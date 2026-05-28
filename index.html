@@ -478,14 +478,21 @@
             font-size: 28px;
             cursor: pointer;
         }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: #3b82f6;
+        }
     </style>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div class="container">
     <h1>🏪 График сотрудников
-        <button id="exportAllBtn" style="font-size: 0.8rem; background:#e2e8f0; border:none; border-radius:20px; padding:6px 12px; cursor:pointer;">💾 Экспорт всех данных</button>
+        <button id="exportAllBtn" style="font-size: 0.8rem; background:#e2e8f0; border:none; border-radius:20px; padding:6px 12px; cursor:pointer;">💾 Экспорт данных (JSON)</button>
     </h1>
        
     <div class="tabs-container" id="tabsContainer"></div>
@@ -553,7 +560,7 @@
         <span>❌ <span class="badge-off">Выходной</span></span>
         <span>🟡 <span class="badge-today">Сегодня</span></span>
     </div>
-    <footer>💾 Все изменения сохраняются автоматически в браузере</footer>
+    <footer>☁️ Все данные хранятся в облаке (Firebase) — доступны с любого устройства</footer>
 </div>
 
 <div id="botSettingsModal" class="modal">
@@ -567,30 +574,22 @@
 </div>
 
 <script>
+    // ========== КОНФИГУРАЦИЯ FIREBASE (ВАШИ КЛЮЧИ) ==========
+    const firebaseConfig = {
+        apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
+        authDomain: "pvz-schedule-38959.firebaseapp.com",
+        projectId: "pvz-schedule-38959",
+        storageBucket: "pvz-schedule-38959.firebasestorage.app",
+        messagingSenderId: "65668659955",
+        appId: "1:65668659955:web:18cd4fe18dcf91e3aa1586"
+    };
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
-  authDomain: "pvz-schedule-38959.firebaseapp.com",
-  projectId: "pvz-schedule-38959",
-  storageBucket: "pvz-schedule-38959.firebasestorage.app",
-  messagingSenderId: "65668659955",
-  appId: "1:65668659955:web:18cd4fe18dcf91e3aa1586"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
+    // Инициализация Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
     // ========== КОНСТАНТЫ ==========
     const ADMIN_PASSWORD = "6535564";
-    const STORAGE_KEY = "pvzScheduleData";
-    const EMPLOYEES_KEY = "globalEmployees";
-    const CURRENT_PVZ_KEY = "currentPVZ";
     const BOT_TOKEN_KEY = "telegram_bot_token";
     
     let allPVZData = {};
@@ -600,6 +599,7 @@ const app = initializeApp(firebaseConfig);
     let selectedMonth = new Date().getMonth() + 1;
     let botToken = "";
     let globalEmployees = [];
+    let isLoading = true;
     
     const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
     
@@ -625,7 +625,7 @@ const app = initializeApp(firebaseConfig);
         };
     }
     
-    function fillDemoSchedules() {
+    function fillDemoSchedules(data) {
         const today = new Date();
         for (let offset = -6; offset <= 12; offset++) {
             const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
@@ -633,66 +633,103 @@ const app = initializeApp(firebaseConfig);
             const month = date.getMonth() + 1;
             const daysCount = new Date(year, month, 0).getDate();
             
-            for (let pvz in allPVZData) {
-                for (let emp of allPVZData[pvz].employees) {
-                    if (!allPVZData[pvz].schedules[emp]) {
-                        allPVZData[pvz].schedules[emp] = {};
+            for (let pvz in data) {
+                for (let emp of data[pvz].employees) {
+                    if (!data[pvz].schedules[emp]) {
+                        data[pvz].schedules[emp] = {};
                     }
                     for (let d = 1; d <= daysCount; d++) {
                         const key = `${year}-${month}-${d}`;
-                        if (allPVZData[pvz].schedules[emp][key] === undefined) {
-                            allPVZData[pvz].schedules[emp][key] = Math.random() < 0.7;
+                        if (data[pvz].schedules[emp][key] === undefined) {
+                            data[pvz].schedules[emp][key] = Math.random() < 0.7;
                         }
                     }
                 }
             }
         }
+        return data;
     }
     
-    // ========== ЗАГРУЗКА И СОХРАНЕНИЕ ==========
-    function loadFromLocalStorage() {
-        const savedData = localStorage.getItem(STORAGE_KEY);
-        const savedEmployees = localStorage.getItem(EMPLOYEES_KEY);
+    // ========== ЗАГРУЗКА И СОХРАНЕНИЕ В FIRESTORE ==========
+    async function loadFromFirestore() {
+        isLoading = true;
+        showNotification("🔄 Загрузка данных из облака...", false);
         
-        if (savedEmployees) {
-            globalEmployees = JSON.parse(savedEmployees);
-        } else {
-            globalEmployees = getDefaultEmployees();
-        }
-        
-        if (savedData) {
-            allPVZData = JSON.parse(savedData);
-            for (let pvz in allPVZData) {
-                if (!allPVZData[pvz].schedules) {
-                    allPVZData[pvz].schedules = {};
-                }
-                for (let emp of allPVZData[pvz].employees) {
-                    if (!allPVZData[pvz].schedules[emp]) {
-                        allPVZData[pvz].schedules[emp] = {};
+        try {
+            // Загружаем сотрудников
+            const employeesDoc = await db.collection("appData").doc("globalEmployees").get();
+            if (employeesDoc.exists) {
+                globalEmployees = employeesDoc.data().employees || [];
+            } else {
+                globalEmployees = getDefaultEmployees();
+                await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
+            }
+            
+            // Загружаем данные ПВЗ
+            const pvzDoc = await db.collection("appData").doc("allPVZData").get();
+            if (pvzDoc.exists) {
+                allPVZData = pvzDoc.data().data || {};
+                // Проверяем структуру
+                for (let pvz in allPVZData) {
+                    if (!allPVZData[pvz].schedules) {
+                        allPVZData[pvz].schedules = {};
+                    }
+                    for (let emp of allPVZData[pvz].employees) {
+                        if (!allPVZData[pvz].schedules[emp]) {
+                            allPVZData[pvz].schedules[emp] = {};
+                        }
                     }
                 }
+            } else {
+                allPVZData = getDefaultPVZData();
+                allPVZData = fillDemoSchedules(allPVZData);
+                await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
             }
-        } else {
-            allPVZData = getDefaultPVZData();
-            fillDemoSchedules();
+            
+            // Загружаем текущий ПВЗ
+            const currentPVZDoc = await db.collection("appData").doc("currentPVZ").get();
+            if (currentPVZDoc.exists && allPVZData[currentPVZDoc.data().name]) {
+                currentPVZ = currentPVZDoc.data().name;
+            } else {
+                currentPVZ = Object.keys(allPVZData)[0];
+            }
+            
+            // Загружаем токен бота
+            botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
+            
+            isLoading = false;
+            showNotification("✅ Данные загружены из облака", false);
+            return true;
+        } catch (error) {
+            console.error("Ошибка загрузки:", error);
+            showNotification("❌ Ошибка загрузки данных! Проверьте подключение к интернету.", true);
+            isLoading = false;
+            return false;
         }
-        
-        const savedPVZ = localStorage.getItem(CURRENT_PVZ_KEY);
-        if (savedPVZ && allPVZData[savedPVZ]) {
-            currentPVZ = savedPVZ;
-        } else {
-            currentPVZ = Object.keys(allPVZData)[0];
-        }
-        
-        botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
     }
     
-    function saveToLocalStorage() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allPVZData));
-        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(globalEmployees));
-        localStorage.setItem(CURRENT_PVZ_KEY, currentPVZ);
-        localStorage.setItem(BOT_TOKEN_KEY, botToken);
-        console.log("Данные сохранены в localStorage");
+    async function saveToFirestore() {
+        if (isLoading) return;
+        try {
+            // Сохраняем сотрудников
+            await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
+            
+            // Сохраняем данные ПВЗ
+            await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
+            
+            // Сохраняем текущий ПВЗ
+            await db.collection("appData").doc("currentPVZ").set({ name: currentPVZ });
+            
+            console.log("Данные сохранены в Firestore");
+        } catch (error) {
+            console.error("Ошибка сохранения:", error);
+            showNotification("⚠️ Ошибка сохранения в облако!", true);
+        }
+    }
+    
+    // Делаем функцию-обёртку для автосохранения после каждого действия
+    async function saveAndSync() {
+        await saveToFirestore();
     }
     
     // ========== УВЕДОМЛЕНИЯ ==========
@@ -855,7 +892,7 @@ const app = initializeApp(firebaseConfig);
         });
     }
     
-    function editGlobalEmployee(idx) {
+    async function editGlobalEmployee(idx) {
         if (!checkPassword()) return;
         const emp = globalEmployees[idx];
         const newName = prompt("Имя:", emp.name);
@@ -881,11 +918,11 @@ const app = initializeApp(firebaseConfig);
         updatePVZEmployeesUI();
         renderSchedule();
         renderGlobalEmployeesTable();
-        saveToLocalStorage();
+        await saveAndSync();
         showNotification(`✅ Сотрудник обновлён`, false);
     }
     
-    function deleteGlobalEmployee(idx) {
+    async function deleteGlobalEmployee(idx) {
         if (!checkPassword()) return;
         const emp = globalEmployees[idx];
         if (confirm(`Удалить "${emp.name}"?`)) {
@@ -898,12 +935,12 @@ const app = initializeApp(firebaseConfig);
             updatePVZEmployeesUI();
             renderSchedule();
             renderGlobalEmployeesTable();
-            saveToLocalStorage();
+            await saveAndSync();
             showNotification(`❌ Сотрудник удалён`, false);
         }
     }
     
-    function addGlobalEmployee() {
+    async function addGlobalEmployee() {
         const name = document.getElementById("newEmpName")?.value.trim();
         const email = document.getElementById("newEmpEmail")?.value.trim();
         const phone = document.getElementById("newEmpPhone")?.value.trim();
@@ -919,7 +956,7 @@ const app = initializeApp(firebaseConfig);
         document.getElementById("newEmpEmail").value = "";
         document.getElementById("newEmpPhone").value = "";
         document.getElementById("newEmpTelegram").value = "";
-        saveToLocalStorage();
+        await saveAndSync();
         showNotification(`✅ Сотрудник "${name}" добавлен`, false);
     }
     
@@ -960,7 +997,7 @@ const app = initializeApp(firebaseConfig);
         renderSchedule();
     }
     
-    function addEmployeeToPVZ() {
+    async function addEmployeeToPVZ() {
         const select = document.getElementById("availableEmployeesSelect");
         const empName = select.value;
         if (!empName) { alert("Выберите сотрудника"); return; }
@@ -970,19 +1007,19 @@ const app = initializeApp(firebaseConfig);
                 allPVZData[currentPVZ].schedules[empName] = {};
             }
             updatePVZEmployeesUI();
-            saveToLocalStorage();
+            await saveAndSync();
             showNotification(`✅ ${empName} добавлен`, false);
         }
     }
     
-    function removeEmployeeFromPVZ(empName) {
+    async function removeEmployeeFromPVZ(empName) {
         if (!checkPassword()) return;
         if (confirm(`Удалить "${empName}" из ПВЗ?`)) {
             const idx = allPVZData[currentPVZ].employees.indexOf(empName);
             if (idx !== -1) allPVZData[currentPVZ].employees.splice(idx, 1);
             delete allPVZData[currentPVZ].schedules[empName];
             updatePVZEmployeesUI();
-            saveToLocalStorage();
+            await saveAndSync();
             showNotification(`❌ ${empName} удалён`, false);
         }
     }
@@ -1028,7 +1065,7 @@ const app = initializeApp(firebaseConfig);
                             ${isWork ? '✅' : '❌'}
                           </td>`;
             }
-            row += `<td style="text-align:center; font-weight:700;">${workCount}</td></tr>`;
+            row += `<td style="text-align:center; font-weight:700;">${workCount}</td>`;
             bodyHtml += row;
         }
         if (employees.length === 0) bodyHtml = '<tr><td colspan="40" style="text-align:center; padding:40px;">👀 Нет сотрудников в этом ПВЗ</td></tr>';
@@ -1037,7 +1074,7 @@ const app = initializeApp(firebaseConfig);
         document.getElementById("currentMonthTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${currentPVZ}`;
     }
     
-    function toggleStatus(e) {
+    async function toggleStatus(e) {
         let target = e.target;
         while (target && target.tagName !== 'TD') target = target.parentElement;
         if (!target || target.classList.contains('employee-col')) return;
@@ -1066,12 +1103,12 @@ const app = initializeApp(firebaseConfig);
         const key = `${year}-${month}-${day}`;
         allPVZData[currentPVZ].schedules[emp][key] = newStatus;
         
-        saveToLocalStorage();
         renderSchedule();
+        await saveAndSync();
         showNotification(`${emp}: ${newStatus ? '✅ рабочий день' : '❌ выходной'} на ${day}.${month}.${year}`, false);
     }
     
-    function renamePVZ(oldName, newName) {
+    async function renamePVZ(oldName, newName) {
         if (!newName || newName === oldName) return false;
         if (allPVZData[newName]) { alert("ПВЗ уже существует"); return false; }
         allPVZData[newName] = allPVZData[oldName];
@@ -1082,18 +1119,18 @@ const app = initializeApp(firebaseConfig);
             updatePVZEmployeesUI();
             renderSchedule();
         }
-        saveToLocalStorage();
+        await saveAndSync();
         showNotification(`✅ ПВЗ переименован`, false);
         return true;
     }
     
-    function editCurrentPVZName() {
+    async function editCurrentPVZName() {
         if (!checkPassword()) return;
         const newName = prompt("Новое название:", currentPVZ);
-        if (newName && newName !== currentPVZ) renamePVZ(currentPVZ, newName);
+        if (newName && newName !== currentPVZ) await renamePVZ(currentPVZ, newName);
     }
     
-    function deleteCurrentPVZ() {
+    async function deleteCurrentPVZ() {
         if (!checkPassword()) return;
         if (Object.keys(allPVZData).length === 1) { alert("Нельзя удалить единственный ПВЗ"); return; }
         if (confirm(`Удалить "${currentPVZ}"?`)) {
@@ -1103,7 +1140,7 @@ const app = initializeApp(firebaseConfig);
             updatePVZEmployeesUI();
             populateMonthSelect();
             renderSchedule();
-            saveToLocalStorage();
+            await saveAndSync();
             showNotification(`❌ ПВЗ удалён`, false);
         }
     }
@@ -1129,7 +1166,7 @@ const app = initializeApp(firebaseConfig);
         const addBtn = document.createElement('button');
         addBtn.className = 'add-tab-btn';
         addBtn.innerHTML = '➕ Добавить ПВЗ';
-        addBtn.onclick = addNewPVZ;
+        addBtn.onclick = () => addNewPVZ();
         container.appendChild(addBtn);
         
         const botBtn = document.createElement('button');
@@ -1139,7 +1176,7 @@ const app = initializeApp(firebaseConfig);
         container.appendChild(botBtn);
     }
     
-    function switchTab(tabId) {
+    async function switchTab(tabId) {
         currentTab = tabId;
         if (tabId === 'employees') {
             document.getElementById("employeesTabContent").style.display = "block";
@@ -1154,17 +1191,17 @@ const app = initializeApp(firebaseConfig);
             renderSchedule();
         }
         renderTabs();
-        saveToLocalStorage();
+        await saveAndSync();
     }
     
-    function addNewPVZ() {
+    async function addNewPVZ() {
         if (!checkPassword()) return;
         let num = Object.keys(allPVZData).length + 1;
         let name = `ПВЗ ${num}`;
         while (allPVZData[name]) { num++; name = `ПВЗ ${num}`; }
         allPVZData[name] = { employees: [], schedules: {} };
-        switchTab(name);
-        saveToLocalStorage();
+        await switchTab(name);
+        await saveAndSync();
         showNotification(`✅ ПВЗ "${name}" добавлен`, false);
     }
     
@@ -1202,8 +1239,12 @@ const app = initializeApp(firebaseConfig);
     }
     
     // ========== ИНИЦИАЛИЗАЦИЯ ==========
-    function init() {
-        loadFromLocalStorage();
+    async function init() {
+        const success = await loadFromFirestore();
+        if (!success) {
+            showNotification("⚠️ Не удалось загрузить данные. Проверьте интернет и права Firestore.", true);
+        }
+        
         renderTabs();
         
         document.getElementById("addEmployeeBtnGlobal")?.addEventListener("click", addGlobalEmployee);
@@ -1233,7 +1274,7 @@ const app = initializeApp(firebaseConfig);
         window.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
         document.getElementById("saveBotTokenBtn")?.addEventListener("click", saveBotToken);
         
-        switchTab(currentPVZ);
+        await switchTab(currentPVZ);
     }
     
     init();
