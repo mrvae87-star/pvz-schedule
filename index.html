@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -484,12 +483,87 @@
             font-size: 1.2rem;
             color: #3b82f6;
         }
+
+        /* Стили для экрана входа */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            transition: opacity 0.5s ease;
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -8px rgba(0,0,0,0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        .login-card h2 {
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+        .login-card input {
+            width: 100%;
+            padding: 14px;
+            margin: 15px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .login-card button:hover {
+            background: #2563eb;
+        }
+        .error-msg {
+            color: #dc2626;
+            font-size: 0.85rem;
+            margin-top: 10px;
+            min-height: 40px;
+        }
+        .main-content {
+            display: none;
+        }
     </style>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
+
+<!-- Экран входа в систему -->
+<div id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <h2>🔐 Вход в систему</h2>
+        <p>Введите пароль для доступа к графику</p>
+        <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="off">
+        <button id="submitLoginBtn">Войти</button>
+        <div id="loginError" class="error-msg"></div>
+    </div>
+</div>
+
+<!-- Основной контент приложения (изначально скрыт) -->
+<div id="mainAppContent" class="main-content">
 <div class="container">
     <h1>🏪 График сотрудников
         <button id="exportAllBtn" style="font-size: 0.8rem; background:#e2e8f0; border:none; border-radius:20px; padding:6px 12px; cursor:pointer;">💾 Экспорт данных (JSON)</button>
@@ -572,8 +646,12 @@
         <button id="saveBotTokenBtn">💾 Сохранить</button>
     </div>
 </div>
+</div> <!-- Конец mainAppContent -->
 
 <script>
+    // ========== ПАРОЛЬ ДЛЯ ВХОДА НА САЙТ ==========
+    const SITE_ACCESS_PASSWORD = "pvz15"; // Пароль, который ты указал
+    
     // ========== КОНФИГУРАЦИЯ FIREBASE (ВАШИ КЛЮЧИ) ==========
     const firebaseConfig = {
         apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
@@ -591,6 +669,7 @@
     // ========== КОНСТАНТЫ ==========
     const ADMIN_PASSWORD = "6535564";
     const BOT_TOKEN_KEY = "telegram_bot_token";
+    const AUTH_KEY = "app_authorized"; // Ключ для запоминания устройства
     
     let allPVZData = {};
     let currentPVZ = "";
@@ -602,6 +681,56 @@
     let isLoading = true;
     
     const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    
+    // ========== ФУНКЦИИ АВТОРИЗАЦИИ ==========
+    function checkInitialAuth() {
+        // Проверяем, есть ли сохраненная метка в браузере
+        const isAuth = localStorage.getItem(AUTH_KEY);
+        if (isAuth === "true") {
+            // Если есть, показываем основной интерфейс и скрываем экран входа
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainAppContent').style.display = 'block';
+            return true;
+        } else {
+            // Если нет, показываем экран входа
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainAppContent').style.display = 'none';
+            return false;
+        }
+    }
+    
+    function setupLoginListener() {
+        const loginBtn = document.getElementById('submitLoginBtn');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorDiv = document.getElementById('loginError');
+        
+        const tryLogin = () => {
+            const enteredPassword = passwordInput.value.trim();
+            if (enteredPassword === SITE_ACCESS_PASSWORD) {
+                // Пароль верный
+                localStorage.setItem(AUTH_KEY, "true");
+                // Плавно скрываем экран входа и показываем основной контент
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainAppContent').style.display = 'block';
+                errorDiv.textContent = '';
+                passwordInput.value = '';
+                showNotification("Доступ разрешён! Загрузка данных...", false);
+                // Загружаем данные после успешного входа (если еще не загружены)
+                if (isLoading) {
+                    initApp();
+                }
+            } else {
+                errorDiv.textContent = '❌ Неверный пароль! Попробуйте снова.';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        };
+        
+        loginBtn.addEventListener('click', tryLogin);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') tryLogin();
+        });
+    }
     
     // ========== ДЕФОЛТНЫЕ ДАННЫЕ ==========
     function getDefaultEmployees() {
@@ -742,7 +871,7 @@
     }
     
     function checkPassword() {
-        const pwd = prompt("Введите пароль:");
+        const pwd = prompt("Введите пароль администратора:");
         if (pwd === ADMIN_PASSWORD) return true;
         alert("Неверный пароль!");
         return false;
@@ -1063,7 +1192,7 @@
                 row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isTodayDate ? 'today-column' : ''}"
                                data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">
                             ${isWork ? '✅' : '❌'}
-                          </td>`;
+                           </td>`;
             }
             row += `<td style="text-align:center; font-weight:700;">${workCount}</td>`;
             bodyHtml += row;
@@ -1238,8 +1367,8 @@
         showNotification("✅ Данные экспортированы", false);
     }
     
-    // ========== ИНИЦИАЛИЗАЦИЯ ==========
-    async function init() {
+    // ========== ИНИЦИАЛИЗАЦИЯ ОСНОВНОГО ПРИЛОЖЕНИЯ ==========
+    async function initApp() {
         const success = await loadFromFirestore();
         if (!success) {
             showNotification("⚠️ Не удалось загрузить данные. Проверьте интернет и права Firestore.", true);
@@ -1277,7 +1406,15 @@
         await switchTab(currentPVZ);
     }
     
-    init();
+    // ========== ГЛАВНЫЙ ЗАПУСК ==========
+    // Сначала проверяем авторизацию
+    const isAuthorized = checkInitialAuth();
+    setupLoginListener();
+    
+    // Если пользователь уже авторизован (например, с прошлого раза), запускаем приложение
+    if (isAuthorized) {
+        initApp();
+    }
 </script>
 </body>
 </html>
