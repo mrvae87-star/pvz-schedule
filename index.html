@@ -62,7 +62,7 @@
             border-bottom: 2px solid #e2e8f0;
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 8px;
             align-items: center;
         }
         .tab {
@@ -71,13 +71,18 @@
             border: none;
             border-radius: 12px 12px 0 0;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             transition: 0.2s;
             display: inline-flex;
             align-items: center;
             gap: 8px;
             color: #475569;
+        }
+        .tab:not(.add-tab-btn):not(#bot-tab-btn) {
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 8px 20px;
         }
         .tab.active {
             background: #3b82f6;
@@ -86,21 +91,29 @@
         .tab:hover:not(.active) {
             background: #e2e8f0;
         }
+        
         .add-tab-btn {
-            background: #e2e8f0;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 6px 12px;
+            border-radius: 40px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             margin-left: 8px;
+            color: #3b82f6;
+            transition: all 0.25s ease;
+            box-shadow: 0 0 2px rgba(59, 130, 246, 0.2);
         }
         .add-tab-btn:hover {
-            background: #cbd5e1;
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+            border-color: #3b82f6;
+            transform: scale(1.02);
         }
         
         .employees-table-container {
@@ -153,6 +166,7 @@
             gap: 12px;
             flex-wrap: wrap;
             align-items: flex-end;
+            margin-bottom: 20px;
         }
         .add-employee-form input {
             padding: 8px 12px;
@@ -170,6 +184,57 @@
             cursor: pointer;
             font-weight: 500;
             color: #15803d;
+        }
+        
+        /* Блок уведомлений во вкладке сотрудников */
+        .notification-section {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+        .notification-section h3 {
+            margin: 0 0 16px 0;
+            font-size: 1.1rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .notification-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .send-notify-btn {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .send-notify-btn:hover {
+            background: #006699;
+            transform: scale(1.02);
+        }
+        .send-notify-btn.secondary {
+            background: #34a853;
+        }
+        .send-notify-btn.secondary:hover {
+            background: #2d8e47;
+        }
+        .bot-config-btn {
+            background: #8b5cf6;
+        }
+        .bot-config-btn:hover {
+            background: #7c3aed;
         }
         
         .pvz-employees-management {
@@ -267,37 +332,6 @@
             cursor: pointer;
         }
         
-        .notification-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .send-notify-btn {
-            background: #0088cc;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 40px;
-            cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: 0.2s;
-        }
-        .send-notify-btn:hover {
-            background: #006699;
-            transform: scale(1.02);
-        }
-        .send-notify-btn.secondary {
-            background: #34a853;
-        }
-        .send-notify-btn.secondary:hover {
-            background: #2d8e47;
-        }
-        
         .current-month-container {
             background: white;
             border-radius: 20px;
@@ -321,22 +355,23 @@
         .schedule-table {
             border-collapse: collapse;
             width: 100%;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
         }
         .schedule-table th {
-            padding: 6px 4px;
+            padding: 8px 4px;
             text-align: center;
             font-weight: 700;
             border-bottom: 2px solid #cbd5e1;
             position: sticky;
             top: 0;
+            background: #f8fafc;
         }
         .schedule-table th .day-number {
             font-size: 0.9rem;
             font-weight: 700;
         }
         .schedule-table th .weekday-name {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 400;
             opacity: 0.8;
             margin-top: 2px;
@@ -357,19 +392,22 @@
         }
         .schedule-table td {
             border: 1px solid #e2e8f0;
-            padding: 8px 4px;
+            padding: 10px 4px;
             text-align: center;
             cursor: pointer;
+            font-size: 1rem;
         }
         .employee-col {
-            font-weight: 700;
+            font-weight: 800;
             background: #fefce8;
             position: sticky;
             left: 0;
             text-align: left;
-            padding-left: 12px;
-            min-width: 130px;
+            padding-left: 15px;
+            min-width: 150px;
             z-index: 1;
+            font-size: 1rem;
+            letter-spacing: 0.3px;
         }
         .shift-work { background-color: #dcfce7; color: #166534; font-weight: 500; }
         .shift-off { background-color: #fee2e2; color: #991b1b; }
@@ -484,7 +522,6 @@
             color: #3b82f6;
         }
 
-        /* Стили для экрана входа */
         .login-screen {
             position: fixed;
             top: 0;
@@ -544,14 +581,26 @@
         .main-content {
             display: none;
         }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .export-btn {
+            background: #e2e8f0;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
     </style>
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 
-<!-- Экран входа в систему -->
 <div id="loginScreen" class="login-screen">
     <div class="login-card">
         <h2>🔐 Вход в систему</h2>
@@ -562,16 +611,28 @@
     </div>
 </div>
 
-<!-- Основной контент приложения (изначально скрыт) -->
 <div id="mainAppContent" class="main-content">
 <div class="container">
     <h1>🏪 График сотрудников
-        <button id="exportAllBtn" style="font-size: 0.8rem; background:#e2e8f0; border:none; border-radius:20px; padding:6px 12px; cursor:pointer;">💾 Экспорт данных (JSON)</button>
+        <div class="action-buttons">
+            <button id="exportAllBtn" class="export-btn">💾 Экспорт данных</button>
+        </div>
     </h1>
        
     <div class="tabs-container" id="tabsContainer"></div>
     
+    <!-- Вкладка "Все сотрудники" - теперь здесь все уведомления и настройки бота -->
     <div id="employeesTabContent" style="display: none;">
+        <!-- Блок уведомлений и настройки бота -->
+        <div class="notification-section">
+            <h3>📨 Telegram уведомления</h3>
+            <div class="notification-buttons">
+                <button id="sendTomorrowNotifyBtn" class="send-notify-btn">📱 Уведомления о завтрашних сменах</button>
+                <button id="sendTestNotifyBtn" class="send-notify-btn secondary">🔔 Тестовое уведомление</button>
+                <button id="botConfigBtn" class="send-notify-btn bot-config-btn">🤖 Настройка бота</button>
+            </div>
+        </div>
+        
         <div class="employees-table-container">
             <table class="employees-table">
                 <thead>
@@ -585,11 +646,12 @@
             <input type="email" id="newEmpEmail" placeholder="Email">
             <input type="tel" id="newEmpPhone" placeholder="Телефон">
             <input type="text" id="newEmpTelegram" placeholder="Telegram ID">
-            <button id="addEmployeeBtnGlobal">➕ Добавить</button>
+            <button id="addEmployeeBtnGlobal">➕ Добавить сотрудника</button>
         </div>
-        <p style="font-size: 0.75rem; color: #64748b; margin-top: 12px;">💡 Telegram ID можно узнать у бота <strong>@userinfobot</strong></p>
+        <p style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">💡 Telegram ID можно узнать у бота <strong>@userinfobot</strong></p>
     </div>
     
+    <!-- Вкладки ПВЗ - теперь только сотрудники и график, без уведомлений -->
     <div id="pvzTabContent" style="display: none;">
         <div class="pvz-employees-management">
             <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span></h3>
@@ -600,11 +662,6 @@
                 <button id="addToPVZBtn" style="background:#dcfce7; color:#15803d;">➕ Добавить в ПВЗ</button>
             </div>
             <div class="pvz-employees-list" id="pvzEmployeesList"></div>
-        </div>
-        
-        <div class="notification-buttons">
-            <button id="sendTomorrowNotifyBtn" class="send-notify-btn">📱 Уведомления о завтрашних сменах</button>
-            <button id="sendTestNotifyBtn" class="send-notify-btn secondary">🔔 Тестовое уведомление</button>
         </div>
         
         <div class="month-selector">
@@ -646,13 +703,11 @@
         <button id="saveBotTokenBtn">💾 Сохранить</button>
     </div>
 </div>
-</div> <!-- Конец mainAppContent -->
+</div>
 
 <script>
-    // ========== ПАРОЛЬ ДЛЯ ВХОДА НА САЙТ ==========
-    const SITE_ACCESS_PASSWORD = "pvz15"; // Пароль, который ты указал
+    const SITE_ACCESS_PASSWORD = "pvz15";
     
-    // ========== КОНФИГУРАЦИЯ FIREBASE (ВАШИ КЛЮЧИ) ==========
     const firebaseConfig = {
         apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
         authDomain: "pvz-schedule-38959.firebaseapp.com",
@@ -662,14 +717,12 @@
         appId: "1:65668659955:web:18cd4fe18dcf91e3aa1586"
     };
 
-    // Инициализация Firebase
     const app = firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     
-    // ========== КОНСТАНТЫ ==========
     const ADMIN_PASSWORD = "6535564";
     const BOT_TOKEN_KEY = "telegram_bot_token";
-    const AUTH_KEY = "app_authorized"; // Ключ для запоминания устройства
+    const AUTH_KEY = "app_authorized";
     
     let allPVZData = {};
     let currentPVZ = "";
@@ -682,17 +735,13 @@
     
     const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
     
-    // ========== ФУНКЦИИ АВТОРИЗАЦИИ ==========
     function checkInitialAuth() {
-        // Проверяем, есть ли сохраненная метка в браузере
         const isAuth = localStorage.getItem(AUTH_KEY);
         if (isAuth === "true") {
-            // Если есть, показываем основной интерфейс и скрываем экран входа
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('mainAppContent').style.display = 'block';
             return true;
         } else {
-            // Если нет, показываем экран входа
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('mainAppContent').style.display = 'none';
             return false;
@@ -707,15 +756,12 @@
         const tryLogin = () => {
             const enteredPassword = passwordInput.value.trim();
             if (enteredPassword === SITE_ACCESS_PASSWORD) {
-                // Пароль верный
                 localStorage.setItem(AUTH_KEY, "true");
-                // Плавно скрываем экран входа и показываем основной контент
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('mainAppContent').style.display = 'block';
                 errorDiv.textContent = '';
                 passwordInput.value = '';
                 showNotification("Доступ разрешён! Загрузка данных...", false);
-                // Загружаем данные после успешного входа (если еще не загружены)
                 if (isLoading) {
                     initApp();
                 }
@@ -732,7 +778,6 @@
         });
     }
     
-    // ========== ДЕФОЛТНЫЕ ДАННЫЕ ==========
     function getDefaultEmployees() {
         return [
             { name: "Анна Смирнова", email: "anna@example.com", phone: "+7-999-123-45-67", telegramId: "" },
@@ -779,13 +824,11 @@
         return data;
     }
     
-    // ========== ЗАГРУЗКА И СОХРАНЕНИЕ В FIRESTORE ==========
     async function loadFromFirestore() {
         isLoading = true;
         showNotification("🔄 Загрузка данных из облака...", false);
         
         try {
-            // Загружаем сотрудников
             const employeesDoc = await db.collection("appData").doc("globalEmployees").get();
             if (employeesDoc.exists) {
                 globalEmployees = employeesDoc.data().employees || [];
@@ -794,11 +837,9 @@
                 await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
             }
             
-            // Загружаем данные ПВЗ
             const pvzDoc = await db.collection("appData").doc("allPVZData").get();
             if (pvzDoc.exists) {
                 allPVZData = pvzDoc.data().data || {};
-                // Проверяем структуру
                 for (let pvz in allPVZData) {
                     if (!allPVZData[pvz].schedules) {
                         allPVZData[pvz].schedules = {};
@@ -815,7 +856,6 @@
                 await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
             }
             
-            // Загружаем текущий ПВЗ
             const currentPVZDoc = await db.collection("appData").doc("currentPVZ").get();
             if (currentPVZDoc.exists && allPVZData[currentPVZDoc.data().name]) {
                 currentPVZ = currentPVZDoc.data().name;
@@ -823,7 +863,6 @@
                 currentPVZ = Object.keys(allPVZData)[0];
             }
             
-            // Загружаем токен бота
             botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
             
             isLoading = false;
@@ -840,15 +879,9 @@
     async function saveToFirestore() {
         if (isLoading) return;
         try {
-            // Сохраняем сотрудников
             await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
-            
-            // Сохраняем данные ПВЗ
             await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
-            
-            // Сохраняем текущий ПВЗ
             await db.collection("appData").doc("currentPVZ").set({ name: currentPVZ });
-            
             console.log("Данные сохранены в Firestore");
         } catch (error) {
             console.error("Ошибка сохранения:", error);
@@ -856,12 +889,10 @@
         }
     }
     
-    // Делаем функцию-обёртку для автосохранения после каждого действия
     async function saveAndSync() {
         await saveToFirestore();
     }
     
-    // ========== УВЕДОМЛЕНИЯ ==========
     function showNotification(message, isError = true) {
         const notification = document.createElement('div');
         notification.className = `notification ${!isError ? 'success' : ''}`;
@@ -899,7 +930,7 @@
     
     async function sendTomorrowNotifications() {
         if (!botToken) {
-            showNotification("⚠️ Сначала настройте Telegram бота!", true);
+            showNotification("⚠️ Сначала настройте Telegram бота! Нажмите 'Настройка бота'", true);
             return;
         }
         
@@ -947,7 +978,7 @@
     
     async function sendTestNotification() {
         if (!botToken) {
-            showNotification("⚠️ Сначала настройте Telegram бота!", true);
+            showNotification("⚠️ Сначала настройте Telegram бота! Нажмите 'Настройка бота'", true);
             return;
         }
         let success = 0, fail = 0;
@@ -959,7 +990,6 @@
         showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false);
     }
     
-    // ========== ЛОГИКА ==========
     function canEmployeeWork(employee, year, month, day, targetPVZ) {
         for (let pvzName in allPVZData) {
             if (pvzName === targetPVZ) continue;
@@ -1287,7 +1317,7 @@
         for (let pvz in allPVZData) {
             const tab = document.createElement('button');
             tab.className = `tab ${currentTab === pvz ? 'active' : ''}`;
-            tab.innerHTML = pvz;
+            tab.innerHTML = `📍 ${pvz}`;
             tab.onclick = () => switchTab(pvz);
             container.appendChild(tab);
         }
@@ -1297,12 +1327,6 @@
         addBtn.innerHTML = '➕ Добавить ПВЗ';
         addBtn.onclick = () => addNewPVZ();
         container.appendChild(addBtn);
-        
-        const botBtn = document.createElement('button');
-        botBtn.className = 'add-tab-btn';
-        botBtn.innerHTML = '🤖 Настройка бота';
-        botBtn.onclick = () => openModal();
-        container.appendChild(botBtn);
     }
     
     async function switchTab(tabId) {
@@ -1367,7 +1391,6 @@
         showNotification("✅ Данные экспортированы", false);
     }
     
-    // ========== ИНИЦИАЛИЗАЦИЯ ОСНОВНОГО ПРИЛОЖЕНИЯ ==========
     async function initApp() {
         const success = await loadFromFirestore();
         if (!success) {
@@ -1397,6 +1420,7 @@
         document.getElementById("exportAllBtn")?.addEventListener("click", exportData);
         document.getElementById("sendTomorrowNotifyBtn")?.addEventListener("click", sendTomorrowNotifications);
         document.getElementById("sendTestNotifyBtn")?.addEventListener("click", sendTestNotification);
+        document.getElementById("botConfigBtn")?.addEventListener("click", openModal);
         
         const modal = document.getElementById("botSettingsModal");
         document.querySelector(".close")?.addEventListener("click", closeModal);
@@ -1406,12 +1430,9 @@
         await switchTab(currentPVZ);
     }
     
-    // ========== ГЛАВНЫЙ ЗАПУСК ==========
-    // Сначала проверяем авторизацию
     const isAuthorized = checkInitialAuth();
     setupLoginListener();
     
-    // Если пользователь уже авторизован (например, с прошлого раза), запускаем приложение
     if (isAuthorized) {
         initApp();
     }
