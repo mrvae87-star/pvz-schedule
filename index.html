@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>График сотрудников по ПВЗ</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 100%;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 20px 24px 24px 24px;
+        }
+        h1 {
+            font-size: 1.7rem;
+            margin: 0 0 8px 0;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border-left: 4px solid #dc2626;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 350px;
+            font-size: 0.85rem;
+        }
+        .notification.success {
+            background: #dcfce7;
+            color: #15803d;
+            border-left-color: #22c55e;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .tabs-container {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+        }
+        .tab {
+            padding: 10px 20px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 12px 12px 0 0;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #475569;
+        }
+        .tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+        .tab:hover:not(.active) {
+            background: #e2e8f0;
+        }
+        .add-tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 8px;
+        }
+        .add-tab-btn:hover {
+            background: #cbd5e1;
+        }
+        
+        .employees-table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .employees-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .employees-table th {
+            background: #f1f5f9;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .employees-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .employees-table tr:hover {
+            background: #f8fafc;
+        }
+        .edit-employee-btn, .delete-employee-btn {
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin: 0 2px;
+        }
+        .edit-employee-btn {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .delete-employee-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .add-employee-form {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .add-employee-form input {
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            flex: 1;
+            min-width: 150px;
+        }
+        .add-employee-form button {
+            padding: 8px 20px;
+            background: #dcfce7;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #15803d;
+        }
+        
+        .pvz-employees-management {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .pvz-employees-management h3 {
+            margin: 0 0 12px 0;
+            font-size: 1rem;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .employee-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .employee-selector select {
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            width: auto;
+            min-width: 200px;
+            max-width: 280px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .employee-selector button {
+            padding: 8px 16px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .pvz-employees-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .pvz-employee-tag {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .pvz-employee-tag button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #991b1b;
+            font-size: 1rem;
+            padding: 0 4px;
+        }
+        
+        .month-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            padding: 12px 20px;
+            border-radius: 60px;
+        }
+        .month-selector select {
+            padding: 10px 20px;
+            border-radius: 40px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .current-month-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .notification-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .send-notify-btn {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .send-notify-btn:hover {
+            background: #006699;
+            transform: scale(1.02);
+        }
+        .send-notify-btn.secondary {
+            background: #34a853;
+        }
+        .send-notify-btn.secondary:hover {
+            background: #2d8e47;
+        }
+        
+        .current-month-container {
+            background: white;
+            border-radius: 20px;
+            border: 2px solid #3b82f6;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .current-header {
+            background: #3b82f6;
+            color: white;
+            padding: 14px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .schedule-table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.8rem;
+        }
+        .schedule-table th {
+            padding: 6px 4px;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 2px solid #cbd5e1;
+            position: sticky;
+            top: 0;
+        }
+        .schedule-table th .day-number {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .schedule-table th .weekday-name {
+            font-size: 0.65rem;
+            font-weight: 400;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+        .schedule-table th.weekday {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        .schedule-table th.weekend {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .schedule-table td.today-column,
+        .schedule-table th.today-column {
+            background-color: #fff3bf !important;
+            border-left: 2px solid #f59e0b;
+            border-right: 2px solid #f59e0b;
+        }
+        .schedule-table td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 4px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .employee-col {
+            font-weight: 700;
+            background: #fefce8;
+            position: sticky;
+            left: 0;
+            text-align: left;
+            padding-left: 12px;
+            min-width: 130px;
+            z-index: 1;
+        }
+        .shift-work { background-color: #dcfce7; color: #166534; font-weight: 500; }
+        .shift-off { background-color: #fee2e2; color: #991b1b; }
+        .shift-work:hover, .shift-off:hover { filter: brightness(0.96); }
+        
+        .pvz-control-panel {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 30px;
+        }
+        .pvz-control-panel button {
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: 400;
+            font-size: 0.7rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            opacity: 0.4;
+            transition: opacity 0.2s;
+        }
+        .pvz-control-panel button:hover {
+            opacity: 1;
+        }
+        .edit-pvz-name-btn {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .delete-pvz-btn {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            font-size: 0.8rem;
+            background: #f8fafc;
+            padding: 10px 16px;
+            border-radius: 60px;
+        }
+        .badge-work, .badge-off, .badge-today {
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        .badge-work { background: #dcfce7; color: #15803d; }
+        .badge-off { background: #fee2e2; color: #b91c1c; }
+        .badge-today { background: #fff3bf; color: #b45309; }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #5b6e8c;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+        }
+        .modal button {
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 28px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🏪 График сотрудников
+        <button id="exportAllBtn" style="font-size: 0.8rem; background:#e2e8f0; border:none; border-radius:20px; padding:6px 12px; cursor:pointer;">💾 Экспорт всех данных</button>
+    </h1>
+       
+    <div class="tabs-container" id="tabsContainer"></div>
+    
+    <div id="employeesTabContent" style="display: none;">
+        <div class="employees-table-container">
+            <table class="employees-table">
+                <thead>
+                    <tr><th>Имя</th><th>Email</th><th>Телефон</th><th>Telegram ID</th><th>Действия</th></tr>
+                </thead>
+                <tbody id="employeesTableBody"></tbody>
+            </table>
+        </div>
+        <div class="add-employee-form">
+            <input type="text" id="newEmpName" placeholder="Имя *">
+            <input type="email" id="newEmpEmail" placeholder="Email">
+            <input type="tel" id="newEmpPhone" placeholder="Телефон">
+            <input type="text" id="newEmpTelegram" placeholder="Telegram ID">
+            <button id="addEmployeeBtnGlobal">➕ Добавить</button>
+        </div>
+        <p style="font-size: 0.75rem; color: #64748b; margin-top: 12px;">💡 Telegram ID можно узнать у бота <strong>@userinfobot</strong></p>
+    </div>
+    
+    <div id="pvzTabContent" style="display: none;">
+        <div class="pvz-employees-management">
+            <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span></h3>
+            <div class="employee-selector">
+                <select id="availableEmployeesSelect">
+                    <option value="">-- Выберите сотрудника --</option>
+                </select>
+                <button id="addToPVZBtn" style="background:#dcfce7; color:#15803d;">➕ Добавить в ПВЗ</button>
+            </div>
+            <div class="pvz-employees-list" id="pvzEmployeesList"></div>
+        </div>
+        
+        <div class="notification-buttons">
+            <button id="sendTomorrowNotifyBtn" class="send-notify-btn">📱 Уведомления о завтрашних сменах</button>
+            <button id="sendTestNotifyBtn" class="send-notify-btn secondary">🔔 Тестовое уведомление</button>
+        </div>
+        
+        <div class="month-selector">
+            <label>📅 Выберите месяц:</label>
+            <select id="monthSelect"></select>
+            <button id="goToCurrentMonthBtn" class="current-month-badge">📅 Текущий месяц</button>
+        </div>
+        
+        <div class="current-month-container">
+            <div class="current-header" id="currentMonthTitle"></div>
+            <div class="table-wrapper">
+                <table class="schedule-table" id="scheduleGrid">
+                    <thead id="tableHeader"></thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="pvz-control-panel">
+            <button id="editPVZNameBtn" class="edit-pvz-name-btn">✏️ Редактировать</button>
+            <button id="deletePVZBtn" class="delete-pvz-btn">🗑 Удалить ПВЗ</button>
+        </div>
+    </div>
+    
+    <div class="legend">
+        <span>✅ <span class="badge-work">Рабочий день</span></span>
+        <span>❌ <span class="badge-off">Выходной</span></span>
+        <span>🟡 <span class="badge-today">Сегодня</span></span>
+    </div>
+    <footer>💾 Все изменения сохраняются автоматически в браузере</footer>
+</div>
+
+<div id="botSettingsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div class="modal-header">🤖 Настройка Telegram бота</div>
+        <p>Вставьте токен бота от <strong>@BotFather</strong>:</p>
+        <input type="text" id="botTokenInput" placeholder="Токен бота">
+        <button id="saveBotTokenBtn">💾 Сохранить</button>
+    </div>
+</div>
+
+<script>
+    // ========== КОНСТАНТЫ ==========
+    const ADMIN_PASSWORD = "6535564";
+    const STORAGE_KEY = "pvzScheduleData";
+    const EMPLOYEES_KEY = "globalEmployees";
+    const CURRENT_PVZ_KEY = "currentPVZ";
+    const BOT_TOKEN_KEY = "telegram_bot_token";
+    
+    let allPVZData = {};
+    let currentPVZ = "";
+    let currentTab = "pvz";
+    let selectedYear = new Date().getFullYear();
+    let selectedMonth = new Date().getMonth() + 1;
+    let botToken = "";
+    let globalEmployees = [];
+    
+    const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    
+    // ========== ДЕФОЛТНЫЕ ДАННЫЕ ==========
+    function getDefaultEmployees() {
+        return [
+            { name: "Анна Смирнова", email: "anna@example.com", phone: "+7-999-123-45-67", telegramId: "" },
+            { name: "Иван Козлов", email: "ivan@example.com", phone: "+7-999-234-56-78", telegramId: "" },
+            { name: "Мария Орлова", email: "maria@example.com", phone: "+7-999-345-67-89", telegramId: "" },
+            { name: "Дмитрий Павлов", email: "dmitry@example.com", phone: "+7-999-456-78-90", telegramId: "" },
+            { name: "Елена Ветрова", email: "elena@example.com", phone: "+7-999-567-89-01", telegramId: "" },
+            { name: "Зинаида Петрова", email: "zina@example.com", phone: "+7-999-678-90-12", telegramId: "" },
+            { name: "Дарья Сидорова", email: "darya@example.com", phone: "+7-999-789-01-23", telegramId: "" }
+        ];
+    }
+    
+    function getDefaultPVZData() {
+        return {
+            "ПВЗ Центральный": { employees: ["Анна Смирнова", "Иван Козлов"], schedules: {} },
+            "ПВЗ Северный": { employees: ["Мария Орлова", "Дмитрий Павлов"], schedules: {} },
+            "ПВЗ Южный": { employees: ["Елена Ветрова", "Зинаида Петрова"], schedules: {} },
+            "ПВЗ Восточный": { employees: ["Дарья Сидорова"], schedules: {} }
+        };
+    }
+    
+    function fillDemoSchedules() {
+        const today = new Date();
+        for (let offset = -6; offset <= 12; offset++) {
+            const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const daysCount = new Date(year, month, 0).getDate();
+            
+            for (let pvz in allPVZData) {
+                for (let emp of allPVZData[pvz].employees) {
+                    if (!allPVZData[pvz].schedules[emp]) {
+                        allPVZData[pvz].schedules[emp] = {};
+                    }
+                    for (let d = 1; d <= daysCount; d++) {
+                        const key = `${year}-${month}-${d}`;
+                        if (allPVZData[pvz].schedules[emp][key] === undefined) {
+                            allPVZData[pvz].schedules[emp][key] = Math.random() < 0.7;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // ========== ЗАГРУЗКА И СОХРАНЕНИЕ ==========
+    function loadFromLocalStorage() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        const savedEmployees = localStorage.getItem(EMPLOYEES_KEY);
+        
+        if (savedEmployees) {
+            globalEmployees = JSON.parse(savedEmployees);
+        } else {
+            globalEmployees = getDefaultEmployees();
+        }
+        
+        if (savedData) {
+            allPVZData = JSON.parse(savedData);
+            for (let pvz in allPVZData) {
+                if (!allPVZData[pvz].schedules) {
+                    allPVZData[pvz].schedules = {};
+                }
+                for (let emp of allPVZData[pvz].employees) {
+                    if (!allPVZData[pvz].schedules[emp]) {
+                        allPVZData[pvz].schedules[emp] = {};
+                    }
+                }
+            }
+        } else {
+            allPVZData = getDefaultPVZData();
+            fillDemoSchedules();
+        }
+        
+        const savedPVZ = localStorage.getItem(CURRENT_PVZ_KEY);
+        if (savedPVZ && allPVZData[savedPVZ]) {
+            currentPVZ = savedPVZ;
+        } else {
+            currentPVZ = Object.keys(allPVZData)[0];
+        }
+        
+        botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
+    }
+    
+    function saveToLocalStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allPVZData));
+        localStorage.setItem(EMPLOYEES_KEY, JSON.stringify(globalEmployees));
+        localStorage.setItem(CURRENT_PVZ_KEY, currentPVZ);
+        localStorage.setItem(BOT_TOKEN_KEY, botToken);
+        console.log("Данные сохранены в localStorage");
+    }
+    
+    // ========== УВЕДОМЛЕНИЯ ==========
+    function showNotification(message, isError = true) {
+        const notification = document.createElement('div');
+        notification.className = `notification ${!isError ? 'success' : ''}`;
+        notification.innerHTML = message;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 4000);
+    }
+    
+    function checkPassword() {
+        const pwd = prompt("Введите пароль:");
+        if (pwd === ADMIN_PASSWORD) return true;
+        alert("Неверный пароль!");
+        return false;
+    }
+    
+    async function sendTelegramMessage(chatId, message) {
+        if (!botToken) return false;
+        try {
+            const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                })
+            });
+            const result = await response.json();
+            return result.ok;
+        } catch (error) {
+            console.error("Send error:", error);
+            return false;
+        }
+    }
+    
+    async function sendTomorrowNotifications() {
+        if (!botToken) {
+            showNotification("⚠️ Сначала настройте Telegram бота!", true);
+            return;
+        }
+        
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const year = tomorrow.getFullYear();
+        const month = tomorrow.getMonth() + 1;
+        const day = tomorrow.getDate();
+        const dateKey = `${year}-${month}-${day}`;
+        
+        const employeeShifts = {};
+        
+        for (let pvzName in allPVZData) {
+            const pvz = allPVZData[pvzName];
+            for (let employee of pvz.employees) {
+                if (pvz.schedules[employee]?.[dateKey] === true) {
+                    if (!employeeShifts[employee]) employeeShifts[employee] = [];
+                    employeeShifts[employee].push({ pvzName, date: `${day}.${month}.${year}` });
+                }
+            }
+        }
+        
+        if (Object.keys(employeeShifts).length === 0) {
+            showNotification("ℹ️ На завтра нет смен", false);
+            return;
+        }
+        
+        let success = 0, fail = 0;
+        
+        for (let empName in employeeShifts) {
+            const employee = globalEmployees.find(e => e.name === empName);
+            if (!employee || !employee.telegramId) {
+                fail++;
+                continue;
+            }
+            const shifts = employeeShifts[empName];
+            const shiftText = shifts.map(s => `🏪 ${s.pvzName} — ${s.date}`).join("\n");
+            const message = `🔔 <b>Напоминание о смене!</b>\n\n${empName}, завтра у вас смена:\n${shiftText}\n\nПриходите вовремя!`;
+            const sent = await sendTelegramMessage(employee.telegramId, message);
+            if (sent) success++; else fail++;
+        }
+        
+        showNotification(`📱 Отправлено: ✅ ${success}, ❌ ${fail}`, false);
+    }
+    
+    async function sendTestNotification() {
+        if (!botToken) {
+            showNotification("⚠️ Сначала настройте Telegram бота!", true);
+            return;
+        }
+        let success = 0, fail = 0;
+        for (let emp of globalEmployees) {
+            if (!emp.telegramId) continue;
+            const sent = await sendTelegramMessage(emp.telegramId, "🧪 Тестовое сообщение от системы графиков ПВЗ");
+            if (sent) success++; else fail++;
+        }
+        showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false);
+    }
+    
+    // ========== ЛОГИКА ==========
+    function canEmployeeWork(employee, year, month, day, targetPVZ) {
+        for (let pvzName in allPVZData) {
+            if (pvzName === targetPVZ) continue;
+            const key = `${year}-${month}-${day}`;
+            if (allPVZData[pvzName].schedules[employee]?.[key] === true) {
+                return { canWork: false, conflictingPVZ: pvzName };
+            }
+        }
+        return { canWork: true, conflictingPVZ: null };
+    }
+    
+    function getDayOfWeek(year, month, day) { return new Date(year, month - 1, day).getDay(); }
+    function isToday(year, month, day) {
+        const today = new Date();
+        return today.getFullYear() === year && today.getMonth() + 1 === month && today.getDate() === day;
+    }
+    function getMonthName(month) {
+        return ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"][month-1];
+    }
+    
+    function populateMonthSelect() {
+        const select = document.getElementById("monthSelect");
+        if (!select) return;
+        const now = new Date();
+        select.innerHTML = '';
+        for (let offset = -12; offset <= 12; offset++) {
+            const date = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const option = document.createElement("option");
+            option.value = `${year}-${month}`;
+            option.textContent = `${getMonthName(month)} ${year}`;
+            if (year === selectedYear && month === selectedMonth) option.selected = true;
+            select.appendChild(option);
+        }
+    }
+    
+    function renderGlobalEmployeesTable() {
+        const tbody = document.getElementById("employeesTableBody");
+        if (!tbody) return;
+        tbody.innerHTML = globalEmployees.map((emp, idx) => `
+            <tr>
+                <td><strong>${escapeHtml(emp.name)}</strong></td>
+                <td>${escapeHtml(emp.email || '—')}</td>
+                <td>${escapeHtml(emp.phone || '—')}</td>
+                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</td>
+                <td>
+                    <button class="edit-employee-btn" data-idx="${idx}">✏️</button>
+                    <button class="delete-employee-btn" data-idx="${idx}">🗑</button>
+                </td>
+            </tr>
+        `).join('');
+        
+        document.querySelectorAll('.edit-employee-btn').forEach(btn => {
+            btn.addEventListener('click', () => editGlobalEmployee(parseInt(btn.dataset.idx)));
+        });
+        document.querySelectorAll('.delete-employee-btn').forEach(btn => {
+            btn.addEventListener('click', () => deleteGlobalEmployee(parseInt(btn.dataset.idx)));
+        });
+    }
+    
+    function editGlobalEmployee(idx) {
+        if (!checkPassword()) return;
+        const emp = globalEmployees[idx];
+        const newName = prompt("Имя:", emp.name);
+        if (!newName) return;
+        const newEmail = prompt("Email:", emp.email || "");
+        const newPhone = prompt("Телефон:", emp.phone || "");
+        const newTelegram = prompt("Telegram ID:", emp.telegramId || "");
+        
+        const oldName = emp.name;
+        emp.name = newName;
+        emp.email = newEmail || "";
+        emp.phone = newPhone || "";
+        emp.telegramId = newTelegram || "";
+        
+        for (let pvz in allPVZData) {
+            const idx2 = allPVZData[pvz].employees.indexOf(oldName);
+            if (idx2 !== -1) allPVZData[pvz].employees[idx2] = newName;
+            if (allPVZData[pvz].schedules[oldName]) {
+                allPVZData[pvz].schedules[newName] = allPVZData[pvz].schedules[oldName];
+                delete allPVZData[pvz].schedules[oldName];
+            }
+        }
+        updatePVZEmployeesUI();
+        renderSchedule();
+        renderGlobalEmployeesTable();
+        saveToLocalStorage();
+        showNotification(`✅ Сотрудник обновлён`, false);
+    }
+    
+    function deleteGlobalEmployee(idx) {
+        if (!checkPassword()) return;
+        const emp = globalEmployees[idx];
+        if (confirm(`Удалить "${emp.name}"?`)) {
+            globalEmployees.splice(idx, 1);
+            for (let pvz in allPVZData) {
+                const idx2 = allPVZData[pvz].employees.indexOf(emp.name);
+                if (idx2 !== -1) allPVZData[pvz].employees.splice(idx2, 1);
+                delete allPVZData[pvz].schedules[emp.name];
+            }
+            updatePVZEmployeesUI();
+            renderSchedule();
+            renderGlobalEmployeesTable();
+            saveToLocalStorage();
+            showNotification(`❌ Сотрудник удалён`, false);
+        }
+    }
+    
+    function addGlobalEmployee() {
+        const name = document.getElementById("newEmpName")?.value.trim();
+        const email = document.getElementById("newEmpEmail")?.value.trim();
+        const phone = document.getElementById("newEmpPhone")?.value.trim();
+        const telegramId = document.getElementById("newEmpTelegram")?.value.trim();
+        
+        if (!name) { alert("Введите имя"); return; }
+        if (globalEmployees.some(e => e.name === name)) { alert("Такой сотрудник уже есть"); return; }
+        
+        globalEmployees.push({ name, email, phone, telegramId });
+        renderGlobalEmployeesTable();
+        updateAvailableEmployeesSelect();
+        document.getElementById("newEmpName").value = "";
+        document.getElementById("newEmpEmail").value = "";
+        document.getElementById("newEmpPhone").value = "";
+        document.getElementById("newEmpTelegram").value = "";
+        saveToLocalStorage();
+        showNotification(`✅ Сотрудник "${name}" добавлен`, false);
+    }
+    
+    function updateAvailableEmployeesSelect() {
+        const select = document.getElementById("availableEmployeesSelect");
+        if (!select) return;
+        const currentEmps = allPVZData[currentPVZ]?.employees || [];
+        const available = globalEmployees.filter(emp => !currentEmps.includes(emp.name));
+        select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+        available.forEach(emp => {
+            const option = document.createElement("option");
+            option.value = emp.name;
+            option.textContent = emp.name;
+            select.appendChild(option);
+        });
+    }
+    
+    function updatePVZEmployeesUI() {
+        const container = document.getElementById("pvzEmployeesList");
+        const span = document.getElementById("currentPVZName");
+        if (!container) return;
+        const employees = allPVZData[currentPVZ]?.employees || [];
+        span.textContent = currentPVZ;
+        if (employees.length === 0) {
+            container.innerHTML = '<span style="color:#64748b;">Нет сотрудников</span>';
+        } else {
+            container.innerHTML = employees.map(emp => `
+                <div class="pvz-employee-tag">
+                    ${escapeHtml(emp)}
+                    <button class="remove-from-pvz" data-name="${emp}">✕</button>
+                </div>
+            `).join('');
+        }
+        document.querySelectorAll('.remove-from-pvz').forEach(btn => {
+            btn.addEventListener('click', () => removeEmployeeFromPVZ(btn.dataset.name));
+        });
+        updateAvailableEmployeesSelect();
+        renderSchedule();
+    }
+    
+    function addEmployeeToPVZ() {
+        const select = document.getElementById("availableEmployeesSelect");
+        const empName = select.value;
+        if (!empName) { alert("Выберите сотрудника"); return; }
+        if (!allPVZData[currentPVZ].employees.includes(empName)) {
+            allPVZData[currentPVZ].employees.push(empName);
+            if (!allPVZData[currentPVZ].schedules[empName]) {
+                allPVZData[currentPVZ].schedules[empName] = {};
+            }
+            updatePVZEmployeesUI();
+            saveToLocalStorage();
+            showNotification(`✅ ${empName} добавлен`, false);
+        }
+    }
+    
+    function removeEmployeeFromPVZ(empName) {
+        if (!checkPassword()) return;
+        if (confirm(`Удалить "${empName}" из ПВЗ?`)) {
+            const idx = allPVZData[currentPVZ].employees.indexOf(empName);
+            if (idx !== -1) allPVZData[currentPVZ].employees.splice(idx, 1);
+            delete allPVZData[currentPVZ].schedules[empName];
+            updatePVZEmployeesUI();
+            saveToLocalStorage();
+            showNotification(`❌ ${empName} удалён`, false);
+        }
+    }
+    
+    function generateHeader(daysCount, year, month) {
+        let html = '<tr><th class="employee-col">Сотрудник</th>';
+        for (let d = 1; d <= daysCount; d++) {
+            const dayOfWeek = getDayOfWeek(year, month, d);
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            const isTodayDate = isToday(year, month, d);
+            html += `<th class="${isWeekend ? 'weekend' : 'weekday'} ${isTodayDate ? 'today-column' : ''}">
+                        <div class="day-number">${d}</div>
+                        <div class="weekday-name">${weekdays[dayOfWeek]}</div>
+                     </th>`;
+        }
+        html += '<th>📊</th>';
+        return html;
+    }
+    
+    function renderSchedule() {
+        const data = allPVZData[currentPVZ];
+        if (!data) return;
+        const year = selectedYear, month = selectedMonth;
+        const daysCount = new Date(year, month, 0).getDate();
+        const employees = [...data.employees];
+        
+        document.getElementById("tableHeader").innerHTML = generateHeader(daysCount, year, month);
+        
+        let bodyHtml = '';
+        for (let emp of employees) {
+            let workCount = 0;
+            let row = `<tr><td class="employee-col">${escapeHtml(emp)}</td>`;
+            for (let d = 1; d <= daysCount; d++) {
+                const key = `${year}-${month}-${d}`;
+                if (!data.schedules[emp]) {
+                    data.schedules[emp] = {};
+                }
+                const isWork = data.schedules[emp][key] === true;
+                if (isWork) workCount++;
+                const isTodayDate = isToday(year, month, d);
+                row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isTodayDate ? 'today-column' : ''}"
+                               data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">
+                            ${isWork ? '✅' : '❌'}
+                          </td>`;
+            }
+            row += `<td style="text-align:center; font-weight:700;">${workCount}</td></tr>`;
+            bodyHtml += row;
+        }
+        if (employees.length === 0) bodyHtml = '<tr><td colspan="40" style="text-align:center; padding:40px;">👀 Нет сотрудников в этом ПВЗ</td></tr>';
+        
+        document.getElementById("tableBody").innerHTML = bodyHtml;
+        document.getElementById("currentMonthTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${currentPVZ}`;
+    }
+    
+    function toggleStatus(e) {
+        let target = e.target;
+        while (target && target.tagName !== 'TD') target = target.parentElement;
+        if (!target || target.classList.contains('employee-col')) return;
+        
+        const emp = target.dataset.employee;
+        const year = parseInt(target.dataset.year);
+        const month = parseInt(target.dataset.month);
+        const day = parseInt(target.dataset.day);
+        const currentStatus = target.dataset.status === 'true';
+        if (!emp) return;
+        
+        const newStatus = !currentStatus;
+        
+        if (newStatus === true) {
+            const conflict = canEmployeeWork(emp, year, month, day, currentPVZ);
+            if (!conflict.canWork) {
+                showNotification(`⚠️ "${emp}" уже работает ${day}.${month}.${year} в ПВЗ "${conflict.conflictingPVZ}"`);
+                return;
+            }
+        }
+        
+        if (!allPVZData[currentPVZ].schedules[emp]) {
+            allPVZData[currentPVZ].schedules[emp] = {};
+        }
+        
+        const key = `${year}-${month}-${day}`;
+        allPVZData[currentPVZ].schedules[emp][key] = newStatus;
+        
+        saveToLocalStorage();
+        renderSchedule();
+        showNotification(`${emp}: ${newStatus ? '✅ рабочий день' : '❌ выходной'} на ${day}.${month}.${year}`, false);
+    }
+    
+    function renamePVZ(oldName, newName) {
+        if (!newName || newName === oldName) return false;
+        if (allPVZData[newName]) { alert("ПВЗ уже существует"); return false; }
+        allPVZData[newName] = allPVZData[oldName];
+        delete allPVZData[oldName];
+        if (currentPVZ === oldName) currentPVZ = newName;
+        renderTabs();
+        if (currentTab !== 'employees') {
+            updatePVZEmployeesUI();
+            renderSchedule();
+        }
+        saveToLocalStorage();
+        showNotification(`✅ ПВЗ переименован`, false);
+        return true;
+    }
+    
+    function editCurrentPVZName() {
+        if (!checkPassword()) return;
+        const newName = prompt("Новое название:", currentPVZ);
+        if (newName && newName !== currentPVZ) renamePVZ(currentPVZ, newName);
+    }
+    
+    function deleteCurrentPVZ() {
+        if (!checkPassword()) return;
+        if (Object.keys(allPVZData).length === 1) { alert("Нельзя удалить единственный ПВЗ"); return; }
+        if (confirm(`Удалить "${currentPVZ}"?`)) {
+            delete allPVZData[currentPVZ];
+            currentPVZ = Object.keys(allPVZData)[0];
+            renderTabs();
+            updatePVZEmployeesUI();
+            populateMonthSelect();
+            renderSchedule();
+            saveToLocalStorage();
+            showNotification(`❌ ПВЗ удалён`, false);
+        }
+    }
+    
+    function renderTabs() {
+        const container = document.getElementById("tabsContainer");
+        container.innerHTML = '';
+        
+        const empTab = document.createElement('button');
+        empTab.className = `tab ${currentTab === 'employees' ? 'active' : ''}`;
+        empTab.innerHTML = '👥 Все сотрудники';
+        empTab.onclick = () => switchTab('employees');
+        container.appendChild(empTab);
+        
+        for (let pvz in allPVZData) {
+            const tab = document.createElement('button');
+            tab.className = `tab ${currentTab === pvz ? 'active' : ''}`;
+            tab.innerHTML = pvz;
+            tab.onclick = () => switchTab(pvz);
+            container.appendChild(tab);
+        }
+        
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-tab-btn';
+        addBtn.innerHTML = '➕ Добавить ПВЗ';
+        addBtn.onclick = addNewPVZ;
+        container.appendChild(addBtn);
+        
+        const botBtn = document.createElement('button');
+        botBtn.className = 'add-tab-btn';
+        botBtn.innerHTML = '🤖 Настройка бота';
+        botBtn.onclick = () => openModal();
+        container.appendChild(botBtn);
+    }
+    
+    function switchTab(tabId) {
+        currentTab = tabId;
+        if (tabId === 'employees') {
+            document.getElementById("employeesTabContent").style.display = "block";
+            document.getElementById("pvzTabContent").style.display = "none";
+            renderGlobalEmployeesTable();
+        } else {
+            currentPVZ = tabId;
+            document.getElementById("employeesTabContent").style.display = "none";
+            document.getElementById("pvzTabContent").style.display = "block";
+            updatePVZEmployeesUI();
+            populateMonthSelect();
+            renderSchedule();
+        }
+        renderTabs();
+        saveToLocalStorage();
+    }
+    
+    function addNewPVZ() {
+        if (!checkPassword()) return;
+        let num = Object.keys(allPVZData).length + 1;
+        let name = `ПВЗ ${num}`;
+        while (allPVZData[name]) { num++; name = `ПВЗ ${num}`; }
+        allPVZData[name] = { employees: [], schedules: {} };
+        switchTab(name);
+        saveToLocalStorage();
+        showNotification(`✅ ПВЗ "${name}" добавлен`, false);
+    }
+    
+    function openModal() {
+        const modal = document.getElementById("botSettingsModal");
+        document.getElementById("botTokenInput").value = botToken;
+        modal.style.display = "block";
+    }
+    
+    function closeModal() {
+        document.getElementById("botSettingsModal").style.display = "none";
+    }
+    
+    function saveBotToken() {
+        botToken = document.getElementById("botTokenInput").value.trim();
+        localStorage.setItem(BOT_TOKEN_KEY, botToken);
+        closeModal();
+        showNotification(botToken ? "✅ Токен сохранён" : "❌ Токен удалён", false);
+    }
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
+    }
+    
+    function exportData() {
+        const data = { allPVZData, globalEmployees, exportDate: new Date().toISOString() };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `pvz_backup_${new Date().toISOString().slice(0,19)}.json`;
+        link.click();
+        URL.revokeObjectURL(link);
+        showNotification("✅ Данные экспортированы", false);
+    }
+    
+    // ========== ИНИЦИАЛИЗАЦИЯ ==========
+    function init() {
+        loadFromLocalStorage();
+        renderTabs();
+        
+        document.getElementById("addEmployeeBtnGlobal")?.addEventListener("click", addGlobalEmployee);
+        document.getElementById("addToPVZBtn")?.addEventListener("click", addEmployeeToPVZ);
+        document.getElementById("editPVZNameBtn")?.addEventListener("click", editCurrentPVZName);
+        document.getElementById("deletePVZBtn")?.addEventListener("click", deleteCurrentPVZ);
+        document.getElementById("monthSelect")?.addEventListener("change", (e) => {
+            const [y, m] = e.target.value.split("-");
+            selectedYear = parseInt(y);
+            selectedMonth = parseInt(m);
+            renderSchedule();
+        });
+        document.getElementById("goToCurrentMonthBtn")?.addEventListener("click", () => {
+            const now = new Date();
+            selectedYear = now.getFullYear();
+            selectedMonth = now.getMonth() + 1;
+            document.getElementById("monthSelect").value = `${selectedYear}-${selectedMonth}`;
+            renderSchedule();
+        });
+        document.getElementById("scheduleGrid")?.addEventListener("click", toggleStatus);
+        document.getElementById("exportAllBtn")?.addEventListener("click", exportData);
+        document.getElementById("sendTomorrowNotifyBtn")?.addEventListener("click", sendTomorrowNotifications);
+        document.getElementById("sendTestNotifyBtn")?.addEventListener("click", sendTestNotification);
+        
+        const modal = document.getElementById("botSettingsModal");
+        document.querySelector(".close")?.addEventListener("click", closeModal);
+        window.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+        document.getElementById("saveBotTokenBtn")?.addEventListener("click", saveBotToken);
+        
+        switchTab(currentPVZ);
+    }
+    
+    init();
+</script>
+</body>
+</html>
