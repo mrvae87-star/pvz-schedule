@@ -479,6 +479,8 @@
             cursor: pointer;
         }
     </style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div class="container">
@@ -565,6 +567,25 @@
 </div>
 
 <script>
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
+  authDomain: "pvz-schedule-38959.firebaseapp.com",
+  projectId: "pvz-schedule-38959",
+  storageBucket: "pvz-schedule-38959.firebasestorage.app",
+  messagingSenderId: "65668659955",
+  appId: "1:65668659955:web:18cd4fe18dcf91e3aa1586"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
     // ========== КОНСТАНТЫ ==========
     const ADMIN_PASSWORD = "6535564";
     const STORAGE_KEY = "pvzScheduleData";
