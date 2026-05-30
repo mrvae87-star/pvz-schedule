@@ -1000,13 +1000,14 @@
         <div class="employees-table-container">
             <table class="employees-table">
                 <thead>
-                    <tr><th>Имя</th><th>Email</th><th>Телефон</th><th>Telegram ID</th><th>Действия</th></tr>
+                    <tr><th>Имя</th><th>Фамилия</th><th>Email</th><th>Телефон</th><th>Telegram ID</th><th>Действия</th></tr>
                 </thead>
                 <tbody id="employeesTableBody"></tbody>
             </table>
         </div>
         <div class="add-employee-form">
             <input type="text" id="newEmpName" placeholder="Имя *">
+            <input type="text" id="newEmpSurname" placeholder="Фамилия *">
             <input type="email" id="newEmpEmail" placeholder="Email">
             <input type="tel" id="newEmpPhone" placeholder="Телефон">
             <input type="text" id="newEmpTelegram" placeholder="Telegram ID">
@@ -1124,7 +1125,7 @@
                             <input type="number" id="extraHourlyRate" placeholder="200" step="50" value="200" style="width:90px;">
                         </div>
                         <div class="form-field-compact">
-                            <label>📝 О Комментарий</label>
+                            <label>📝 Комментарий</label>
                             <input type="text" id="extraDesc" placeholder="Кратко" style="width:120px;">
                         </div>
                         <button id="addExtraWorkBtn">✅ Добавить</button>
@@ -1232,7 +1233,7 @@
     let selectedYear = new Date().getFullYear();
     let selectedMonth = new Date().getMonth() + 1;
     let botToken = "";
-    let globalEmployees = [];
+    let globalEmployees = []; // Каждый элемент: { name: "Иван", surname: "Иванов", fullName: "Иван Иванов", ... }
     let isLoading = true;
     
     let salaryData = {};
@@ -1268,12 +1269,12 @@
         return salaryData[employeeName][monthKey];
     }
     
-    function calculateWorkDaysForEmployee(employeeName, year, month) {
+    function calculateWorkDaysForEmployee(employeeFullName, year, month) {
         let totalWorkDays = 0;
         const daysInMonth = new Date(year, month, 0).getDate();
         
         for (let pvzName in allPVZData) {
-            const schedules = allPVZData[pvzName].schedules[employeeName];
+            const schedules = allPVZData[pvzName].schedules[employeeFullName];
             if (!schedules) continue;
             
             for (let day = 1; day <= daysInMonth; day++) {
@@ -1286,9 +1287,9 @@
         return totalWorkDays;
     }
     
-    function calculateTotalExtraForMonth(employeeName, year, month) {
+    function calculateTotalExtraForMonth(employeeFullName, year, month) {
         let total = 0;
-        const works = extraWorks[employeeName] || [];
+        const works = extraWorks[employeeFullName] || [];
         for (let work of works) {
             const [workYear, workMonth] = work.date.split('-');
             if (parseInt(workYear) === year && parseInt(workMonth) === month) {
@@ -1301,11 +1302,11 @@
     function initSalaryData() {
         const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
         for (let emp of globalEmployees) {
-            if (!salaryData[emp.name]) {
-                salaryData[emp.name] = {};
+            if (!salaryData[emp.fullName]) {
+                salaryData[emp.fullName] = {};
             }
-            if (!salaryData[emp.name][currentKey]) {
-                salaryData[emp.name][currentKey] = {
+            if (!salaryData[emp.fullName][currentKey]) {
+                salaryData[emp.fullName][currentKey] = {
                     rate: 1500,
                     traineeDays: 0,
                     traineeRate: 800,
@@ -1317,12 +1318,12 @@
         }
     }
     
-    function calculateNetSalary(empName, year, month) {
-        const monthData = getEmployeeMonthData(empName, year, month);
-        const workDays = calculateWorkDaysForEmployee(empName, year, month);
+    function calculateNetSalary(empFullName, year, month) {
+        const monthData = getEmployeeMonthData(empFullName, year, month);
+        const workDays = calculateWorkDaysForEmployee(empFullName, year, month);
         const baseSalary = workDays * monthData.rate;
         const traineeBonus = monthData.traineeDays * monthData.traineeRate;
-        const extraAmount = calculateTotalExtraForMonth(empName, year, month);
+        const extraAmount = calculateTotalExtraForMonth(empFullName, year, month);
         const total = baseSalary + extraAmount + traineeBonus - monthData.advance - monthData.moneyTransferred - monthData.fine;
         return Math.max(0, total);
     }
@@ -1355,22 +1356,22 @@
         tbody.innerHTML = "";
         
         for (let emp of globalEmployees) {
-            const monthData = getEmployeeMonthData(emp.name, currentDashboardYear, currentDashboardMonth);
-            const workDays = calculateWorkDaysForEmployee(emp.name, currentDashboardYear, currentDashboardMonth);
-            const extraThisMonth = calculateTotalExtraForMonth(emp.name, currentDashboardYear, currentDashboardMonth);
-            const netSalary = calculateNetSalary(emp.name, currentDashboardYear, currentDashboardMonth);
+            const monthData = getEmployeeMonthData(emp.fullName, currentDashboardYear, currentDashboardMonth);
+            const workDays = calculateWorkDaysForEmployee(emp.fullName, currentDashboardYear, currentDashboardMonth);
+            const extraThisMonth = calculateTotalExtraForMonth(emp.fullName, currentDashboardYear, currentDashboardMonth);
+            const netSalary = calculateNetSalary(emp.fullName, currentDashboardYear, currentDashboardMonth);
             
             const row = tbody.insertRow();
-            row.insertCell(0).innerHTML = `<strong>${escapeHtml(emp.name)}</strong>`;
+            row.insertCell(0).innerHTML = `<strong>${escapeHtml(emp.fullName)}</strong>`;
             row.insertCell(1).innerHTML = `<span class="readonly-cell" style="display:inline-block; width:100%; text-align:center; font-weight:700;">${workDays}</span>`;
-            row.insertCell(2).innerHTML = `<input type="number" class="salary-rate" data-name="${emp.name}" value="${monthData.rate}" step="100">`;
-            row.insertCell(3).innerHTML = `<span class="extra-display" data-name="${emp.name}" style="font-weight:700; color:#2563eb;">${extraThisMonth}</span>`;
-            row.insertCell(4).innerHTML = `<input type="number" class="salary-trainee-days" data-name="${emp.name}" value="${monthData.traineeDays}" step="1">`;
-            row.insertCell(5).innerHTML = `<input type="number" class="salary-trainee-rate" data-name="${emp.name}" value="${monthData.traineeRate}" step="100">`;
-            row.insertCell(6).innerHTML = `<input type="number" class="salary-advance" data-name="${emp.name}" value="${monthData.advance}" step="500">`;
-            row.insertCell(7).innerHTML = `<input type="number" class="salary-money-transferred" data-name="${emp.name}" value="${monthData.moneyTransferred}" step="500">`;
-            row.insertCell(8).innerHTML = `<input type="number" class="salary-fine" data-name="${emp.name}" value="${monthData.fine}" step="100">`;
-            row.insertCell(9).innerHTML = `<span class="net-salary-amount" data-name="${emp.name}" style="font-weight:700; color:#15803d;">${netSalary} ₽</span>`;
+            row.insertCell(2).innerHTML = `<input type="number" class="salary-rate" data-name="${emp.fullName}" value="${monthData.rate}" step="100">`;
+            row.insertCell(3).innerHTML = `<span class="extra-display" data-name="${emp.fullName}" style="font-weight:700; color:#2563eb;">${extraThisMonth}</span>`;
+            row.insertCell(4).innerHTML = `<input type="number" class="salary-trainee-days" data-name="${emp.fullName}" value="${monthData.traineeDays}" step="1">`;
+            row.insertCell(5).innerHTML = `<input type="number" class="salary-trainee-rate" data-name="${emp.fullName}" value="${monthData.traineeRate}" step="100">`;
+            row.insertCell(6).innerHTML = `<input type="number" class="salary-advance" data-name="${emp.fullName}" value="${monthData.advance}" step="500">`;
+            row.insertCell(7).innerHTML = `<input type="number" class="salary-money-transferred" data-name="${emp.fullName}" value="${monthData.moneyTransferred}" step="500">`;
+            row.insertCell(8).innerHTML = `<input type="number" class="salary-fine" data-name="${emp.fullName}" value="${monthData.fine}" step="100">`;
+            row.insertCell(9).innerHTML = `<span class="net-salary-amount" data-name="${emp.fullName}" style="font-weight:700; color:#15803d;">${netSalary} ₽</span>`;
         }
         
         updateTotalSalary();
@@ -1512,14 +1513,14 @@
     }
     
     async function addExtraWork() {
-        const empName = document.getElementById("extraEmployeeSelect").value;
+        const empFullName = document.getElementById("extraEmployeeSelect").value;
         const pvzName = document.getElementById("extraPVZSelect").value;
         const date = document.getElementById("extraDate").value;
         const hours = parseFloat(document.getElementById("extraHours").value);
         const hourlyRate = parseFloat(document.getElementById("extraHourlyRate").value);
         const desc = document.getElementById("extraDesc").value.trim();
         
-        if (!empName) { alert("Выберите сотрудника"); return; }
+        if (!empFullName) { alert("Выберите сотрудника"); return; }
         if (!pvzName) { alert("Выберите ПВЗ"); return; }
         if (!date) { alert("Выберите дату"); return; }
         if (isNaN(hours) || hours <= 0) { alert("Введите корректное количество часов"); return; }
@@ -1528,7 +1529,7 @@
         const amount = Math.round(hours * hourlyRate);
         
         const newWork = {
-            id: Date.now() + Math.random() + empName,
+            id: Date.now() + Math.random() + empFullName,
             pvz: pvzName,
             date: date,
             hours: hours,
@@ -1537,8 +1538,8 @@
             amount: amount
         };
         
-        if (!extraWorks[empName]) extraWorks[empName] = [];
-        extraWorks[empName].push(newWork);
+        if (!extraWorks[empFullName]) extraWorks[empFullName] = [];
+        extraWorks[empFullName].push(newWork);
         
         await autoSaveSalary();
         renderExtraWorksTable();
@@ -1549,7 +1550,7 @@
         document.getElementById("extraHourlyRate").value = "200";
         document.getElementById("extraDesc").value = "";
         
-        showNotification(`✅ Добавлена подработка: ${empName} | ${pvzName} | ${hours}ч × ${hourlyRate}₽ = ${amount}₽`, false);
+        showNotification(`✅ Добавлена подработка: ${empFullName} | ${pvzName} | ${hours}ч × ${hourlyRate}₽ = ${amount}₽`, false);
     }
     
     function populateExtraEmployeeSelect() {
@@ -1558,8 +1559,8 @@
         select.innerHTML = '<option value="">-- Выберите --</option>';
         globalEmployees.forEach(emp => {
             const option = document.createElement("option");
-            option.value = emp.name;
-            option.textContent = emp.name;
+            option.value = emp.fullName;
+            option.textContent = emp.fullName;
             select.appendChild(option);
         });
     }
@@ -1623,7 +1624,7 @@
         
         for (let emp of globalEmployees) {
             let rowHtml = '<tr>';
-            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.name)}</div></td>`;
+            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</div></td>`;
             let workDaysCount = 0;
             
             for (let day = 1; day <= daysInMonth; day++) {
@@ -1635,7 +1636,7 @@
                 // Ищем ПВЗ для этого дня
                 for (let pvz in allPVZData) {
                     const key = `${analyticsYear}-${analyticsMonth}-${day}`;
-                    if (allPVZData[pvz].schedules[emp.name]?.[key] === true) {
+                    if (allPVZData[pvz].schedules[emp.fullName]?.[key] === true) {
                         pvzName = pvz;
                         workDaysCount++;
                         break;
@@ -1731,14 +1732,51 @@
     
     function getDefaultEmployees() {
         return [
-            { name: "Анна Смирнова", email: "anna@example.com", phone: "+7-999-123-45-67", telegramId: "" },
-            { name: "Иван Козлов", email: "ivan@example.com", phone: "+7-999-234-56-78", telegramId: "" },
-            { name: "Мария Орлова", email: "maria@example.com", phone: "+7-999-345-67-89", telegramId: "" },
-            { name: "Дмитрий Павлов", email: "dmitry@example.com", phone: "+7-999-456-78-90", telegramId: "" },
-            { name: "Елена Ветрова", email: "elena@example.com", phone: "+7-999-567-89-01", telegramId: "" },
-            { name: "Зинаида Петрова", email: "zina@example.com", phone: "+7-999-678-90-12", telegramId: "" },
-            { name: "Дарья Сидорова", email: "darya@example.com", phone: "+7-999-789-01-23", telegramId: "" }
+            { name: "Анна", surname: "Смирнова", fullName: "Анна Смирнова", email: "anna@example.com", phone: "+7-999-123-45-67", telegramId: "" },
+            { name: "Иван", surname: "Козлов", fullName: "Иван Козлов", email: "ivan@example.com", phone: "+7-999-234-56-78", telegramId: "" },
+            { name: "Мария", surname: "Орлова", fullName: "Мария Орлова", email: "maria@example.com", phone: "+7-999-345-67-89", telegramId: "" },
+            { name: "Дмитрий", surname: "Павлов", fullName: "Дмитрий Павлов", email: "dmitry@example.com", phone: "+7-999-456-78-90", telegramId: "" },
+            { name: "Елена", surname: "Ветрова", fullName: "Елена Ветрова", email: "elena@example.com", phone: "+7-999-567-89-01", telegramId: "" },
+            { name: "Зинаида", surname: "Петрова", fullName: "Зинаида Петрова", email: "zina@example.com", phone: "+7-999-678-90-12", telegramId: "" },
+            { name: "Дарья", surname: "Сидорова", fullName: "Дарья Сидорова", email: "darya@example.com", phone: "+7-999-789-01-23", telegramId: "" }
         ];
+    }
+    
+    // Функция для миграции старых данных (где имя было в одном поле)
+    async function migrateOldEmployeeData(oldEmployees) {
+        if (!oldEmployees || oldEmployees.length === 0) return getDefaultEmployees();
+        
+        // Проверяем, есть ли у первого сотрудника поле surname
+        if (oldEmployees[0] && oldEmployees[0].surname !== undefined) {
+            // Уже новая структура
+            return oldEmployees;
+        }
+        
+        console.log("Миграция старых данных сотрудников...");
+        const newEmployees = [];
+        for (const emp of oldEmployees) {
+            let name = emp.name || "";
+            let surname = "";
+            
+            // Пытаемся разделить полное имя на имя и фамилию
+            const parts = name.trim().split(' ');
+            if (parts.length >= 2) {
+                name = parts[0];
+                surname = parts.slice(1).join(' ');
+            } else {
+                surname = name; // Если только одно слово, дублируем
+            }
+            
+            newEmployees.push({
+                name: name,
+                surname: surname,
+                fullName: emp.name, // сохраняем оригинальное полное имя
+                email: emp.email || "",
+                phone: emp.phone || "",
+                telegramId: emp.telegramId || ""
+            });
+        }
+        return newEmployees;
     }
     
     function getDefaultPVZData() {
@@ -1782,7 +1820,10 @@
         try {
             const employeesDoc = await db.collection("appData").doc("globalEmployees").get();
             if (employeesDoc.exists) {
-                globalEmployees = employeesDoc.data().employees || [];
+                const oldEmployees = employeesDoc.data().employees || [];
+                globalEmployees = await migrateOldEmployeeData(oldEmployees);
+                // Сохраняем мигрированные данные обратно
+                await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
             } else {
                 globalEmployees = getDefaultEmployees();
                 await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
@@ -1915,15 +1956,15 @@
         
         let success = 0, fail = 0;
         
-        for (let empName in employeeShifts) {
-            const employee = globalEmployees.find(e => e.name === empName);
+        for (let empFullName in employeeShifts) {
+            const employee = globalEmployees.find(e => e.fullName === empFullName);
             if (!employee || !employee.telegramId) {
                 fail++;
                 continue;
             }
-            const shifts = employeeShifts[empName];
+            const shifts = employeeShifts[empFullName];
             const shiftText = shifts.map(s => `🏪 ${s.pvzName} — ${s.date}`).join("\n");
-            const message = `🔔 <b>Напоминание о смене!</b>\n\n${empName}, завтра у вас смена:\n${shiftText}\n\nПриходите вовремя!`;
+            const message = `🔔 <b>Напоминание о смене!</b>\n\n${empFullName}, завтра у вас смена:\n${shiftText}\n\nПриходите вовремя!`;
             const sent = await sendTelegramMessage(employee.telegramId, message);
             if (sent) success++; else fail++;
         }
@@ -1945,11 +1986,11 @@
         showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false);
     }
     
-    function canEmployeeWork(employee, year, month, day, targetPVZ) {
+    function canEmployeeWork(employeeFullName, year, month, day, targetPVZ) {
         for (let pvzName in allPVZData) {
             if (pvzName === targetPVZ) continue;
             const key = `${year}-${month}-${day}`;
-            if (allPVZData[pvzName].schedules[employee]?.[key] === true) {
+            if (allPVZData[pvzName].schedules[employeeFullName]?.[key] === true) {
                 return { canWork: false, conflictingPVZ: pvzName };
             }
         }
@@ -1988,8 +2029,9 @@
         tbody.innerHTML = globalEmployees.map((emp, idx) => `
             <tr>
                 <td><strong>${escapeHtml(emp.name)}</strong></td>
-                <td>${escapeHtml(emp.email || '—')}</div></td>
-                <td>${escapeHtml(emp.phone || '—')}</div></td>
+                <td><strong>${escapeHtml(emp.surname)}</strong></div></td>
+                <td>${escapeHtml(emp.email || '—')}</div></div></td>
+                <td>${escapeHtml(emp.phone || '—')}</div></div></td>
                 <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</div></div></td>
                 <td>
                     <button class="edit-employee-btn" data-idx="${idx}">✏️</button>
@@ -2011,34 +2053,42 @@
         const emp = globalEmployees[idx];
         const newName = prompt("Имя:", emp.name);
         if (!newName) return;
+        const newSurname = prompt("Фамилия:", emp.surname);
+        if (!newSurname) return;
         const newEmail = prompt("Email:", emp.email || "");
         const newPhone = prompt("Телефон:", emp.phone || "");
         const newTelegram = prompt("Telegram ID:", emp.telegramId || "");
         
-        const oldName = emp.name;
+        const oldFullName = emp.fullName;
         emp.name = newName;
+        emp.surname = newSurname;
+        emp.fullName = `${newName} ${newSurname}`;
         emp.email = newEmail || "";
         emp.phone = newPhone || "";
         emp.telegramId = newTelegram || "";
         
+        // Обновляем ссылки во всех ПВЗ
         for (let pvz in allPVZData) {
-            const idx2 = allPVZData[pvz].employees.indexOf(oldName);
-            if (idx2 !== -1) allPVZData[pvz].employees[idx2] = newName;
-            if (allPVZData[pvz].schedules[oldName]) {
-                allPVZData[pvz].schedules[newName] = allPVZData[pvz].schedules[oldName];
-                delete allPVZData[pvz].schedules[oldName];
+            const idx2 = allPVZData[pvz].employees.indexOf(oldFullName);
+            if (idx2 !== -1) allPVZData[pvz].employees[idx2] = emp.fullName;
+            if (allPVZData[pvz].schedules[oldFullName]) {
+                allPVZData[pvz].schedules[emp.fullName] = allPVZData[pvz].schedules[oldFullName];
+                delete allPVZData[pvz].schedules[oldFullName];
             }
         }
         
-        if (salaryData[oldName]) {
-            salaryData[newName] = salaryData[oldName];
-            delete salaryData[oldName];
+        // Обновляем в зарплатных данных
+        if (salaryData[oldFullName]) {
+            salaryData[emp.fullName] = salaryData[oldFullName];
+            delete salaryData[oldFullName];
         }
         
-        if (extraWorks[oldName]) {
-            extraWorks[newName] = extraWorks[oldName];
-            delete extraWorks[oldName];
+        // Обновляем в подработках
+        if (extraWorks[oldFullName]) {
+            extraWorks[emp.fullName] = extraWorks[oldFullName];
+            delete extraWorks[oldFullName];
         }
+        
         updatePVZEmployeesUI();
         renderSchedule();
         renderGlobalEmployeesTable();
@@ -2057,15 +2107,15 @@
     async function deleteGlobalEmployee(idx) {
         if (!checkPassword()) return;
         const emp = globalEmployees[idx];
-        if (confirm(`Удалить "${emp.name}"?`)) {
+        if (confirm(`Удалить "${emp.fullName}"?`)) {
             globalEmployees.splice(idx, 1);
             for (let pvz in allPVZData) {
-                const idx2 = allPVZData[pvz].employees.indexOf(emp.name);
+                const idx2 = allPVZData[pvz].employees.indexOf(emp.fullName);
                 if (idx2 !== -1) allPVZData[pvz].employees.splice(idx2, 1);
-                delete allPVZData[pvz].schedules[emp.name];
+                delete allPVZData[pvz].schedules[emp.fullName];
             }
-            delete salaryData[emp.name];
-            delete extraWorks[emp.name];
+            delete salaryData[emp.fullName];
+            delete extraWorks[emp.fullName];
             updatePVZEmployeesUI();
             renderSchedule();
             renderGlobalEmployeesTable();
@@ -2084,18 +2134,21 @@
     
     async function addGlobalEmployee() {
         const name = document.getElementById("newEmpName")?.value.trim();
+        const surname = document.getElementById("newEmpSurname")?.value.trim();
         const email = document.getElementById("newEmpEmail")?.value.trim();
         const phone = document.getElementById("newEmpPhone")?.value.trim();
         const telegramId = document.getElementById("newEmpTelegram")?.value.trim();
         
         if (!name) { alert("Введите имя"); return; }
-        if (globalEmployees.some(e => e.name === name)) { alert("Такой сотрудник уже есть"); return; }
+        if (!surname) { alert("Введите фамилию"); return; }
+        const fullName = `${name} ${surname}`;
+        if (globalEmployees.some(e => e.fullName === fullName)) { alert("Такой сотрудник уже есть"); return; }
         
-        globalEmployees.push({ name, email, phone, telegramId });
+        globalEmployees.push({ name, surname, fullName, email, phone, telegramId });
         
         const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
-        salaryData[name] = {};
-        salaryData[name][currentKey] = {
+        salaryData[fullName] = {};
+        salaryData[fullName][currentKey] = {
             rate: 1500,
             traineeDays: 0,
             traineeRate: 800,
@@ -2104,7 +2157,7 @@
             fine: 0
         };
         
-        extraWorks[name] = [];
+        extraWorks[fullName] = [];
         renderGlobalEmployeesTable();
         if (currentTab === 'dashboard') {
             renderSalaryTable();
@@ -2115,23 +2168,24 @@
         }
         updateAvailableEmployeesSelect();
         document.getElementById("newEmpName").value = "";
+        document.getElementById("newEmpSurname").value = "";
         document.getElementById("newEmpEmail").value = "";
         document.getElementById("newEmpPhone").value = "";
         document.getElementById("newEmpTelegram").value = "";
         await saveAndSync();
-        showNotification(`✅ Сотрудник "${name}" добавлен`, false);
+        showNotification(`✅ Сотрудник "${fullName}" добавлен`, false);
     }
     
     function updateAvailableEmployeesSelect() {
         const select = document.getElementById("availableEmployeesSelect");
         if (!select) return;
         const currentEmps = allPVZData[currentPVZ]?.employees || [];
-        const available = globalEmployees.filter(emp => !currentEmps.includes(emp.name));
+        const available = globalEmployees.filter(emp => !currentEmps.includes(emp.fullName));
         select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
         available.forEach(emp => {
             const option = document.createElement("option");
-            option.value = emp.name;
-            option.textContent = emp.name;
+            option.value = emp.fullName;
+            option.textContent = emp.fullName;
             select.appendChild(option);
         });
     }
@@ -2161,34 +2215,34 @@
     
     async function addEmployeeToPVZ() {
         const select = document.getElementById("availableEmployeesSelect");
-        const empName = select.value;
-        if (!empName) { alert("Выберите сотрудника"); return; }
-        if (!allPVZData[currentPVZ].employees.includes(empName)) {
-            allPVZData[currentPVZ].employees.push(empName);
-            if (!allPVZData[currentPVZ].schedules[empName]) {
-                allPVZData[currentPVZ].schedules[empName] = {};
+        const empFullName = select.value;
+        if (!empFullName) { alert("Выберите сотрудника"); return; }
+        if (!allPVZData[currentPVZ].employees.includes(empFullName)) {
+            allPVZData[currentPVZ].employees.push(empFullName);
+            if (!allPVZData[currentPVZ].schedules[empFullName]) {
+                allPVZData[currentPVZ].schedules[empFullName] = {};
             }
             updatePVZEmployeesUI();
             if (currentTab === 'analytics') {
                 renderAnalytics();
             }
             await saveAndSync();
-            showNotification(`✅ ${empName} добавлен`, false);
+            showNotification(`✅ ${empFullName} добавлен`, false);
         }
     }
     
-    async function removeEmployeeFromPVZ(empName) {
+    async function removeEmployeeFromPVZ(empFullName) {
         if (!checkPassword()) return;
-        if (confirm(`Удалить "${empName}" из ПВЗ?`)) {
-            const idx = allPVZData[currentPVZ].employees.indexOf(empName);
+        if (confirm(`Удалить "${empFullName}" из ПВЗ?`)) {
+            const idx = allPVZData[currentPVZ].employees.indexOf(empFullName);
             if (idx !== -1) allPVZData[currentPVZ].employees.splice(idx, 1);
-            delete allPVZData[currentPVZ].schedules[empName];
+            delete allPVZData[currentPVZ].schedules[empFullName];
             updatePVZEmployeesUI();
             if (currentTab === 'analytics') {
                 renderAnalytics();
             }
             await saveAndSync();
-            showNotification(`❌ ${empName} удалён`, false);
+            showNotification(`❌ ${empFullName} удалён`, false);
         }
     }
     
