@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>График сотрудников по ПВЗ</title>
+    <title>График сотрудников по ПВЗ + Дашборд ЗП</title>
     <style>
         * {
             box-sizing: border-box;
@@ -30,6 +30,26 @@
             gap: 12px;
             flex-wrap: wrap;
             justify-content: space-between;
+        }
+        
+        .dashboard-corner-btn {
+            background: rgba(100, 116, 139, 0.1);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dashboard-corner-btn:hover {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
         }
         
         .notification {
@@ -186,7 +206,6 @@
             color: #15803d;
         }
         
-        /* Блок уведомлений во вкладке сотрудников */
         .notification-section {
             background: #f1f5f9;
             border-radius: 20px;
@@ -493,7 +512,7 @@
             margin-bottom: 20px;
             color: #0f172a;
         }
-        .modal input {
+        .modal input, .modal select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -581,20 +600,347 @@
         .main-content {
             display: none;
         }
-        
-        .action-buttons {
+
+        .dashboard-container {
+            padding: 20px 0;
+        }
+        .salary-table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        .salary-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            min-width: 1100px;
+        }
+        .salary-table th, .salary-table td {
+            border: 1px solid #cbd5e1;
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .salary-table th {
+            background: #1e293b;
+            color: white;
+            font-weight: 600;
+        }
+        .salary-table input {
+            width: 100px;
+            padding: 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .salary-table .readonly-cell {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        .dashboard-header {
             display: flex;
-            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .dashboard-password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2100;
+            display: flex;
+            justify-content: center;
             align-items: center;
         }
-        .export-btn {
-            background: #e2e8f0;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-size: 0.8rem;
+        .dashboard-password-card {
+            background: white;
+            padding: 30px;
+            border-radius: 28px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
         }
+        .dashboard-month-selector {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f1f5f9;
+            padding: 8px 20px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        .total-salary-wrapper {
+            margin-top: 16px;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .total-salary-row {
+            background: #fef9c3;
+            padding: 12px 24px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: right;
+            border: 2px solid #eab308;
+            display: inline-block;
+            min-width: 280px;
+        }
+        .salary-note {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 16px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+        .extra-work-section {
+            margin-top: 30px;
+            border-top: 2px dashed #cbd5e1;
+            padding-top: 20px;
+        }
+        .extra-work-form {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: flex-end;
+        }
+        .extra-work-form input, .extra-work-form select {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            font-size: 0.85rem;
+        }
+        .extra-work-form select {
+            min-width: 140px;
+        }
+        .extra-work-form input {
+            min-width: 110px;
+        }
+        .extra-work-form button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .extra-work-form label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .form-field-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .extra-work-list {
+            overflow-x: auto;
+        }
+        .extra-work-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .extra-work-table th {
+            background: #e2e8f0;
+            padding: 10px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        .extra-work-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.85rem;
+        }
+        .delete-extra-btn {
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .dashboard-sub-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .sub-tab {
+            background: none;
+            border: none;
+            padding: 6px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .sub-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        /* ========== АНАЛИТИКА - ИСПРАВЛЕННАЯ ========== */
+        .analytics-container {
+            padding: 20px 0;
+        }
+        .analytics-header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+        }
+        .analytics-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+        .analytics-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 16px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+        }
+        .analytics-controls select {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .analytics-table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 600px;
+        }
+        .analytics-table th {
+            background: #1e293b;
+            color: white;
+            padding: 10px 6px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border: 1px solid #334155;
+        }
+        .analytics-table td {
+            border: 1px solid #e2e8f0;
+            padding: 8px 4px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .employee-name-cell {
+            background: #f8fafc;
+            font-weight: 700;
+            text-align: left !important;
+            padding-left: 12px !important;
+            position: sticky;
+            left: 0;
+            background-color: #f8fafc;
+            z-index: 5;
+            min-width: 140px;
+        }
+        .work-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: #dcfce7;
+            color: #15803d;
+        }
+        .off-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .pvz-name-small {
+            font-size: 0.65rem;
+            color: #0369a1;
+            margin-top: 3px;
+            display: block;
+            white-space: nowrap;
+        }
+        .today-highlight {
+            background-color: #fff3bf !important;
+        }
+        .legend-analytics {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 10px 16px;
+            background: #f8fafc;
+            border-radius: 40px;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+        }
+        .legend-analytics span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .legend-dot.work { background: #dcfce7; border: 1px solid #15803d; }
+        .legend-dot.off { background: #fee2e2; border: 1px solid #991b1b; }
+        .legend-dot.today { background: #fff3bf; border: 1px solid #f59e0b; }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -613,17 +959,14 @@
 
 <div id="mainAppContent" class="main-content">
 <div class="container">
-    <h1>🏪 График сотрудников
-        <div class="action-buttons">
-            <button id="exportAllBtn" class="export-btn">💾 Экспорт данных</button>
-        </div>
+    <h1>
+        🏪 График сотрудников
+        <button id="dashboardCornerBtn" class="dashboard-corner-btn">💰 Дашборд</button>
     </h1>
        
     <div class="tabs-container" id="tabsContainer"></div>
     
-    <!-- Вкладка "Все сотрудники" - теперь здесь все уведомления и настройки бота -->
     <div id="employeesTabContent" style="display: none;">
-        <!-- Блок уведомлений и настройки бота -->
         <div class="notification-section">
             <h3>📨 Telegram уведомления</h3>
             <div class="notification-buttons">
@@ -651,7 +994,6 @@
         <p style="font-size: 0.75rem; color: #64748b; margin-top: 8px;">💡 Telegram ID можно узнать у бота <strong>@userinfobot</strong></p>
     </div>
     
-    <!-- Вкладки ПВЗ - теперь только сотрудники и график, без уведомлений -->
     <div id="pvzTabContent" style="display: none;">
         <div class="pvz-employees-management">
             <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span></h3>
@@ -685,13 +1027,151 @@
             <button id="deletePVZBtn" class="delete-pvz-btn">🗑 Удалить ПВЗ</button>
         </div>
     </div>
+
+    <div id="dashboardTabContent" style="display: none;">
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <h2>💰 Расчётная плата сотрудников</h2>
+            </div>
+            <div class="dashboard-sub-tabs">
+                <button class="sub-tab active" data-subtab="main">📊 Основной расчёт</button>
+                <button class="sub-tab" data-subtab="extra">📋 Подработки</button>
+            </div>
+            
+            <div id="dashboardMainTab">
+                <div class="dashboard-month-selector">
+                    <label>📅 Месяц расчёта:</label>
+                    <select id="dashboardMonthSelect"></select>
+                    <button id="refreshSalaryBtn" style="background:#3b82f6; color:white; border:none; padding:6px 16px; border-radius:40px; cursor:pointer;">🔄 Обновить рабочие дни</button>
+                </div>
+                <div class="salary-table-wrapper">
+                    <table class="salary-table" id="salaryTable">
+                        <thead>
+                            <tr>
+                                <th>Имя сотрудника</th>
+                                <th>Раб. дней</th>
+                                <th>Ставка руб.</th>
+                                <th>Подработка</th>
+                                <th>Дней стажер</th>
+                                <th>Ставка стажер</th>
+                                <th>Аванс руб.</th>
+                                <th>Перевод на счет</th>
+                                <th>Штраф руб.</th>
+                                <th>Итого на руки</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salaryTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="total-salary-wrapper">
+                    <div class="total-salary-row">
+                        💰 Итого за месяц: <span id="totalSalaryAmount">0</span> ₽
+                    </div>
+                </div>
+                <div class="salary-note">
+                    📌 Итого на руки = (Раб. дней × Ставка) + Подработка + (Дней стажер × Ставка стажер) − Аванс − Перевод на счет − Штраф<br>
+                    ⚡ Ставки сохраняются для каждого месяца отдельно.
+                </div>
+            </div>
+
+            <div id="dashboardExtraTab" style="display: none;">
+                <div class="extra-work-section">
+                    <h3>➕ Добавить подработку</h3>
+                    <div class="extra-work-form">
+                        <div class="form-field-compact">
+                            <label>👤 Сотр.</label>
+                            <select id="extraEmployeeSelect">
+                                <option value="">-- Выберите --</option>
+                            </select>
+                        </div>
+                        <div class="form-field-compact">
+                            <label>🏪 ПВЗ</label>
+                            <select id="extraPVZSelect">
+                                <option value="">-- Выберите --</option>
+                            </select>
+                        </div>
+                        <div class="form-field-compact">
+                            <label>📅 Дата</label>
+                            <input type="date" id="extraDate">
+                        </div>
+                        <div class="form-field-compact">
+                            <label>⏱️ Часы</label>
+                            <input type="number" id="extraHours" placeholder="0" step="0.5" style="width:80px;">
+                        </div>
+                        <div class="form-field-compact">
+                            <label>💰 Ставка/час</label>
+                            <input type="number" id="extraHourlyRate" placeholder="200" step="50" value="200" style="width:90px;">
+                        </div>
+                        <div class="form-field-compact">
+                            <label>📝 Описание</label>
+                            <input type="text" id="extraDesc" placeholder="Кратко" style="width:120px;">
+                        </div>
+                        <button id="addExtraWorkBtn">✅ Добавить</button>
+                    </div>
+                    
+                    <h3>📜 История подработок</h3>
+                    <div class="extra-work-list">
+                        <table class="extra-work-table">
+                            <thead>
+                                <tr>
+                                    <th>Сотрудник</th>
+                                    <th>ПВЗ</th>
+                                    <th>Дата</th>
+                                    <th>Часы</th>
+                                    <th>Ставка</th>
+                                    <th>Описание</th>
+                                    <th>Сумма</th>
+                                    <th>Действие</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extraWorkTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- АНАЛИТИКА - ИСПРАВЛЕННАЯ ВЕРСИЯ (без кнопки и без лишней сводки) -->
+    <div id="analyticsTabContent" style="display: none;">
+        <div class="analytics-container">
+            <div class="analytics-header">
+                <h2>📊 Аналитика работы сотрудников</h2>
+            </div>
+            
+            <div class="legend-analytics">
+                <span><span class="legend-dot work"></span> Рабочий день</span>
+                <span><span class="legend-dot off"></span> Выходной</span>
+                <span><span class="legend-dot today"></span> Сегодняшняя дата</span>
+                <span>🏪 В ячейке указан ПВЗ</span>
+            </div>
+
+            <div class="analytics-controls">
+                <div class="control-group">
+                    <label>Год</label>
+                    <select id="analyticsYearSelect"></select>
+                </div>
+                <div class="control-group">
+                    <label>Месяц</label>
+                    <select id="analyticsMonthSelect"></select>
+                </div>
+            </div>
+            
+            <div class="analytics-table-wrapper">
+                <table class="analytics-table" id="analyticsTable">
+                    <thead id="analyticsTableHeader"></thead>
+                    <tbody id="analyticsTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     
     <div class="legend">
         <span>✅ <span class="badge-work">Рабочий день</span></span>
         <span>❌ <span class="badge-off">Выходной</span></span>
         <span>🟡 <span class="badge-today">Сегодня</span></span>
     </div>
-    <footer>☁️ Все данные хранятся в облаке (Firebase) — доступны с любого устройства</footer>
+    <footer>☁️ Все данные — доступны с любого устройства</footer>
 </div>
 
 <div id="botSettingsModal" class="modal">
@@ -707,6 +1187,7 @@
 
 <script>
     const SITE_ACCESS_PASSWORD = "pvz15";
+    const DASHBOARD_PASSWORD = "6535564";
     
     const firebaseConfig = {
         apiKey: "AIzaSyDnBMku_utsiVxHEfvPgAhQy89UAKSzBws",
@@ -733,7 +1214,456 @@
     let globalEmployees = [];
     let isLoading = true;
     
+    let salaryData = {};
+    let currentDashboardYear = new Date().getFullYear();
+    let currentDashboardMonth = new Date().getMonth() + 1;
+    
+    let extraWorks = {};
+    
+    let analyticsYear = new Date().getFullYear();
+    let analyticsMonth = new Date().getMonth() + 1;
+    
     const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    
+    function getMonthKey(year, month) {
+        return `${year}-${month}`;
+    }
+    
+    function getEmployeeMonthData(employeeName, year, month) {
+        const monthKey = getMonthKey(year, month);
+        if (!salaryData[employeeName]) {
+            salaryData[employeeName] = {};
+        }
+        if (!salaryData[employeeName][monthKey]) {
+            salaryData[employeeName][monthKey] = {
+                rate: 1500,
+                traineeDays: 0,
+                traineeRate: 800,
+                advance: 0,
+                moneyTransferred: 0,
+                fine: 0
+            };
+        }
+        return salaryData[employeeName][monthKey];
+    }
+    
+    function calculateWorkDaysForEmployee(employeeName, year, month) {
+        let totalWorkDays = 0;
+        const daysInMonth = new Date(year, month, 0).getDate();
+        
+        for (let pvzName in allPVZData) {
+            const schedules = allPVZData[pvzName].schedules[employeeName];
+            if (!schedules) continue;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const key = `${year}-${month}-${day}`;
+                if (schedules[key] === true) {
+                    totalWorkDays++;
+                }
+            }
+        }
+        return totalWorkDays;
+    }
+    
+    function calculateTotalExtraForMonth(employeeName, year, month) {
+        let total = 0;
+        const works = extraWorks[employeeName] || [];
+        for (let work of works) {
+            const [workYear, workMonth] = work.date.split('-');
+            if (parseInt(workYear) === year && parseInt(workMonth) === month) {
+                total += work.amount || 0;
+            }
+        }
+        return total;
+    }
+    
+    function initSalaryData() {
+        const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
+        for (let emp of globalEmployees) {
+            if (!salaryData[emp.name]) {
+                salaryData[emp.name] = {};
+            }
+            if (!salaryData[emp.name][currentKey]) {
+                salaryData[emp.name][currentKey] = {
+                    rate: 1500,
+                    traineeDays: 0,
+                    traineeRate: 800,
+                    advance: 0,
+                    moneyTransferred: 0,
+                    fine: 0
+                };
+            }
+        }
+    }
+    
+    function calculateNetSalary(empName, year, month) {
+        const monthData = getEmployeeMonthData(empName, year, month);
+        const workDays = calculateWorkDaysForEmployee(empName, year, month);
+        const baseSalary = workDays * monthData.rate;
+        const traineeBonus = monthData.traineeDays * monthData.traineeRate;
+        const extraAmount = calculateTotalExtraForMonth(empName, year, month);
+        const total = baseSalary + extraAmount + traineeBonus - monthData.advance - monthData.moneyTransferred - monthData.fine;
+        return Math.max(0, total);
+    }
+    
+    function updateTotalSalary() {
+        let totalMonthSalary = 0;
+        document.querySelectorAll('.net-salary-amount').forEach(el => {
+            const val = parseFloat(el.innerText);
+            if (!isNaN(val)) totalMonthSalary += val;
+        });
+        const totalSpan = document.getElementById("totalSalaryAmount");
+        if (totalSpan) {
+            totalSpan.innerText = totalMonthSalary.toLocaleString('ru-RU');
+        }
+    }
+    
+    async function autoSaveSalary() {
+        try {
+            await db.collection("appData").doc("salaryData").set({ data: salaryData });
+            await db.collection("appData").doc("extraWorks").set({ data: extraWorks });
+            console.log("Автосохранение зарплат и подработок");
+        } catch(e) {
+            console.error("Ошибка автосохранения:", e);
+        }
+    }
+    
+    function renderSalaryTable() {
+        const tbody = document.getElementById("salaryTableBody");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+        
+        for (let emp of globalEmployees) {
+            const monthData = getEmployeeMonthData(emp.name, currentDashboardYear, currentDashboardMonth);
+            const workDays = calculateWorkDaysForEmployee(emp.name, currentDashboardYear, currentDashboardMonth);
+            const extraThisMonth = calculateTotalExtraForMonth(emp.name, currentDashboardYear, currentDashboardMonth);
+            const netSalary = calculateNetSalary(emp.name, currentDashboardYear, currentDashboardMonth);
+            
+            const row = tbody.insertRow();
+            row.insertCell(0).innerHTML = `<strong>${escapeHtml(emp.name)}</strong>`;
+            row.insertCell(1).innerHTML = `<span class="readonly-cell" style="display:inline-block; width:100%; text-align:center; font-weight:700;">${workDays}</span>`;
+            row.insertCell(2).innerHTML = `<input type="number" class="salary-rate" data-name="${emp.name}" value="${monthData.rate}" step="100">`;
+            row.insertCell(3).innerHTML = `<span class="extra-display" data-name="${emp.name}" style="font-weight:700; color:#2563eb;">${extraThisMonth}</span>`;
+            row.insertCell(4).innerHTML = `<input type="number" class="salary-trainee-days" data-name="${emp.name}" value="${monthData.traineeDays}" step="1">`;
+            row.insertCell(5).innerHTML = `<input type="number" class="salary-trainee-rate" data-name="${emp.name}" value="${monthData.traineeRate}" step="100">`;
+            row.insertCell(6).innerHTML = `<input type="number" class="salary-advance" data-name="${emp.name}" value="${monthData.advance}" step="500">`;
+            row.insertCell(7).innerHTML = `<input type="number" class="salary-money-transferred" data-name="${emp.name}" value="${monthData.moneyTransferred}" step="500">`;
+            row.insertCell(8).innerHTML = `<input type="number" class="salary-fine" data-name="${emp.name}" value="${monthData.fine}" step="100">`;
+            row.insertCell(9).innerHTML = `<span class="net-salary-amount" data-name="${emp.name}" style="font-weight:700; color:#15803d;">${netSalary} ₽</span>`;
+        }
+        
+        updateTotalSalary();
+        
+        const inputs = document.querySelectorAll('#salaryTableBody input');
+        inputs.forEach(input => {
+            input.addEventListener('change', async function() {
+                const empName = this.getAttribute('data-name');
+                if (empName) {
+                    const monthData = getEmployeeMonthData(empName, currentDashboardYear, currentDashboardMonth);
+                    if (this.classList.contains('salary-rate')) monthData.rate = parseFloat(this.value) || 0;
+                    if (this.classList.contains('salary-trainee-days')) monthData.traineeDays = parseFloat(this.value) || 0;
+                    if (this.classList.contains('salary-trainee-rate')) monthData.traineeRate = parseFloat(this.value) || 0;
+                    if (this.classList.contains('salary-advance')) monthData.advance = parseFloat(this.value) || 0;
+                    if (this.classList.contains('salary-money-transferred')) monthData.moneyTransferred = parseFloat(this.value) || 0;
+                    if (this.classList.contains('salary-fine')) monthData.fine = parseFloat(this.value) || 0;
+                    
+                    const newNetSalary = calculateNetSalary(empName, currentDashboardYear, currentDashboardMonth);
+                    const netSpan = document.querySelector(`.net-salary-amount[data-name="${empName}"]`);
+                    if (netSpan) {
+                        netSpan.innerText = `${newNetSalary} ₽`;
+                    }
+                    
+                    updateTotalSalary();
+                    await autoSaveSalary();
+                }
+            });
+        });
+    }
+    
+    function refreshSalaryWorkDays() {
+        renderSalaryTable();
+        showNotification(`Рабочие дни пересчитаны за ${getMonthName(currentDashboardMonth)} ${currentDashboardYear}`, false);
+    }
+    
+    function populateDashboardMonthSelect() {
+        const select = document.getElementById("dashboardMonthSelect");
+        if (!select) return;
+        const now = new Date();
+        select.innerHTML = '';
+        for (let offset = -12; offset <= 12; offset++) {
+            const date = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const option = document.createElement("option");
+            option.value = `${year}-${month}`;
+            option.textContent = `${getMonthName(month)} ${year}`;
+            if (year === currentDashboardYear && month === currentDashboardMonth) option.selected = true;
+            select.appendChild(option);
+        }
+    }
+    
+    async function loadExtraWorksFromFirestore() {
+        try {
+            const doc = await db.collection("appData").doc("extraWorks").get();
+            if (doc.exists && doc.data().data) {
+                extraWorks = doc.data().data;
+            } else {
+                extraWorks = {};
+            }
+        } catch(e) {
+            console.error(e);
+            extraWorks = {};
+        }
+    }
+    
+    async function loadSalaryDataFromFirestore() {
+        try {
+            const doc = await db.collection("appData").doc("salaryData").get();
+            if (doc.exists && doc.data().data) {
+                salaryData = doc.data().data;
+            } else {
+                salaryData = {};
+                initSalaryData();
+            }
+        } catch(e) {
+            console.error(e);
+            salaryData = {};
+            initSalaryData();
+        }
+        renderSalaryTable();
+    }
+    
+    function populatePVZSelect() {
+        const select = document.getElementById("extraPVZSelect");
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Выберите --</option>';
+        for (let pvzName in allPVZData) {
+            const option = document.createElement("option");
+            option.value = pvzName;
+            option.textContent = pvzName;
+            select.appendChild(option);
+        }
+    }
+    
+    function renderExtraWorksTable() {
+        const tbody = document.getElementById("extraWorkTableBody");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+        
+        const allEntries = [];
+        for (let empName in extraWorks) {
+            const works = extraWorks[empName];
+            for (let work of works) {
+                allEntries.push({ empName, ...work });
+            }
+        }
+        
+        allEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        for (let entry of allEntries) {
+            const row = tbody.insertRow();
+            row.insertCell(0).innerHTML = `<strong>${escapeHtml(entry.empName)}</strong>`;
+            row.insertCell(1).innerHTML = escapeHtml(entry.pvz || '—');
+            row.insertCell(2).innerHTML = entry.date;
+            row.insertCell(3).innerHTML = `${entry.hours} ч.`;
+            row.insertCell(4).innerHTML = `${entry.hourlyRate} ₽`;
+            row.insertCell(5).innerHTML = escapeHtml(entry.desc) || '—';
+            row.insertCell(6).innerHTML = `<strong>${entry.amount} ₽</strong>`;
+            row.insertCell(7).innerHTML = `<button class="delete-extra-btn" data-id="${entry.id}" data-emp="${entry.empName}">🗑</button>`;
+        }
+        
+        document.querySelectorAll('.delete-extra-btn').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const empName = btn.getAttribute('data-emp');
+                const id = btn.getAttribute('data-id');
+                if (confirm('Удалить запись о подработке?')) {
+                    if (extraWorks[empName]) {
+                        extraWorks[empName] = extraWorks[empName].filter(w => w.id !== id);
+                        if (extraWorks[empName].length === 0) delete extraWorks[empName];
+                        await autoSaveSalary();
+                        renderExtraWorksTable();
+                        renderSalaryTable();
+                        showNotification('Запись удалена', false);
+                    }
+                }
+            });
+        });
+    }
+    
+    async function addExtraWork() {
+        const empName = document.getElementById("extraEmployeeSelect").value;
+        const pvzName = document.getElementById("extraPVZSelect").value;
+        const date = document.getElementById("extraDate").value;
+        const hours = parseFloat(document.getElementById("extraHours").value);
+        const hourlyRate = parseFloat(document.getElementById("extraHourlyRate").value);
+        const desc = document.getElementById("extraDesc").value.trim();
+        
+        if (!empName) { alert("Выберите сотрудника"); return; }
+        if (!pvzName) { alert("Выберите ПВЗ"); return; }
+        if (!date) { alert("Выберите дату"); return; }
+        if (isNaN(hours) || hours <= 0) { alert("Введите корректное количество часов"); return; }
+        if (isNaN(hourlyRate) || hourlyRate <= 0) { alert("Введите корректную ставку в час"); return; }
+        
+        const amount = Math.round(hours * hourlyRate);
+        
+        const newWork = {
+            id: Date.now() + Math.random() + empName,
+            pvz: pvzName,
+            date: date,
+            hours: hours,
+            hourlyRate: hourlyRate,
+            desc: desc || "Подработка",
+            amount: amount
+        };
+        
+        if (!extraWorks[empName]) extraWorks[empName] = [];
+        extraWorks[empName].push(newWork);
+        
+        await autoSaveSalary();
+        renderExtraWorksTable();
+        renderSalaryTable();
+        
+        document.getElementById("extraDate").value = "";
+        document.getElementById("extraHours").value = "";
+        document.getElementById("extraHourlyRate").value = "200";
+        document.getElementById("extraDesc").value = "";
+        
+        showNotification(`✅ Добавлена подработка: ${empName} | ${pvzName} | ${hours}ч × ${hourlyRate}₽ = ${amount}₽`, false);
+    }
+    
+    function populateExtraEmployeeSelect() {
+        const select = document.getElementById("extraEmployeeSelect");
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Выберите --</option>';
+        globalEmployees.forEach(emp => {
+            const option = document.createElement("option");
+            option.value = emp.name;
+            option.textContent = emp.name;
+            select.appendChild(option);
+        });
+    }
+    
+    // ========== ФУНКЦИИ ДЛЯ АНАЛИТИКИ ==========
+    function populateAnalyticsSelects() {
+        const yearSelect = document.getElementById("analyticsYearSelect");
+        const monthSelect = document.getElementById("analyticsMonthSelect");
+        if (!yearSelect || !monthSelect) return;
+        
+        const currentYear = new Date().getFullYear();
+        yearSelect.innerHTML = '';
+        for (let y = currentYear - 2; y <= currentYear + 1; y++) {
+            const option = document.createElement("option");
+            option.value = y;
+            option.textContent = y;
+            if (y === analyticsYear) option.selected = true;
+            yearSelect.appendChild(option);
+        }
+        
+        monthSelect.innerHTML = '';
+        for (let m = 1; m <= 12; m++) {
+            const option = document.createElement("option");
+            option.value = m;
+            option.textContent = getMonthName(m);
+            if (m === analyticsMonth) option.selected = true;
+            monthSelect.appendChild(option);
+        }
+    }
+    
+    function renderAnalytics() {
+        const tbody = document.getElementById("analyticsTableBody");
+        const thead = document.getElementById("analyticsTableHeader");
+        if (!tbody || !thead) return;
+        
+        const daysInMonth = new Date(analyticsYear, analyticsMonth, 0).getDate();
+        const today = new Date();
+        const isCurrentMonth = (today.getFullYear() === analyticsYear && (today.getMonth() + 1) === analyticsMonth);
+        
+        // Заголовок таблицы
+        let headerHtml = '<tr>';
+        headerHtml += '<th style="min-width: 140px; position: sticky; left: 0; background: #1e293b; z-index: 20;">👤 Сотрудник</th>';
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            const isToday = isCurrentMonth && today.getDate() === day;
+            let bgStyle = '';
+            if (isWeekend) bgStyle = 'background: #991b1b;';
+            if (isToday) bgStyle = 'background: #f59e0b;';
+            headerHtml += `<th style="${bgStyle} width: 70px;">
+                <div>${day}</div>
+                <div style="font-size: 0.65rem; opacity: 0.8;">${weekdays[dayOfWeek]}</div>
+            </th>`;
+        }
+        headerHtml += '<th style="min-width: 70px;">📊 Дней</th>';
+        headerHtml += '</tr>';
+        thead.innerHTML = headerHtml;
+        
+        // Тело таблицы
+        tbody.innerHTML = '';
+        
+        for (let emp of globalEmployees) {
+            let rowHtml = '<tr>';
+            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.name)}</td>`;
+            let workDaysCount = 0;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                const isToday = isCurrentMonth && today.getDate() === day;
+                let pvzName = '';
+                
+                // Ищем ПВЗ для этого дня
+                for (let pvz in allPVZData) {
+                    const key = `${analyticsYear}-${analyticsMonth}-${day}`;
+                    if (allPVZData[pvz].schedules[emp.name]?.[key] === true) {
+                        pvzName = pvz;
+                        workDaysCount++;
+                        break;
+                    }
+                }
+                
+                let cellClass = '';
+                let cellContent = '';
+                
+                if (pvzName) {
+                    let shortName = pvzName.length > 12 ? pvzName.substring(0, 10) + '..' : pvzName;
+                    cellContent = `<div class="work-badge">✅</div><span class="pvz-name-small">${escapeHtml(shortName)}</span>`;
+                    cellClass = 'work-day-bg';
+                } else {
+                    cellContent = `<div class="off-badge">❌</div>`;
+                    if (isWeekend) cellClass = 'weekend-bg';
+                }
+                
+                if (isToday) cellClass += ' today-highlight';
+                
+                rowHtml += `<td class="${cellClass}" style="vertical-align: middle;">${cellContent}</td>`;
+            }
+            
+            rowHtml += `<td style="text-align: center; font-weight: 700; background: #e0f2fe;">${workDaysCount}</td>`;
+            rowHtml += '</tr>';
+            tbody.innerHTML += rowHtml;
+        }
+    }
+    
+    function refreshAnalytics() {
+        const yearSelect = document.getElementById("analyticsYearSelect");
+        const monthSelect = document.getElementById("analyticsMonthSelect");
+        if (yearSelect && monthSelect) {
+            analyticsYear = parseInt(yearSelect.value);
+            analyticsMonth = parseInt(monthSelect.value);
+        }
+        renderAnalytics();
+    }
+    
+    function openAnalytics() {
+        currentTab = 'analytics';
+        renderTabs();
+        document.getElementById("employeesTabContent").style.display = "none";
+        document.getElementById("pvzTabContent").style.display = "none";
+        document.getElementById("dashboardTabContent").style.display = "none";
+        document.getElementById("analyticsTabContent").style.display = "block";
+        populateAnalyticsSelects();
+        renderAnalytics();
+    }
     
     function checkInitialAuth() {
         const isAuth = localStorage.getItem(AUTH_KEY);
@@ -865,6 +1795,9 @@
             
             botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
             
+            await loadExtraWorksFromFirestore();
+            await loadSalaryDataFromFirestore();
+            
             isLoading = false;
             showNotification("✅ Данные загружены из облака", false);
             return true;
@@ -882,6 +1815,7 @@
             await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
             await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
             await db.collection("appData").doc("currentPVZ").set({ name: currentPVZ });
+            await autoSaveSalary();
             console.log("Данные сохранены в Firestore");
         } catch (error) {
             console.error("Ошибка сохранения:", error);
@@ -1033,13 +1967,13 @@
         tbody.innerHTML = globalEmployees.map((emp, idx) => `
             <tr>
                 <td><strong>${escapeHtml(emp.name)}</strong></td>
-                <td>${escapeHtml(emp.email || '—')}</td>
-                <td>${escapeHtml(emp.phone || '—')}</td>
-                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</td>
+                <td>${escapeHtml(emp.email || '—')}</div></td>
+                <td>${escapeHtml(emp.phone || '—')}</div></td>
+                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</div></div></td>
                 <td>
                     <button class="edit-employee-btn" data-idx="${idx}">✏️</button>
                     <button class="delete-employee-btn" data-idx="${idx}">🗑</button>
-                </td>
+                </div></td>
             </tr>
         `).join('');
         
@@ -1074,9 +2008,27 @@
                 delete allPVZData[pvz].schedules[oldName];
             }
         }
+        
+        if (salaryData[oldName]) {
+            salaryData[newName] = salaryData[oldName];
+            delete salaryData[oldName];
+        }
+        
+        if (extraWorks[oldName]) {
+            extraWorks[newName] = extraWorks[oldName];
+            delete extraWorks[oldName];
+        }
         updatePVZEmployeesUI();
         renderSchedule();
         renderGlobalEmployeesTable();
+        if (currentTab === 'dashboard') {
+            renderSalaryTable();
+            renderExtraWorksTable();
+            populateExtraEmployeeSelect();
+        }
+        if (currentTab === 'analytics') {
+            renderAnalytics();
+        }
         await saveAndSync();
         showNotification(`✅ Сотрудник обновлён`, false);
     }
@@ -1091,9 +2043,19 @@
                 if (idx2 !== -1) allPVZData[pvz].employees.splice(idx2, 1);
                 delete allPVZData[pvz].schedules[emp.name];
             }
+            delete salaryData[emp.name];
+            delete extraWorks[emp.name];
             updatePVZEmployeesUI();
             renderSchedule();
             renderGlobalEmployeesTable();
+            if (currentTab === 'dashboard') {
+                renderSalaryTable();
+                renderExtraWorksTable();
+                populateExtraEmployeeSelect();
+            }
+            if (currentTab === 'analytics') {
+                renderAnalytics();
+            }
             await saveAndSync();
             showNotification(`❌ Сотрудник удалён`, false);
         }
@@ -1109,7 +2071,27 @@
         if (globalEmployees.some(e => e.name === name)) { alert("Такой сотрудник уже есть"); return; }
         
         globalEmployees.push({ name, email, phone, telegramId });
+        
+        const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
+        salaryData[name] = {};
+        salaryData[name][currentKey] = {
+            rate: 1500,
+            traineeDays: 0,
+            traineeRate: 800,
+            advance: 0,
+            moneyTransferred: 0,
+            fine: 0
+        };
+        
+        extraWorks[name] = [];
         renderGlobalEmployeesTable();
+        if (currentTab === 'dashboard') {
+            renderSalaryTable();
+            populateExtraEmployeeSelect();
+        }
+        if (currentTab === 'analytics') {
+            renderAnalytics();
+        }
         updateAvailableEmployeesSelect();
         document.getElementById("newEmpName").value = "";
         document.getElementById("newEmpEmail").value = "";
@@ -1166,6 +2148,9 @@
                 allPVZData[currentPVZ].schedules[empName] = {};
             }
             updatePVZEmployeesUI();
+            if (currentTab === 'analytics') {
+                renderAnalytics();
+            }
             await saveAndSync();
             showNotification(`✅ ${empName} добавлен`, false);
         }
@@ -1178,13 +2163,16 @@
             if (idx !== -1) allPVZData[currentPVZ].employees.splice(idx, 1);
             delete allPVZData[currentPVZ].schedules[empName];
             updatePVZEmployeesUI();
+            if (currentTab === 'analytics') {
+                renderAnalytics();
+            }
             await saveAndSync();
             showNotification(`❌ ${empName} удалён`, false);
         }
     }
     
     function generateHeader(daysCount, year, month) {
-        let html = '<tr><th class="employee-col">Сотрудник</th>';
+        let html = `<table><th class="employee-col">Сотрудник</th>`;
         for (let d = 1; d <= daysCount; d++) {
             const dayOfWeek = getDayOfWeek(year, month, d);
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
@@ -1210,7 +2198,7 @@
         let bodyHtml = '';
         for (let emp of employees) {
             let workCount = 0;
-            let row = `<tr><td class="employee-col">${escapeHtml(emp)}</td>`;
+            let row = `<tr><td class="employee-col">${escapeHtml(emp)}</div></td>`;
             for (let d = 1; d <= daysCount; d++) {
                 const key = `${year}-${month}-${d}`;
                 if (!data.schedules[emp]) {
@@ -1222,12 +2210,12 @@
                 row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isTodayDate ? 'today-column' : ''}"
                                data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">
                             ${isWork ? '✅' : '❌'}
-                           </td>`;
+                            </div>`;
             }
-            row += `<td style="text-align:center; font-weight:700;">${workCount}</td>`;
+            row += `<td style="text-align:center; font-weight:700;">${workCount}</div>`;
             bodyHtml += row;
         }
-        if (employees.length === 0) bodyHtml = '<tr><td colspan="40" style="text-align:center; padding:40px;">👀 Нет сотрудников в этом ПВЗ</td></tr>';
+        if (employees.length === 0) bodyHtml = '<tr><td colspan="40" style="text-align:center; padding:40px;">👀 Нет сотрудников в этом ПВЗ</div></tr>';
         
         document.getElementById("tableBody").innerHTML = bodyHtml;
         document.getElementById("currentMonthTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${currentPVZ}`;
@@ -1263,6 +2251,12 @@
         allPVZData[currentPVZ].schedules[emp][key] = newStatus;
         
         renderSchedule();
+        if (currentTab === 'dashboard' && currentDashboardYear === year && currentDashboardMonth === month) {
+            renderSalaryTable();
+        }
+        if (currentTab === 'analytics' && analyticsYear === year && analyticsMonth === month) {
+            renderAnalytics();
+        }
         await saveAndSync();
         showNotification(`${emp}: ${newStatus ? '✅ рабочий день' : '❌ выходной'} на ${day}.${month}.${year}`, false);
     }
@@ -1274,9 +2268,12 @@
         delete allPVZData[oldName];
         if (currentPVZ === oldName) currentPVZ = newName;
         renderTabs();
-        if (currentTab !== 'employees') {
+        if (currentTab !== 'employees' && currentTab !== 'dashboard' && currentTab !== 'analytics') {
             updatePVZEmployeesUI();
             renderSchedule();
+        }
+        if (currentTab === 'analytics') {
+            renderAnalytics();
         }
         await saveAndSync();
         showNotification(`✅ ПВЗ переименован`, false);
@@ -1299,9 +2296,81 @@
             updatePVZEmployeesUI();
             populateMonthSelect();
             renderSchedule();
+            if (currentTab === 'analytics') {
+                renderAnalytics();
+            }
             await saveAndSync();
             showNotification(`❌ ПВЗ удалён`, false);
         }
+    }
+    
+    function showDashboardPasswordModal(callback) {
+        const overlay = document.createElement('div');
+        overlay.className = 'dashboard-password-overlay';
+        overlay.innerHTML = `
+            <div class="dashboard-password-card">
+                <h3>🔐 Доступ к дашборду зарплат</h3>
+                <p>Введите пароль для продолжения</p>
+                <input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off">
+                <div style="margin-top: 20px;">
+                    <button id="dashboardPasswordSubmit" style="background:#3b82f6; color:white; padding:8px 20px; border:none; border-radius:40px; cursor:pointer;">Войти</button>
+                    <button id="dashboardPasswordCancel" style="background:#cbd5e1; margin-left:10px; padding:8px 20px; border:none; border-radius:40px; cursor:pointer;">Отмена</button>
+                </div>
+                <div id="dashboardPasswordError" style="color:red; margin-top:10px;"></div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        
+        const input = overlay.querySelector('#dashboardPasswordInput');
+        const submitBtn = overlay.querySelector('#dashboardPasswordSubmit');
+        const cancelBtn = overlay.querySelector('#dashboardPasswordCancel');
+        const errorDiv = overlay.querySelector('#dashboardPasswordError');
+        
+        const cleanup = () => overlay.remove();
+        
+        const verify = () => {
+            if (input.value === DASHBOARD_PASSWORD) {
+                cleanup();
+                callback(true);
+            } else {
+                errorDiv.innerText = '❌ Неверный пароль!';
+                input.value = '';
+                input.focus();
+            }
+        };
+        
+        submitBtn.addEventListener('click', verify);
+        cancelBtn.addEventListener('click', () => {
+            cleanup();
+            callback(false);
+        });
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') verify();
+        });
+        input.focus();
+    }
+    
+    async function openDashboard() {
+        showDashboardPasswordModal((granted) => {
+            if (granted) {
+                currentTab = 'dashboard';
+                renderTabs();
+                document.getElementById("employeesTabContent").style.display = "none";
+                document.getElementById("pvzTabContent").style.display = "none";
+                document.getElementById("dashboardTabContent").style.display = "block";
+                document.getElementById("analyticsTabContent").style.display = "none";
+                populateDashboardMonthSelect();
+                populateExtraEmployeeSelect();
+                populatePVZSelect();
+                renderSalaryTable();
+                renderExtraWorksTable();
+                document.getElementById("dashboardMainTab").style.display = "block";
+                document.getElementById("dashboardExtraTab").style.display = "none";
+                showNotification("Доступ к дашборду зарплат открыт", false);
+            } else {
+                showNotification("Доступ запрещён", true);
+            }
+        });
     }
     
     function renderTabs() {
@@ -1322,6 +2391,12 @@
             container.appendChild(tab);
         }
         
+        const analyticsTab = document.createElement('button');
+        analyticsTab.className = `tab ${currentTab === 'analytics' ? 'active' : ''}`;
+        analyticsTab.innerHTML = '📊 Аналитика';
+        analyticsTab.onclick = () => switchTab('analytics');
+        container.appendChild(analyticsTab);
+        
         const addBtn = document.createElement('button');
         addBtn.className = 'add-tab-btn';
         addBtn.innerHTML = '➕ Добавить ПВЗ';
@@ -1330,20 +2405,30 @@
     }
     
     async function switchTab(tabId) {
-        currentTab = tabId;
         if (tabId === 'employees') {
+            currentTab = 'employees';
             document.getElementById("employeesTabContent").style.display = "block";
             document.getElementById("pvzTabContent").style.display = "none";
+            document.getElementById("dashboardTabContent").style.display = "none";
+            document.getElementById("analyticsTabContent").style.display = "none";
             renderGlobalEmployeesTable();
+            renderTabs();
+        } else if (tabId === 'dashboard') {
+            await openDashboard();
+        } else if (tabId === 'analytics') {
+            openAnalytics();
         } else {
             currentPVZ = tabId;
+            currentTab = tabId;
             document.getElementById("employeesTabContent").style.display = "none";
             document.getElementById("pvzTabContent").style.display = "block";
+            document.getElementById("dashboardTabContent").style.display = "none";
+            document.getElementById("analyticsTabContent").style.display = "none";
             updatePVZEmployeesUI();
             populateMonthSelect();
             renderSchedule();
+            renderTabs();
         }
-        renderTabs();
         await saveAndSync();
     }
     
@@ -1380,17 +2465,6 @@
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m]));
     }
     
-    function exportData() {
-        const data = { allPVZData, globalEmployees, exportDate: new Date().toISOString() };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `pvz_backup_${new Date().toISOString().slice(0,19)}.json`;
-        link.click();
-        URL.revokeObjectURL(link);
-        showNotification("✅ Данные экспортированы", false);
-    }
-    
     async function initApp() {
         const success = await loadFromFirestore();
         if (!success) {
@@ -1417,10 +2491,42 @@
             renderSchedule();
         });
         document.getElementById("scheduleGrid")?.addEventListener("click", toggleStatus);
-        document.getElementById("exportAllBtn")?.addEventListener("click", exportData);
         document.getElementById("sendTomorrowNotifyBtn")?.addEventListener("click", sendTomorrowNotifications);
         document.getElementById("sendTestNotifyBtn")?.addEventListener("click", sendTestNotification);
         document.getElementById("botConfigBtn")?.addEventListener("click", openModal);
+        document.getElementById("dashboardCornerBtn")?.addEventListener("click", openDashboard);
+        document.getElementById("refreshSalaryBtn")?.addEventListener("click", () => {
+            refreshSalaryWorkDays();
+        });
+        document.getElementById("dashboardMonthSelect")?.addEventListener("change", (e) => {
+            const [y, m] = e.target.value.split("-");
+            currentDashboardYear = parseInt(y);
+            currentDashboardMonth = parseInt(m);
+            renderSalaryTable();
+        });
+        document.getElementById("addExtraWorkBtn")?.addEventListener("click", addExtraWork);
+        
+        // Обработчики для аналитики (без кнопки, только при смене значения)
+        document.getElementById("analyticsYearSelect")?.addEventListener("change", refreshAnalytics);
+        document.getElementById("analyticsMonthSelect")?.addEventListener("change", refreshAnalytics);
+        
+        document.querySelectorAll('.sub-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const subtab = btn.getAttribute('data-subtab');
+                if (subtab === 'main') {
+                    document.getElementById("dashboardMainTab").style.display = "block";
+                    document.getElementById("dashboardExtraTab").style.display = "none";
+                } else {
+                    document.getElementById("dashboardMainTab").style.display = "none";
+                    document.getElementById("dashboardExtraTab").style.display = "block";
+                    renderExtraWorksTable();
+                    populateExtraEmployeeSelect();
+                    populatePVZSelect();
+                }
+            });
+        });
         
         const modal = document.getElementById("botSettingsModal");
         document.querySelector(".close")?.addEventListener("click", closeModal);
