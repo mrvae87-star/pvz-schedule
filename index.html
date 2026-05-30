@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>График сотрудников по ПВЗ + Дашборд ЗП</title>
+    <!-- Добавлен фавикон (иконка вкладки) -->
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABdSURBVFhH7ZTRDcAgDEOdFnGxTpTJOEFXQCiJSn9ydO8Dy31NLFuzgDHGGGOMMcYYY4wxZgUuxJ7MrUqy1W7gDRqR3M+FSe4XQiX3C6GS+4VQyf1CqOR+IawuLyESM+/SdYnkAAAAAElFTkSuQmCC">
     <style>
         * {
             box-sizing: border-box;
@@ -77,13 +79,28 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        .tabs-container {
+        /* Новая структура табов: левая группа (ПВЗ) и правая группа (системные вкладки) */
+        .tabs-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
             margin-bottom: 20px;
             border-bottom: 2px solid #e2e8f0;
+            gap: 8px;
+        }
+        .tabs-left {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
             align-items: center;
+            flex: 1;
+        }
+        .tabs-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
         }
         .tab {
             padding: 10px 20px;
@@ -964,7 +981,11 @@
         <button id="dashboardCornerBtn" class="dashboard-corner-btn">💰 Дашборд</button>
     </h1>
        
-    <div class="tabs-container" id="tabsContainer"></div>
+    <!-- Новая структура табов: слева ПВЗ, справа системные вкладки -->
+    <div class="tabs-wrapper">
+        <div class="tabs-left" id="tabsLeft"></div>
+        <div class="tabs-right" id="tabsRight"></div>
+    </div>
     
     <div id="employeesTabContent" style="display: none;">
         <div class="notification-section">
@@ -1602,7 +1623,7 @@
         
         for (let emp of globalEmployees) {
             let rowHtml = '<tr>';
-            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.name)}</td>`;
+            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.name)}</div></td>`;
             let workDaysCount = 0;
             
             for (let day = 1; day <= daysInMonth; day++) {
@@ -1635,10 +1656,10 @@
                 
                 if (isToday) cellClass += ' today-highlight';
                 
-                rowHtml += `<td class="${cellClass}" style="vertical-align: middle;">${cellContent}</td>`;
+                rowHtml += `<td class="${cellClass}" style="vertical-align: middle;">${cellContent}</div>`;
             }
             
-            rowHtml += `<td style="text-align: center; font-weight: 700; background: #e0f2fe;">${workDaysCount}</td>`;
+            rowHtml += `<td style="text-align: center; font-weight: 700; background: #e0f2fe;">${workDaysCount}</div>`;
             rowHtml += '</tr>';
             tbody.innerHTML += rowHtml;
         }
@@ -2374,34 +2395,41 @@
     }
     
     function renderTabs() {
-        const container = document.getElementById("tabsContainer");
-        container.innerHTML = '';
+        const tabsLeft = document.getElementById("tabsLeft");
+        const tabsRight = document.getElementById("tabsRight");
+        if (!tabsLeft || !tabsRight) return;
         
-        const empTab = document.createElement('button');
-        empTab.className = `tab ${currentTab === 'employees' ? 'active' : ''}`;
-        empTab.innerHTML = '👥 Все сотрудники';
-        empTab.onclick = () => switchTab('employees');
-        container.appendChild(empTab);
-        
+        // Левая часть: вкладки ПВЗ
+        tabsLeft.innerHTML = '';
         for (let pvz in allPVZData) {
             const tab = document.createElement('button');
             tab.className = `tab ${currentTab === pvz ? 'active' : ''}`;
             tab.innerHTML = `📍 ${pvz}`;
             tab.onclick = () => switchTab(pvz);
-            container.appendChild(tab);
+            tabsLeft.appendChild(tab);
         }
+        
+        // Кнопка добавления ПВЗ (в левой части, после списка ПВЗ)
+        const addBtn = document.createElement('button');
+        addBtn.className = 'add-tab-btn';
+        addBtn.innerHTML = '➕ Добавить ПВЗ';
+        addBtn.onclick = () => addNewPVZ();
+        tabsLeft.appendChild(addBtn);
+        
+        // Правая часть: системные вкладки
+        tabsRight.innerHTML = '';
+        
+        const empTab = document.createElement('button');
+        empTab.className = `tab ${currentTab === 'employees' ? 'active' : ''}`;
+        empTab.innerHTML = '👥 Все сотрудники';
+        empTab.onclick = () => switchTab('employees');
+        tabsRight.appendChild(empTab);
         
         const analyticsTab = document.createElement('button');
         analyticsTab.className = `tab ${currentTab === 'analytics' ? 'active' : ''}`;
         analyticsTab.innerHTML = '📊 Аналитика';
         analyticsTab.onclick = () => switchTab('analytics');
-        container.appendChild(analyticsTab);
-        
-        const addBtn = document.createElement('button');
-        addBtn.className = 'add-tab-btn';
-        addBtn.innerHTML = '➕ Добавить ПВЗ';
-        addBtn.onclick = () => addNewPVZ();
-        container.appendChild(addBtn);
+        tabsRight.appendChild(analyticsTab);
     }
     
     async function switchTab(tabId) {
