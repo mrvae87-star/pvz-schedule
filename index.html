@@ -669,7 +669,7 @@
     
     <div id="pvzTabContent" style="display: none;">
         <div class="pvz-employees-management">
-            <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span></h3>
+            <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span> за <span id="currentMonthNameForPVZ"></span></h3>
             <div class="employee-selector">
                 <select id="availableEmployeesSelect">
                     <option value="">-- Выберите сотрудника --</option>
@@ -862,10 +862,10 @@
             
             <div id="emergencyFormBlock">
                 <div class="emergency-form">
-                    <h3>📝 Выберите сотрудника</h3>
+                    <h3>📝 Выберите свое имя </h3>
                     <div class="emergency-form-row">
                         <select id="publicEmployeeSelect">
-                            <option value="">-- Выберите сотрудника из списка --</option>
+                            <option value="">-- Выберите свое имя из списка --</option>
                         </select>
                     </div>
                     <div class="emergency-form-row">
@@ -966,7 +966,7 @@
     const BOT_TOKEN_KEY = "telegram_bot_token";
     const AUTH_KEY = "app_authorized";
     
-    let allPVZData = {};
+    let allPVZData = {}; // Структура: { "ПВЗ Центральный": { employeesHistory: { "2024-5": ["Анна"], "2024-6": ["Иван"] }, schedules: { "Анна": { "2024-5-1": true } } } }
     let currentPVZ = "";
     let currentTab = "pvz";
     let selectedYear = new Date().getFullYear();
@@ -999,6 +999,144 @@
         contract: { label: '📝 Трудовой договор', icon: '📝' },
         application: { label: '📄 Заявление на расчет', icon: '📄' }
     };
+    
+    // --- НОВЫЕ ФУНКЦИИ ДЛЯ ПРОВЕРКИ ЗАНЯТОСТИ В ПВЗ ---
+    
+    // Проверка, работает ли уже другой сотрудник в этом ПВЗ в указанный день
+    function isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, day, currentEmployeeName) {
+        const pvz = allPVZData[pvzName];
+        if (!pvz || !pvz.schedules) return false;
+        
+        const dateKey = `${year}-${month}-${day}`;
+        
+        // Перебираем всех сотрудников, которые есть в этом ПВЗ в этом месяце
+        const employeesThisMonth = getEmployeesForMonth(pvzName, year, month);
+        for (let emp of employeesThisMonth) {
+            // Пропускаем текущего сотрудника
+            if (emp === currentEmployeeName) continue;
+            
+            // Проверяем, есть ли у него смена в этот день
+            if (pvz.schedules[emp] && pvz.schedules[emp][dateKey] === true) {
+                return { isBusy: true, employeeName: emp };
+            }
+        }
+        return { isBusy: false, employeeName: null };
+    }
+    
+    // Проверка, может ли сотрудник работать в указанный день в данном ПВЗ (учитывая оба ограничения)
+    function canEmployeeWorkOnDay(employeeFullName, year, month, day, targetPVZ) {
+        // 1. Проверка, не занят ли сотрудник в другом ПВЗ
+        for (let pvzName in allPVZData) {
+            if (pvzName === targetPVZ) continue;
+            if (allPVZData[pvzName].schedules && allPVZData[pvzName].schedules[employeeFullName]) {
+                const dateKey = `${year}-${month}-${day}`;
+                if (allPVZData[pvzName].schedules[employeeFullName][dateKey] === true) {
+                    return { canWork: false, reason: `alreadyInOtherPVZ`, conflictingPVZ: pvzName };
+                }
+            }
+        }
+        
+        // 2. Проверка, не работает ли уже другой сотрудник в этом же ПВЗ
+        const otherEmployeeCheck = isAnotherEmployeeWorkingInThisPVZ(targetPVZ, year, month, day, employeeFullName);
+        if (otherEmployeeCheck.isBusy) {
+            return { canWork: false, reason: `anotherInSamePVZ`, conflictingEmployee: otherEmployeeCheck.employeeName };
+        }
+        
+        return { canWork: true, reason: null };
+    }
+    
+    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ НОВОЙ ЛОГИКИ (ПО МЕСЯЦАМ) ---
+    
+    // Получить ключ месяца для истории сотрудников
+    function getMonthHistoryKey(year, month) {
+        return `${year}-${month}`;
+    }
+    
+    // Инициализировать историю сотрудников для ПВЗ, если её нет
+    function initPVZHistoryIfNeeded(pvzName) {
+        if (!allPVZData[pvzName]) return;
+        if (!allPVZData[pvzName].employeesHistory) {
+            allPVZData[pvzName].employeesHistory = {};
+        }
+        // Инициализировать для базовых месяцев (на всякий случай)
+        if (!allPVZData[pvzName].schedules) allPVZData[pvzName].schedules = {};
+    }
+    
+    // Получить список сотрудников для ПВЗ в конкретный месяц
+    function getEmployeesForMonth(pvzName, year, month) {
+        if (!allPVZData[pvzName] || !allPVZData[pvzName].employeesHistory) return [];
+        const monthKey = getMonthHistoryKey(year, month);
+        if (allPVZData[pvzName].employeesHistory[monthKey]) {
+            return [...allPVZData[pvzName].employeesHistory[monthKey]];
+        }
+        
+        // Если данных за этот месяц нет, пробуем найти ближайший предыдущий месяц с данными
+        const allKeys = Object.keys(allPVZData[pvzName].employeesHistory).sort();
+        if (allKeys.length === 0) return [];
+        
+        let lastKey = null;
+        for (let key of allKeys) {
+            const [keyYear, keyMonth] = key.split('-').map(Number);
+            if (keyYear < year || (keyYear === year && keyMonth < month)) {
+                lastKey = key;
+            } else {
+                break;
+            }
+        }
+        
+        if (lastKey) {
+            // Копируем данные из прошлого месяца, чтобы не создавать пустой список
+            allPVZData[pvzName].employeesHistory[monthKey] = [...allPVZData[pvzName].employeesHistory[lastKey]];
+            return [...allPVZData[pvzName].employeesHistory[monthKey]];
+        }
+        
+        return []; // Если нет вообще никаких данных
+    }
+    
+    // Установить список сотрудников для ПВЗ в конкретный месяц
+    function setEmployeesForMonth(pvzName, year, month, employeesList) {
+        if (!allPVZData[pvzName] || !allPVZData[pvzName].employeesHistory) {
+            if (!allPVZData[pvzName]) allPVZData[pvzName] = { employeesHistory: {}, schedules: {} };
+            if (!allPVZData[pvzName].employeesHistory) allPVZData[pvzName].employeesHistory = {};
+        }
+        const monthKey = getMonthHistoryKey(year, month);
+        allPVZData[pvzName].employeesHistory[monthKey] = [...employeesList];
+    }
+    
+    // Добавить сотрудника в ПВЗ на конкретный месяц
+    function addEmployeeToMonth(pvzName, year, month, employeeName) {
+        const currentEmps = getEmployeesForMonth(pvzName, year, month);
+        if (!currentEmps.includes(employeeName)) {
+            currentEmps.push(employeeName);
+            setEmployeesForMonth(pvzName, year, month, currentEmps);
+            return true;
+        }
+        return false;
+    }
+    
+    // Удалить сотрудника из ПВЗ на конкретный месяц
+    function removeEmployeeFromMonth(pvzName, year, month, employeeName) {
+        const currentEmps = getEmployeesForMonth(pvzName, year, month);
+        const index = currentEmps.indexOf(employeeName);
+        if (index !== -1) {
+            currentEmps.splice(index, 1);
+            setEmployeesForMonth(pvzName, year, month, currentEmps);
+            // Также удаляем графики этого сотрудника за этот месяц
+            if (allPVZData[pvzName].schedules && allPVZData[pvzName].schedules[employeeName]) {
+                const daysInMonth = new Date(year, month, 0).getDate();
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dayKey = `${year}-${month}-${d}`;
+                    if (allPVZData[pvzName].schedules[employeeName][dayKey] !== undefined) {
+                        delete allPVZData[pvzName].schedules[employeeName][dayKey];
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    // --- ОСТАЛЬНЫЕ ФУНКЦИИ (КОМПРЕССИЯ, ДОКУМЕНТЫ, UI) ---
     
     // Функция для сжатия изображения
     function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.6) {
@@ -1257,12 +1395,16 @@
             globalEmployees.splice(employeeIndex, 1);
         }
         
-        // 2. Удаляем сотрудника из всех ПВЗ и их графиков
+        // 2. Удаляем сотрудника из всех ПВЗ и их графиков (для всех месяцев)
         for (let pvzName in allPVZData) {
             const pvz = allPVZData[pvzName];
-            const empIndexInPVZ = pvz.employees.indexOf(empName);
-            if (empIndexInPVZ !== -1) {
-                pvz.employees.splice(empIndexInPVZ, 1);
+            if (pvz.employeesHistory) {
+                for (let monthKey in pvz.employeesHistory) {
+                    const empIndexInMonth = pvz.employeesHistory[monthKey].indexOf(empName);
+                    if (empIndexInMonth !== -1) {
+                        pvz.employeesHistory[monthKey].splice(empIndexInMonth, 1);
+                    }
+                }
             }
             if (pvz.schedules && pvz.schedules[empName]) {
                 delete pvz.schedules[empName];
@@ -2079,27 +2221,56 @@
     
     function getDefaultPVZData() {
         return {
-            "ПВЗ Центральный": { employees: ["Анна Смирнова", "Иван Козлов"], schedules: {} },
-            "ПВЗ Северный": { employees: ["Мария Орлова", "Дмитрий Павлов"], schedules: {} },
-            "ПВЗ Южный": { employees: ["Елена Ветрова", "Зинаида Петрова"], schedules: {} },
-            "ПВЗ Восточный": { employees: ["Дарья Сидорова"], schedules: {} }
+            "ПВЗ Центральный": { employeesHistory: {}, schedules: {} },
+            "ПВЗ Северный": { employeesHistory: {}, schedules: {} },
+            "ПВЗ Южный": { employeesHistory: {}, schedules: {} },
+            "ПВЗ Восточный": { employeesHistory: {}, schedules: {} }
         };
     }
     
+    // Заполнение демо-данных для истории сотрудников и графиков
     function fillDemoSchedules(data) {
         const today = new Date();
-        for (let offset = -6; offset <= 12; offset++) {
-            const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const daysCount = new Date(year, month, 0).getDate();
-            for (let pvz in data) {
-                for (let emp of data[pvz].employees) {
-                    if (!data[pvz].schedules[emp]) data[pvz].schedules[emp] = {};
+        // Создадим базовую историю сотрудников для нескольких месяцев
+        for (let pvzName in data) {
+            initPVZHistoryIfNeeded(pvzName);
+            
+            // Базовый список сотрудников для каждого ПВЗ
+            let baseEmployees = [];
+            if (pvzName === "ПВЗ Центральный") baseEmployees = ["Анна Смирнова", "Иван Козлов"];
+            else if (pvzName === "ПВЗ Северный") baseEmployees = ["Мария Орлова", "Дмитрий Павлов"];
+            else if (pvzName === "ПВЗ Южный") baseEmployees = ["Елена Ветрова", "Зинаида Петрова"];
+            else if (pvzName === "ПВЗ Восточный") baseEmployees = ["Дарья Сидорова"];
+            
+            // Заполним для текущего и следующих месяцев
+            for (let offset = -3; offset <= 6; offset++) {
+                const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+                const monthKey = getMonthHistoryKey(year, month);
+                if (!data[pvzName].employeesHistory[monthKey]) {
+                    data[pvzName].employeesHistory[monthKey] = [...baseEmployees];
+                }
+            }
+            
+            // Заполним случайные графики
+            for (let emp of baseEmployees) {
+                if (!data[pvzName].schedules[emp]) data[pvzName].schedules[emp] = {};
+                for (let offset = -3; offset <= 6; offset++) {
+                    const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
+                    const year = date.getFullYear();
+                    const month = date.getMonth() + 1;
+                    const daysCount = new Date(year, month, 0).getDate();
                     for (let d = 1; d <= daysCount; d++) {
                         const key = `${year}-${month}-${d}`;
-                        if (data[pvz].schedules[emp][key] === undefined) {
-                            data[pvz].schedules[emp][key] = Math.random() < 0.7;
+                        if (data[pvzName].schedules[emp][key] === undefined) {
+                            // Делаем так, чтобы в один день не было двух сотрудников
+                            const otherWorking = isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, d, emp);
+                            if (!otherWorking.isBusy) {
+                                data[pvzName].schedules[emp][key] = Math.random() < 0.5;
+                            } else {
+                                data[pvzName].schedules[emp][key] = false;
+                            }
                         }
                     }
                 }
@@ -2124,11 +2295,19 @@
             const pvzDoc = await db.collection("appData").doc("allPVZData").get();
             if (pvzDoc.exists) {
                 allPVZData = pvzDoc.data().data || {};
+                // Миграция старых данных в новую структуру, если необходимо
                 for (let pvz in allPVZData) {
-                    if (!allPVZData[pvz].schedules) allPVZData[pvz].schedules = {};
-                    for (let emp of allPVZData[pvz].employees) {
-                        if (!allPVZData[pvz].schedules[emp]) allPVZData[pvz].schedules[emp] = {};
+                    if (!allPVZData[pvz].employeesHistory && allPVZData[pvz].employees) {
+                        // Старый формат: employees был массивом. Конвертируем для текущего месяца
+                        const currentYear = new Date().getFullYear();
+                        const currentMonth = new Date().getMonth() + 1;
+                        const monthKey = getMonthHistoryKey(currentYear, currentMonth);
+                        allPVZData[pvz].employeesHistory = {};
+                        allPVZData[pvz].employeesHistory[monthKey] = [...allPVZData[pvz].employees];
+                        delete allPVZData[pvz].employees;
                     }
+                    if (!allPVZData[pvz].employeesHistory) allPVZData[pvz].employeesHistory = {};
+                    if (!allPVZData[pvz].schedules) allPVZData[pvz].schedules = {};
                 }
             } else {
                 allPVZData = fillDemoSchedules(getDefaultPVZData());
@@ -2202,7 +2381,9 @@
         const dateKey = `${year}-${month}-${day}`;
         const employeeShifts = {};
         for (let pvzName in allPVZData) {
-            for (let employee of allPVZData[pvzName].employees) {
+            // Получаем сотрудников за текущий месяц (месяц завтрашнего дня)
+            const employeesForMonth = getEmployeesForMonth(pvzName, year, month);
+            for (let employee of employeesForMonth) {
                 if (allPVZData[pvzName].schedules[employee]?.[dateKey] === true) {
                     if (!employeeShifts[employee]) employeeShifts[employee] = [];
                     employeeShifts[employee].push({ pvzName, date: `${day}.${month}.${year}` });
@@ -2228,16 +2409,6 @@
             (await sendTelegramMessage(emp.telegramId, "🧪 Тестовое сообщение от системы графиков ПВЗ")) ? success++ : fail++;
         }
         showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false);
-    }
-    
-    function canEmployeeWork(employeeFullName, year, month, day, targetPVZ) {
-        for (let pvzName in allPVZData) {
-            if (pvzName === targetPVZ) continue;
-            if (allPVZData[pvzName].schedules[employeeFullName]?.[`${year}-${month}-${day}`] === true) {
-                return { canWork: false, conflictingPVZ: pvzName };
-            }
-        }
-        return { canWork: true, conflictingPVZ: null };
     }
     
     function getDayOfWeek(year, month, day) { return new Date(year, month - 1, day).getDay(); }
@@ -2303,9 +2474,17 @@
         emp.telegramId = prompt("Telegram ID:", emp.telegramId || "") || "";
         
         for (let pvz in allPVZData) {
-            const idx2 = allPVZData[pvz].employees.indexOf(oldFullName);
-            if (idx2 !== -1) allPVZData[pvz].employees[idx2] = emp.fullName;
-            if (allPVZData[pvz].schedules[oldFullName]) { allPVZData[pvz].schedules[emp.fullName] = allPVZData[pvz].schedules[oldFullName]; delete allPVZData[pvz].schedules[oldFullName]; }
+            // Обновляем во всех месяцах истории
+            if (allPVZData[pvz].employeesHistory) {
+                for (let monthKey in allPVZData[pvz].employeesHistory) {
+                    const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(oldFullName);
+                    if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey][idx2] = emp.fullName;
+                }
+            }
+            if (allPVZData[pvz].schedules[oldFullName]) { 
+                allPVZData[pvz].schedules[emp.fullName] = allPVZData[pvz].schedules[oldFullName]; 
+                delete allPVZData[pvz].schedules[oldFullName]; 
+            }
         }
         if (salaryData[oldFullName]) { salaryData[emp.fullName] = salaryData[oldFullName]; delete salaryData[oldFullName]; }
         if (extraWorks[oldFullName]) { extraWorks[emp.fullName] = extraWorks[oldFullName]; delete extraWorks[oldFullName]; }
@@ -2328,8 +2507,12 @@
         
         globalEmployees.splice(idx, 1);
         for (let pvz in allPVZData) {
-            const idx2 = allPVZData[pvz].employees.indexOf(deletedName);
-            if (idx2 !== -1) allPVZData[pvz].employees.splice(idx2, 1);
+            if (allPVZData[pvz].employeesHistory) {
+                for (let monthKey in allPVZData[pvz].employeesHistory) {
+                    const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(deletedName);
+                    if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey].splice(idx2, 1);
+                }
+            }
             delete allPVZData[pvz].schedules[deletedName];
         }
         delete salaryData[deletedName];
@@ -2365,7 +2548,7 @@
     function updateAvailableEmployeesSelect() {
         const select = document.getElementById("availableEmployeesSelect");
         if (!select) return;
-        const currentEmps = allPVZData[currentPVZ]?.employees || [];
+        const currentEmps = getEmployeesForMonth(currentPVZ, selectedYear, selectedMonth);
         const available = globalEmployees.filter(emp => !currentEmps.includes(emp.fullName));
         select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
         available.forEach(emp => { const o = document.createElement("option"); o.value = emp.fullName; o.textContent = emp.fullName; select.appendChild(o); });
@@ -2374,9 +2557,11 @@
     function updatePVZEmployeesUI() {
         const container = document.getElementById("pvzEmployeesList");
         const span = document.getElementById("currentPVZName");
+        const monthSpan = document.getElementById("currentMonthNameForPVZ");
         if (!container) return;
-        const employees = allPVZData[currentPVZ]?.employees || [];
+        const employees = getEmployeesForMonth(currentPVZ, selectedYear, selectedMonth);
         span.textContent = currentPVZ;
+        if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`;
         container.innerHTML = employees.length === 0 ? '<span style="color:#64748b;">Нет сотрудников</span>' : employees.map(emp => `<div class="pvz-employee-tag">${escapeHtml(emp)}<button class="remove-from-pvz" data-name="${emp}">✕</button></div>`).join('');
         document.querySelectorAll('.remove-from-pvz').forEach(btn => btn.addEventListener('click', () => removeEmployeeFromPVZ(btn.dataset.name)));
         updateAvailableEmployeesSelect(); renderSchedule();
@@ -2385,26 +2570,27 @@
     async function addEmployeeToPVZ() {
         const empFullName = document.getElementById("availableEmployeesSelect").value;
         if (!empFullName) { alert("Выберите сотрудника"); return; }
-        if (!allPVZData[currentPVZ].employees.includes(empFullName)) {
-            allPVZData[currentPVZ].employees.push(empFullName);
-            if (!allPVZData[currentPVZ].schedules[empFullName]) allPVZData[currentPVZ].schedules[empFullName] = {};
+        // Проверка на уникальность в рамках выбранного месяца
+        const currentEmps = getEmployeesForMonth(currentPVZ, selectedYear, selectedMonth);
+        if (!currentEmps.includes(empFullName)) {
+            addEmployeeToMonth(currentPVZ, selectedYear, selectedMonth, empFullName);
             updatePVZEmployeesUI();
             if (currentTab === 'analytics') renderAnalytics();
             await saveAndSync();
-            showNotification(`✅ ${empFullName} добавлен`, false);
+            showNotification(`✅ ${empFullName} добавлен в ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false);
+        } else {
+            alert("Сотрудник уже добавлен в этом месяце");
         }
     }
     
     async function removeEmployeeFromPVZ(empFullName) {
         if (!checkPassword()) return;
-        if (!confirm(`Удалить "${empFullName}" из ПВЗ?`)) return;
-        const idx = allPVZData[currentPVZ].employees.indexOf(empFullName);
-        if (idx !== -1) allPVZData[currentPVZ].employees.splice(idx, 1);
-        delete allPVZData[currentPVZ].schedules[empFullName];
+        if (!confirm(`Удалить "${empFullName}" из ПВЗ "${currentPVZ}" за ${getMonthName(selectedMonth)} ${selectedYear}?`)) return;
+        removeEmployeeFromMonth(currentPVZ, selectedYear, selectedMonth, empFullName);
         updatePVZEmployeesUI();
         if (currentTab === 'analytics') renderAnalytics();
         await saveAndSync();
-        showNotification(`❌ ${empFullName} удалён`, false);
+        showNotification(`❌ ${empFullName} удалён из ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false);
     }
     
     function generateHeader(daysCount, year, month) {
@@ -2413,7 +2599,7 @@
             const dow = getDayOfWeek(year, month, d);
             html += `<th class="${dow === 0 || dow === 6 ? 'weekend' : 'weekday'} ${isToday(year, month, d) ? 'today-column' : ''}"><div class="day-number">${d}</div><div class="weekday-name">${weekdays[dow]}</div></th>`;
         }
-        return html + '<th>📊</th></tr>';
+        return html + '<th>📊</th></td>';
     }
     
     function renderSchedule() {
@@ -2423,7 +2609,8 @@
         const daysCount = new Date(year, month, 0).getDate();
         document.getElementById("tableHeader").innerHTML = generateHeader(daysCount, year, month);
         let bodyHtml = '';
-        for (let emp of [...data.employees]) {
+        const employeesThisMonth = getEmployeesForMonth(currentPVZ, year, month);
+        for (let emp of employeesThisMonth) {
             let workCount = 0, row = `<tr><td class="employee-col">${escapeHtml(emp)}</td>`;
             for (let d = 1; d <= daysCount; d++) {
                 if (!data.schedules[emp]) data.schedules[emp] = {};
@@ -2433,7 +2620,7 @@
             }
             bodyHtml += row + `<td style="text-align:center;font-weight:700;">${workCount}</td></tr>`;
         }
-        document.getElementById("tableBody").innerHTML = bodyHtml || '</tr><td colspan="40" style="text-align:center;padding:40px;">👀 Нет сотрудников в этом ПВЗ</td></tr>';
+        document.getElementById("tableBody").innerHTML = bodyHtml || '<tr><td colspan="40" style="text-align:center;padding:40px;">👀 Нет сотрудников в этом ПВЗ за выбранный месяц</td></tr>';
         document.getElementById("currentMonthTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${currentPVZ}`;
     }
     
@@ -2442,11 +2629,28 @@
         while (target && target.tagName !== 'TD') target = target.parentElement;
         if (!target || target.classList.contains('employee-col')) return;
         const emp = target.dataset.employee, year = parseInt(target.dataset.year), month = parseInt(target.dataset.month), day = parseInt(target.dataset.day);
-        const newStatus = target.dataset.status !== 'true';
+        const currentStatus = target.dataset.status === 'true';
+        const newStatus = !currentStatus;
+        
         if (newStatus) {
-            const conflict = canEmployeeWork(emp, year, month, day, currentPVZ);
-            if (!conflict.canWork) { showNotification(`⚠️ "${emp}" уже работает ${day}.${month}.${year} в ПВЗ "${conflict.conflictingPVZ}"`); return; }
+            // Проверка, может ли сотрудник работать в этот день (учитывая оба ограничения)
+            const conflict = canEmployeeWorkOnDay(emp, year, month, day, currentPVZ);
+            if (!conflict.canWork) { 
+                if (conflict.reason === 'alreadyInOtherPVZ') {
+                    showNotification(`⚠️ "${emp}" уже работает ${day}.${month}.${year} в ПВЗ "${conflict.conflictingPVZ}"`); 
+                } else if (conflict.reason === 'anotherInSamePVZ') {
+                    showNotification(`⚠️ В этот день (${day}.${month}.${year}) в ПВЗ "${currentPVZ}" уже работает сотрудник "${conflict.conflictingEmployee}". Два сотрудника не могут работать в одном ПВЗ в один день!`); 
+                }
+                return; 
+            }
+            // Проверка, что сотрудник вообще числится в этом ПВЗ в этом месяце
+            const employeesThisMonth = getEmployeesForMonth(currentPVZ, year, month);
+            if (!employeesThisMonth.includes(emp)) {
+                showNotification(`⚠️ "${emp}" не числится в этом ПВЗ за ${getMonthName(month)} ${year}. Сначала добавьте его.`);
+                return;
+            }
         }
+        
         if (!allPVZData[currentPVZ].schedules[emp]) allPVZData[currentPVZ].schedules[emp] = {};
         allPVZData[currentPVZ].schedules[emp][`${year}-${month}-${day}`] = newStatus;
         renderSchedule();
@@ -2484,7 +2688,7 @@
     function showDashboardPasswordModal(callback) {
         const overlay = document.createElement('div');
         overlay.className = 'dashboard-password-overlay';
-        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду зарплат</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
+        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
         document.body.appendChild(overlay);
         const input = overlay.querySelector('#dashboardPasswordInput'), submit = overlay.querySelector('#dashboardPasswordSubmit'), cancel = overlay.querySelector('#dashboardPasswordCancel'), error = overlay.querySelector('#dashboardPasswordError');
         const cleanup = () => overlay.remove();
@@ -2547,7 +2751,7 @@
         if (!checkPassword()) return;
         let num = Object.keys(allPVZData).length + 1, name = `ПВЗ ${num}`;
         while (allPVZData[name]) { num++; name = `ПВЗ ${num}`; }
-        allPVZData[name] = { employees: [], schedules: {} };
+        allPVZData[name] = { employeesHistory: {}, schedules: {} };
         await switchTab(name); await saveAndSync();
         showNotification(`✅ ПВЗ "${name}" добавлен`, false);
     }
@@ -2557,6 +2761,12 @@
     function saveBotToken() { botToken = document.getElementById("botTokenInput").value.trim(); localStorage.setItem(BOT_TOKEN_KEY, botToken); closeModal(); showNotification(botToken ? "✅ Токен сохранён" : "❌ Токен удалён", false); }
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
     
+    // Обновление названия месяца в интерфейсе ПВЗ при смене месяца
+    function updatePVZMonthName() {
+        const monthSpan = document.getElementById("currentMonthNameForPVZ");
+        if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`;
+    }
+    
     async function initApp() {
         if (!await loadFromFirestore()) showNotification("⚠️ Не удалось загрузить данные.", true);
         renderTabs();
@@ -2564,8 +2774,21 @@
         document.getElementById("addToPVZBtn")?.addEventListener("click", addEmployeeToPVZ);
         document.getElementById("editPVZNameBtn")?.addEventListener("click", editCurrentPVZName);
         document.getElementById("deletePVZBtn")?.addEventListener("click", deleteCurrentPVZ);
-        document.getElementById("monthSelect")?.addEventListener("change", e => { [selectedYear, selectedMonth] = e.target.value.split("-").map(Number); renderSchedule(); });
-        document.getElementById("goToCurrentMonthBtn")?.addEventListener("click", () => { const now = new Date(); selectedYear = now.getFullYear(); selectedMonth = now.getMonth() + 1; document.getElementById("monthSelect").value = `${selectedYear}-${selectedMonth}`; renderSchedule(); });
+        document.getElementById("monthSelect")?.addEventListener("change", e => { 
+            [selectedYear, selectedMonth] = e.target.value.split("-").map(Number); 
+            updatePVZEmployeesUI(); 
+            renderSchedule();
+            updatePVZMonthName();
+        });
+        document.getElementById("goToCurrentMonthBtn")?.addEventListener("click", () => { 
+            const now = new Date(); 
+            selectedYear = now.getFullYear(); 
+            selectedMonth = now.getMonth() + 1; 
+            document.getElementById("monthSelect").value = `${selectedYear}-${selectedMonth}`; 
+            updatePVZEmployeesUI();
+            renderSchedule(); 
+            updatePVZMonthName();
+        });
         document.getElementById("scheduleGrid")?.addEventListener("click", toggleStatus);
         document.getElementById("sendTomorrowNotifyBtn")?.addEventListener("click", sendTomorrowNotifications);
         document.getElementById("sendTestNotifyBtn")?.addEventListener("click", sendTestNotification);
