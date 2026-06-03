@@ -1,7 +1,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>График сотрудников по ПВЗ + Дашборд ЗП</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80'%3E🏪%3C/text%3E%3C/svg%3E"> 
     <style>
@@ -36,7 +36,6 @@
         .header-buttons {
             display: flex;
             gap: 8px;
-            flex-wrap: wrap;
         }
         .header-corner-btn {
             background: rgba(100, 116, 139, 0.1);
@@ -62,159 +61,6 @@
             background: #ef4444;
             border-color: #ef4444;
         }
-        
-        /* Стили для мобильного режима сотрудника - оптимизировано для одного экрана */
-        .employee-mode-container {
-            max-width: 100%;
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-        }
-        .employee-mode-header {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: white;
-            padding: 16px 20px;
-            text-align: center;
-        }
-        .employee-mode-header h2 {
-            margin: 0 0 4px 0;
-            font-size: 1.3rem;
-        }
-        .employee-mode-header p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 0.75rem;
-        }
-        .employee-selector-panel {
-            background: #f8fafc;
-            padding: 12px 16px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .employee-selector-panel select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #cbd5e1;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-            background: white;
-            cursor: pointer;
-        }
-        .employee-selector-panel select:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-        .employee-selector-panel button {
-            width: 100%;
-            padding: 10px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-top: 4px;
-        }
-        .employee-selector-panel button:hover {
-            background: #2563eb;
-        }
-        .employee-selector-panel .back-to-admin-btn {
-            background: #64748b;
-            margin-top: 8px;
-        }
-        .employee-selector-panel .back-to-admin-btn:hover {
-            background: #475569;
-        }
-        
-        /* Мобильная таблица графика сотрудника - компактная */
-        .employee-schedule-container {
-            padding: 12px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        .employee-schedule-title {
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 12px;
-            padding: 8px;
-            background: #f1f5f9;
-            border-radius: 12px;
-        }
-        .employee-schedule-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.65rem;
-            min-width: 400px;
-        }
-        .employee-schedule-table th {
-            padding: 6px 3px;
-            text-align: center;
-            font-weight: 700;
-            background: #1e293b;
-            color: white;
-            border: 1px solid #334155;
-            font-size: 0.6rem;
-        }
-        .employee-schedule-table td {
-            border: 1px solid #e2e8f0;
-            padding: 6px 3px;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .employee-schedule-table .day-cell {
-            font-weight: 500;
-            background: #f8fafc;
-        }
-        .employee-work-cell {
-            font-size: 0.6rem;
-            font-weight: 500;
-            border-radius: 8px;
-        }
-        .employee-off-cell {
-            background: #fee2e2;
-            color: #991b1b;
-            font-size: 0.6rem;
-        }
-        .pvz-name-in-cell {
-            font-weight: 600;
-            font-size: 0.55rem;
-            display: block;
-            line-height: 1.2;
-            word-break: break-word;
-        }
-        .legend-employee {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 12px;
-            padding: 8px;
-            background: #f8fafc;
-            border-radius: 20px;
-            font-size: 0.6rem;
-            flex-wrap: wrap;
-        }
-        .legend-employee span {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .legend-color-box {
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-        }
-        
-        /* Цвета для ПВЗ */
-        .pvz-bg-0 { background-color: rgba(59, 130, 246, 0.25); } /* Синий */
-        .pvz-bg-1 { background-color: rgba(34, 197, 94, 0.25); } /* Зеленый */
-        .pvz-bg-2 { background-color: rgba(249, 115, 22, 0.25); } /* Оранжевый */
-        .pvz-bg-3 { background-color: rgba(168, 85, 247, 0.25); } /* Фиолетовый */
-        .pvz-bg-4 { background-color: rgba(236, 72, 153, 0.25); } /* Розовый */
-        .pvz-bg-5 { background-color: rgba(20, 184, 166, 0.25); } /* Бирюзовый */
         
         .notification {
             position: fixed;
@@ -342,6 +188,174 @@
             margin-bottom: 8px;
         }
         
+        /* Стили для документов */
+        .employee-block {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: border-color 0.2s;
+        }
+        .employee-block:hover {
+            border-color: #3b82f6;
+        }
+        .employee-block .emp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .employee-block .emp-name {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: #1e293b;
+        }
+        .employee-block .emp-address {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .documents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .document-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .document-card .doc-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #475569;
+            text-align: center;
+        }
+        .document-card .doc-preview {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 60px;
+        }
+        .document-card img {
+            width: 100%;
+            max-height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            cursor: pointer;
+        }
+        .pdf-preview {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 15px;
+            background: #fee2e2;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #fecaca;
+            width: 100%;
+            text-align: center;
+        }
+        .pdf-icon {
+            font-size: 2rem;
+        }
+        .pdf-name {
+            font-size: 0.75rem;
+            color: #991b1b;
+            word-break: break-all;
+        }
+        .document-card .doc-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .upload-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .upload-btn:hover {
+            background: #2563eb;
+        }
+        .delete-doc-btn {
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+        .delete-doc-btn:hover {
+            background: #fecaca;
+        }
+        .contacts-section {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .contacts-section h5 {
+            margin: 0 0 8px 0;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+        .contact-tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin: 3px;
+        }
+        
+        .doc-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        .doc-modal img, .doc-modal iframe {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+        }
+        .doc-modal .close-doc-modal {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+        }
+        
+        /* Остальные стили */
         .employees-table-container { overflow-x: auto; margin-bottom: 20px; }
         .employees-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .employees-table th { background: #f1f5f9; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
@@ -465,6 +479,7 @@
         .success-message h3 { color: #15803d; margin: 0 0 10px 0; }
         .success-message p { color: #166534; margin: 0; }
 
+        /* Стили для аналитики с цветами ПВЗ */
         .analytics-container { padding: 20px 0; }
         .analytics-header { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 15px 20px; border-radius: 16px; margin-bottom: 20px; }
         .analytics-header h2 { margin: 0; font-size: 1.3rem; }
@@ -506,14 +521,16 @@
         .legend-dot.off { background: #fee2e2; border: 1px solid #991b1b; }
         .legend-dot.today { background: #fff3bf; border: 1px solid #f59e0b; }
         
-        .pvz-color-0 { background-color: rgba(59, 130, 246, 0.15); }
-        .pvz-color-1 { background-color: rgba(34, 197, 94, 0.15); }
-        .pvz-color-2 { background-color: rgba(249, 115, 22, 0.15); }
-        .pvz-color-3 { background-color: rgba(168, 85, 247, 0.15); }
-        .pvz-color-default { background-color: rgba(100, 116, 139, 0.1); }
+        /* Цвета для разных ПВЗ */
+        .pvz-color-0 { background-color: rgba(59, 130, 246, 0.15); } /* Синий - Центральный */
+        .pvz-color-1 { background-color: rgba(34, 197, 94, 0.15); } /* Зеленый - Северный */
+        .pvz-color-2 { background-color: rgba(249, 115, 22, 0.15); } /* Оранжевый - Южный */
+        .pvz-color-3 { background-color: rgba(168, 85, 247, 0.15); } /* Фиолетовый - Восточный */
+        .pvz-color-default { background-color: rgba(100, 116, 139, 0.1); } /* Серый - остальные */
         
         .no-results { text-align: center; padding: 40px; color: #64748b; font-size: 1rem; }
         
+        /* Стили для кнопок с анимацией */
         .action-btn {
             padding: 6px 14px;
             border-radius: 20px;
@@ -547,7 +564,14 @@
             opacity: 1;
             box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
         }
+        .header-corner-btn, .tab, .add-tab-btn, .send-notify-btn, .upload-btn, .delete-doc-btn {
+            transition: all 0.3s ease;
+        }
+        .header-corner-btn:hover, .tab:hover, .add-tab-btn:hover, .send-notify-btn:hover, .upload-btn:hover, .delete-doc-btn:hover {
+            transform: scale(1.02);
+        }
         
+        /* Модальное окно редактирования контактов */
         .edit-contacts-modal {
             display: none;
             position: fixed;
@@ -609,44 +633,6 @@
             cursor: pointer;
             font-size: 0.75rem;
         }
-        
-        /* Стили для мобильной оптимизации */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 12px 16px;
-            }
-            h1 {
-                font-size: 1.3rem;
-            }
-            .tab {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
-            .employee-schedule-table {
-                font-size: 0.55rem;
-            }
-            .employee-schedule-table th {
-                padding: 4px 2px;
-                font-size: 0.55rem;
-            }
-            .employee-schedule-table td {
-                padding: 4px 2px;
-            }
-            .pvz-name-in-cell {
-                font-size: 0.5rem;
-            }
-            .legend-employee {
-                gap: 8px;
-                font-size: 0.55rem;
-            }
-            .legend-color-box {
-                width: 12px;
-                height: 12px;
-            }
-        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -668,7 +654,6 @@
     <h1>
         🏪 График сотрудников
         <div class="header-buttons">
-            <button id="employeeModeBtn" class="header-corner-btn">📱 Сотрудникам</button>
             <button id="emergencyCornerBtn" class="header-corner-btn emergency-btn">🆘 Экстренные контакты</button>
             <button id="dashboardCornerBtn" class="header-corner-btn">💰 Дашборд</button>
         </div>
@@ -849,6 +834,7 @@
                 <div class="emergency-contacts-container">
                     <h3>🆘 Экстренные контакты всех сотрудников</h3>
                     
+                    <!-- Поиск -->
                     <div class="search-box">
                         <label>🔍 Поиск по имени сотрудника:</label>
                         <input type="text" id="emergencySearchInput" placeholder="Введите имя или фамилию..." oninput="filterEmergencyContacts()">
@@ -940,45 +926,6 @@
         </div>
     </div>
     
-    <!-- Мобильный режим для сотрудников -->
-    <div id="employeeModeContent" style="display: none;">
-        <div class="employee-mode-container">
-            <div class="employee-mode-header">
-                <h2>👋 Мои смены</h2>
-                <p>Выберите свой ПВЗ и имя, чтобы увидеть график работы</p>
-            </div>
-            
-            <div class="employee-selector-panel">
-                <select id="employeeModePVZSelect">
-                    <option value="">-- Выберите ПВЗ --</option>
-                </select>
-                <select id="employeeModeEmployeeSelect" disabled>
-                    <option value="">-- Сначала выберите ПВЗ --</option>
-                </select>
-                <select id="employeeModeMonthSelect">
-                    <option value="">-- Выберите месяц --</option>
-                </select>
-                <button id="employeeModeShowScheduleBtn">📅 Показать мой график</button>
-                <button id="employeeModeBackToAdminBtn" class="back-to-admin-btn">← Вернуться в админ-панель</button>
-            </div>
-            
-            <div id="employeeModeScheduleContainer" style="display: none;">
-                <div class="employee-schedule-title" id="employeeScheduleTitle"></div>
-                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                    <table class="employee-schedule-table" id="employeeScheduleTable">
-                        <thead id="employeeTableHeader"></thead>
-                        <tbody id="employeeTableBody"></tbody>
-                    </table>
-                </div>
-                <div class="legend-employee" id="employeeLegend"></div>
-            </div>
-            
-            <div id="employeeModeNoData" style="display: none; text-align: center; padding: 40px; color: #64748b;">
-                😔 Нет данных о графике за выбранный месяц
-            </div>
-        </div>
-    </div>
-    
     <div class="legend">
         <span>✅ <span class="badge-work">Рабочий день</span></span>
         <span>❌ <span class="badge-off">Выходной</span></span>
@@ -1002,6 +949,7 @@
     </div>
 </div>
 
+<!-- Модальное окно для редактирования контактов -->
 <div id="editContactsModal" class="edit-contacts-modal">
     <div class="edit-contacts-content">
         <span class="close-edit-modal">&times;</span>
@@ -1027,6 +975,7 @@
 <script>
     // Скрытые пароли
     const _p1 = [112, 118, 122, 49, 53];
+    // Пароль дашборда: zina6535564
     const _p2 = [122, 105, 110, 97, 54, 53, 51, 53, 53, 54, 52];
     const SITE_ACCESS_PASSWORD = String.fromCharCode(..._p1);
     const DASHBOARD_PASSWORD = String.fromCharCode(..._p2);
@@ -1069,14 +1018,7 @@
     let emergencyContacts = {};
     let currentEditingEmployee = null;
     
-    // Мобильный режим
-    let isEmployeeModeActive = false;
-    let selectedEmployeePVZ = "";
-    let selectedEmployeeName = "";
-    let selectedEmployeeMonthYear = "";
-    
     const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
-    const weekdaysShort = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
     
     const DOC_TYPES = {
         passport: { label: '🛂 Паспорт', icon: '🛂' },
@@ -1085,16 +1027,22 @@
         application: { label: '📄 Заявление на расчет', icon: '📄' }
     };
     
-    // Функция для получения цвета ПВЗ (индекс)
+    // Функция для получения цвета ПВЗ
+    function getPVZColorClass(pvzName) {
+        const pvzColors = {
+            "ПВЗ Центральный": "pvz-color-0",
+            "ПВЗ Северный": "pvz-color-1",
+            "ПВЗ Южный": "pvz-color-2",
+            "ПВЗ Восточный": "pvz-color-3"
+        };
+        return pvzColors[pvzName] || "pvz-color-default";
+    }
+    
+    // Функция для получения индекса цвета ПВЗ
     function getPVZColorIndex(pvzName) {
         const pvzList = Object.keys(allPVZData);
         const index = pvzList.indexOf(pvzName);
-        return index % 6;
-    }
-    
-    function getPVZColorClass(pvzName) {
-        const index = getPVZColorIndex(pvzName);
-        return `pvz-bg-${index}`;
+        return index % 4; // 4 базовых цвета
     }
     
     // --- ФУНКЦИИ ДЛЯ ПРОВЕРКИ ЗАНЯТОСТИ В ПВЗ ---
@@ -2120,6 +2068,7 @@
         
         tbody.innerHTML = '';
         
+        // Фильтрация сотрудников по поиску
         let filteredEmployees = globalEmployees;
         if (analyticsSearchTerm) {
             filteredEmployees = globalEmployees.filter(emp => 
@@ -2128,7 +2077,7 @@
         }
         
         if (filteredEmployees.length === 0 && analyticsSearchTerm) {
-            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td>' + '</tr>';
+            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>';
             return;
         }
         
@@ -2149,7 +2098,7 @@
                     if (allPVZData[pvz].schedules[emp.fullName]?.[key] === true) {
                         pvzName = pvz;
                         workDaysCount++;
-                        colorClass = `pvz-color-${getPVZColorIndex(pvz)}`;
+                        colorClass = getPVZColorClass(pvz);
                         break;
                     }
                 }
@@ -2188,226 +2137,26 @@
     
     function openAnalytics() {
         currentTab = 'analytics';
-        isEmployeeModeActive = false;
         renderTabs();
         document.getElementById("employeesTabContent").style.display = "none";
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "block";
         document.getElementById("emergencyContactsTabContent").style.display = "none";
-        document.getElementById("employeeModeContent").style.display = "none";
         populateAnalyticsSelects();
         renderAnalytics();
     }
     
     function openEmergencyContacts() {
         currentTab = 'emergency';
-        isEmployeeModeActive = false;
         renderTabs();
         document.getElementById("employeesTabContent").style.display = "none";
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "none";
         document.getElementById("emergencyContactsTabContent").style.display = "block";
-        document.getElementById("employeeModeContent").style.display = "none";
         loadPublicEmergencyForm();
     }
-    
-    // --- МОБИЛЬНЫЙ РЕЖИМ ДЛЯ СОТРУДНИКОВ ---
-    
-    function openEmployeeMode() {
-        currentTab = 'employee';
-        isEmployeeModeActive = true;
-        
-        // Скрываем все основные вкладки
-        document.getElementById("employeesTabContent").style.display = "none";
-        document.getElementById("pvzTabContent").style.display = "none";
-        document.getElementById("dashboardTabContent").style.display = "none";
-        document.getElementById("analyticsTabContent").style.display = "none";
-        document.getElementById("emergencyContactsTabContent").style.display = "none";
-        document.getElementById("employeeModeContent").style.display = "block";
-        
-        // Заполняем селекты
-        populateEmployeeModeSelects();
-    }
-    
-    function populateEmployeeModeSelects() {
-        // ПВЗ
-        const pvzSelect = document.getElementById("employeeModePVZSelect");
-        pvzSelect.innerHTML = '<option value="">-- Выберите ПВЗ --</option>';
-        for (let pvz in allPVZData) {
-            const option = document.createElement("option");
-            option.value = pvz;
-            option.textContent = pvz;
-            pvzSelect.appendChild(option);
-        }
-        
-        // Месяцы (последние 12 месяцев)
-        const monthSelect = document.getElementById("employeeModeMonthSelect");
-        monthSelect.innerHTML = '<option value="">-- Выберите месяц --</option>';
-        const now = new Date();
-        for (let offset = -6; offset <= 6; offset++) {
-            const date = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const option = document.createElement("option");
-            option.value = `${year}-${month}`;
-            option.textContent = `${getMonthName(month)} ${year}`;
-            monthSelect.appendChild(option);
-        }
-        
-        // Сотрудники обновляются при выборе ПВЗ
-        pvzSelect.addEventListener("change", () => {
-            const selectedPvz = pvzSelect.value;
-            const employeeSelect = document.getElementById("employeeModeEmployeeSelect");
-            
-            if (!selectedPvz) {
-                employeeSelect.innerHTML = '<option value="">-- Сначала выберите ПВЗ --</option>';
-                employeeSelect.disabled = true;
-                return;
-            }
-            
-            employeeSelect.disabled = false;
-            employeeSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
-            
-            // Получаем сотрудников для выбранного ПВЗ за текущий месяц
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
-            const employees = getEmployeesForMonth(selectedPvz, currentYear, currentMonth);
-            
-            employees.forEach(emp => {
-                const option = document.createElement("option");
-                option.value = emp;
-                option.textContent = emp;
-                employeeSelect.appendChild(option);
-            });
-        });
-    }
-    
-    function showEmployeeSchedule() {
-        const pvzSelect = document.getElementById("employeeModePVZSelect");
-        const employeeSelect = document.getElementById("employeeModeEmployeeSelect");
-        const monthSelect = document.getElementById("employeeModeMonthSelect");
-        
-        const pvz = pvzSelect.value;
-        const employee = employeeSelect.value;
-        const monthYear = monthSelect.value;
-        
-        if (!pvz) {
-            showNotification("Пожалуйста, выберите ПВЗ", true);
-            return;
-        }
-        if (!employee) {
-            showNotification("Пожалуйста, выберите сотрудника", true);
-            return;
-        }
-        if (!monthYear) {
-            showNotification("Пожалуйста, выберите месяц", true);
-            return;
-        }
-        
-        const [year, month] = monthYear.split('-').map(Number);
-        const daysInMonth = new Date(year, month, 0).getDate();
-        const today = new Date();
-        const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
-        
-        // Собираем график сотрудника по всем ПВЗ за этот месяц
-        const scheduleMap = {}; // день -> название ПВЗ где работает
-        let hasAnyWork = false;
-        
-        for (let pvzName in allPVZData) {
-            const pvzData = allPVZData[pvzName];
-            if (pvzData.schedules && pvzData.schedules[employee]) {
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const key = `${year}-${month}-${day}`;
-                    if (pvzData.schedules[employee][key] === true) {
-                        scheduleMap[day] = pvzName;
-                        hasAnyWork = true;
-                    }
-                }
-            }
-        }
-        
-        if (!hasAnyWork) {
-            document.getElementById("employeeModeScheduleContainer").style.display = "none";
-            document.getElementById("employeeModeNoData").style.display = "block";
-            return;
-        }
-        
-        document.getElementById("employeeModeNoData").style.display = "none";
-        document.getElementById("employeeModeScheduleContainer").style.display = "block";
-        
-        // Заголовок
-        document.getElementById("employeeScheduleTitle").innerHTML = `📅 ${getMonthName(month)} ${year}<br>👤 ${escapeHtml(employee)}`;
-        
-        // Создаем таблицу: сверху дни недели, снизу даты с названием ПВЗ
-        let headerHtml = '<tr>';
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayOfWeek = getDayOfWeek(year, month, day);
-            headerHtml += `<th>${weekdaysShort[dayOfWeek]}<br><span style="font-size:0.55rem; opacity:0.8;">${day}</span></th>`;
-        }
-        headerHtml += '</tr>';
-        document.getElementById("employeeTableHeader").innerHTML = headerHtml;
-        
-        let bodyHtml = '<tr>';
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayOfWeek = getDayOfWeek(year, month, day);
-            const isToday = isCurrentMonth && today.getDate() === day;
-            const workingPVZ = scheduleMap[day];
-            
-            let cellClass = "day-cell";
-            let cellContent = "";
-            
-            if (workingPVZ) {
-                const colorClass = getPVZColorClass(workingPVZ);
-                cellClass += ` ${colorClass}`;
-                // Сокращаем название ПВЗ для мобильной версии
-                let shortPVZName = workingPVZ;
-                if (workingPVZ.length > 12) {
-                    shortPVZName = workingPVZ.substring(0, 10) + '..';
-                }
-                cellContent = `<div class="pvz-name-in-cell">🏪 ${escapeHtml(shortPVZName)}</div>`;
-            } else {
-                cellClass += " employee-off-cell";
-                cellContent = "❌";
-            }
-            
-            if (isToday) cellClass += " today-highlight";
-            
-            bodyHtml += `<td class="${cellClass}">${cellContent}</td>`;
-        }
-        bodyHtml += '<tr>';
-        document.getElementById("employeeTableBody").innerHTML = bodyHtml;
-        
-        // Легенда с цветами ПВЗ
-        const legendHtml = buildEmployeeLegend();
-        document.getElementById("employeeLegend").innerHTML = legendHtml;
-    }
-    
-    function buildEmployeeLegend() {
-        const uniquePVZ = new Set();
-        for (let pvz in allPVZData) {
-            uniquePVZ.add(pvz);
-        }
-        
-        let html = '';
-        Array.from(uniquePVZ).slice(0, 4).forEach(pvz => {
-            const colorClass = getPVZColorClass(pvz);
-            html += `<span><div class="legend-color-box ${colorClass}" style="border: 1px solid #cbd5e1;"></div> ${escapeHtml(pvz.length > 10 ? pvz.substring(0, 8)+'..' : pvz)}</span>`;
-        });
-        html += `<span><div class="legend-color-box" style="background: #fee2e2; border: 1px solid #991b1b;"></div> Вых</span>`;
-        html += `<span><div class="legend-color-box" style="background: #fff3bf; border: 1px solid #f59e0b;"></div> Сег</span>`;
-        
-        return html;
-    }
-    
-    function backToAdminMode() {
-        isEmployeeModeActive = false;
-        switchTab(currentPVZ);
-    }
-    
-    // --- ОСТАЛЬНЫЕ ФУНКЦИИ ---
     
     function checkInitialAuth() {
         const isAuth = localStorage.getItem(AUTH_KEY);
@@ -2852,7 +2601,7 @@
             const dow = getDayOfWeek(year, month, d);
             html += `<th class="${dow === 0 || dow === 6 ? 'weekend' : 'weekday'} ${isToday(year, month, d) ? 'today-column' : ''}"><div class="day-number">${d}</div><div class="weekday-name">${weekdays[dow]}</div></th>`;
         }
-        return html + '<th>📊</th></tr>';
+        return html + '<th>📊</th></td>';
     }
     
     function renderSchedule() {
@@ -2871,7 +2620,7 @@
                 if (isWork) workCount++;
                 row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isToday(year, month, d) ? 'today-column' : ''}" data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">${isWork ? '✅' : '❌'}</td>`;
             }
-            bodyHtml += row + `<td style="text-align:center;font-weight:700;">${workCount}</td></table>`;
+            bodyHtml += row + `<td style="text-align:center;font-weight:700;">${workCount}</td></tr>`;
         }
         document.getElementById("tableBody").innerHTML = bodyHtml || '<tr><td colspan="40" style="text-align:center;padding:40px;">👀 Нет сотрудников в этом ПВЗ за выбранный месяц</td></tr>';
         document.getElementById("currentMonthTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${currentPVZ}`;
@@ -2952,12 +2701,9 @@
     async function openDashboard() {
         showDashboardPasswordModal(granted => {
             if (granted) {
-                currentTab = 'dashboard';
-                isEmployeeModeActive = false;
-                renderTabs();
+                currentTab = 'dashboard'; renderTabs();
                 ["employeesTabContent","pvzTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
                 document.getElementById("dashboardTabContent").style.display = "block";
-                document.getElementById("employeeModeContent").style.display = "none";
                 populateDashboardMonthSelect(); populateExtraEmployeeSelect(); populatePVZSelect();
                 renderSalaryTable(); renderExtraWorksTable(); renderEmergencyContacts();
                 document.getElementById("dashboardMainTab").style.display = "block";
@@ -2991,8 +2737,7 @@
     }
     
     async function switchTab(tabId) {
-        isEmployeeModeActive = false;
-        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","emergencyContactsTabContent","employeeModeContent"].forEach(id => document.getElementById(id).style.display = "none");
+        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
         if (tabId === 'employees') { currentTab = 'employees'; document.getElementById("employeesTabContent").style.display = "block"; renderGlobalEmployeesTable(); }
         else if (tabId === 'dashboard') { await openDashboard(); return; }
         else if (tabId === 'analytics') { openAnalytics(); return; }
@@ -3049,9 +2794,6 @@
         document.getElementById("botConfigBtn")?.addEventListener("click", openModal);
         document.getElementById("dashboardCornerBtn")?.addEventListener("click", openDashboard);
         document.getElementById("emergencyCornerBtn")?.addEventListener("click", () => switchTab('emergency'));
-        document.getElementById("employeeModeBtn")?.addEventListener("click", openEmployeeMode);
-        document.getElementById("employeeModeShowScheduleBtn")?.addEventListener("click", showEmployeeSchedule);
-        document.getElementById("employeeModeBackToAdminBtn")?.addEventListener("click", () => switchTab(currentPVZ));
         document.getElementById("refreshSalaryBtn")?.addEventListener("click", refreshSalaryWorkDays);
         document.getElementById("dashboardMonthSelect")?.addEventListener("change", e => { [currentDashboardYear, currentDashboardMonth] = e.target.value.split("-").map(Number); renderSalaryTable(); });
         document.getElementById("addExtraWorkBtn")?.addEventListener("click", addExtraWork);
