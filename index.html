@@ -62,6 +62,162 @@
             border-color: #ef4444;
         }
         
+        /* Стили для мобильного режима сотрудника */
+        .employee-mode-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .employee-mode-header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 24px 20px;
+            text-align: center;
+        }
+        .employee-mode-header h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.5rem;
+        }
+        .employee-mode-header p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+        .employee-selector-panel {
+            background: #f8fafc;
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .employee-selector-panel select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 16px;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            background: white;
+            cursor: pointer;
+        }
+        .employee-selector-panel select:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .employee-selector-panel button {
+            width: 100%;
+            padding: 14px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .employee-selector-panel button:hover {
+            background: #2563eb;
+            transform: scale(1.02);
+        }
+        .employee-selector-panel .back-to-admin-btn {
+            background: #64748b;
+            margin-top: 12px;
+        }
+        .employee-selector-panel .back-to-admin-btn:hover {
+            background: #475569;
+        }
+        
+        /* Мобильная таблица графика сотрудника */
+        .employee-schedule-container {
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .employee-schedule-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: #f1f5f9;
+            border-radius: 16px;
+        }
+        .employee-schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 500px;
+        }
+        .employee-schedule-table th {
+            padding: 12px 6px;
+            text-align: center;
+            font-weight: 700;
+            background: #1e293b;
+            color: white;
+            border: 1px solid #334155;
+        }
+        .employee-schedule-table td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .employee-schedule-table .day-cell {
+            font-weight: 600;
+            background: #f8fafc;
+        }
+        .employee-work-cell {
+            font-size: 0.7rem;
+            font-weight: 500;
+            border-radius: 12px;
+        }
+        .employee-off-cell {
+            background: #fee2e2;
+            color: #991b1b;
+            font-size: 0.7rem;
+        }
+        .pvz-name-in-cell {
+            font-weight: 600;
+            font-size: 0.7rem;
+            display: block;
+        }
+        .legend-employee {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            flex-wrap: wrap;
+        }
+        .legend-employee span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .legend-color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 8px;
+        }
+        
+        /* Цвета для ПВЗ */
+        .pvz-bg-0 { background-color: rgba(59, 130, 246, 0.2); } /* Синий */
+        .pvz-bg-1 { background-color: rgba(34, 197, 94, 0.2); } /* Зеленый */
+        .pvz-bg-2 { background-color: rgba(249, 115, 22, 0.2); } /* Оранжевый */
+        .pvz-bg-3 { background-color: rgba(168, 85, 247, 0.2); } /* Фиолетовый */
+        .pvz-bg-4 { background-color: rgba(236, 72, 153, 0.2); } /* Розовый */
+        .pvz-bg-5 { background-color: rgba(20, 184, 166, 0.2); } /* Бирюзовый */
+        
+        .pvz-text-0 { color: #1e40af; }
+        .pvz-text-1 { color: #166534; }
+        .pvz-text-2 { color: #9a3412; }
+        .pvz-text-3 { color: #5b21b6; }
+        
         .notification {
             position: fixed;
             top: 20px;
@@ -188,174 +344,6 @@
             margin-bottom: 8px;
         }
         
-        /* Стили для документов */
-        .employee-block {
-            background: white;
-            border: 2px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 16px;
-            transition: border-color 0.2s;
-        }
-        .employee-block:hover {
-            border-color: #3b82f6;
-        }
-        .employee-block .emp-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #f1f5f9;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .employee-block .emp-name {
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: #1e293b;
-        }
-        .employee-block .emp-address {
-            font-size: 0.8rem;
-            color: #64748b;
-            margin-top: 4px;
-        }
-        .documents-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 12px;
-            margin-top: 12px;
-        }
-        .document-card {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .document-card .doc-label {
-            font-weight: 600;
-            font-size: 0.8rem;
-            color: #475569;
-            text-align: center;
-        }
-        .document-card .doc-preview {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60px;
-        }
-        .document-card img {
-            width: 100%;
-            max-height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #cbd5e1;
-            cursor: pointer;
-        }
-        .pdf-preview {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 15px;
-            background: #fee2e2;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 1px solid #fecaca;
-            width: 100%;
-            text-align: center;
-        }
-        .pdf-icon {
-            font-size: 2rem;
-        }
-        .pdf-name {
-            font-size: 0.75rem;
-            color: #991b1b;
-            word-break: break-all;
-        }
-        .document-card .doc-actions {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .upload-btn {
-            background: #3b82f6;
-            color: white;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            font-weight: 500;
-        }
-        .upload-btn:hover {
-            background: #2563eb;
-        }
-        .delete-doc-btn {
-            background: #fee2e2;
-            color: #991b1b;
-            border: none;
-            padding: 5px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.7rem;
-        }
-        .delete-doc-btn:hover {
-            background: #fecaca;
-        }
-        .contacts-section {
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #e2e8f0;
-        }
-        .contacts-section h5 {
-            margin: 0 0 8px 0;
-            font-size: 0.85rem;
-            color: #475569;
-        }
-        .contact-tag {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            margin: 3px;
-        }
-        
-        .doc-modal {
-            display: none;
-            position: fixed;
-            z-index: 3000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-        }
-        .doc-modal img, .doc-modal iframe {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-        }
-        .doc-modal .close-doc-modal {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-        }
-        
-        /* Остальные стили */
         .employees-table-container { overflow-x: auto; margin-bottom: 20px; }
         .employees-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .employees-table th { background: #f1f5f9; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
@@ -486,6 +474,24 @@
         .control-group { display: flex; flex-direction: column; gap: 5px; }
         .control-group label { font-size: 0.7rem; font-weight: 600; color: #475569; text-transform: uppercase; }
         .analytics-controls select { padding: 8px 16px; border-radius: 12px; border: 1px solid #cbd5e1; background: white; font-size: 0.9rem; cursor: pointer; }
+        .analytics-search {
+            margin: 20px 0;
+            background: #f8fafc;
+            padding: 12px 16px;
+            border-radius: 40px;
+        }
+        .analytics-search input {
+            width: 100%;
+            padding: 10px 16px;
+            border: 2px solid #cbd5e1;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+        .analytics-search input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
         .analytics-table-wrapper { overflow-x: auto; border-radius: 16px; border: 1px solid #e2e8f0; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .analytics-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; min-width: 600px; }
         .analytics-table th { background: #1e293b; color: white; padding: 10px 6px; text-align: center; font-weight: 600; font-size: 0.75rem; position: sticky; top: 0; z-index: 10; border: 1px solid #334155; }
@@ -493,7 +499,7 @@
         .employee-name-cell { background: #f8fafc; font-weight: 700; text-align: left !important; padding-left: 12px !important; position: sticky; left: 0; background-color: #f8fafc; z-index: 5; min-width: 140px; }
         .work-badge { display: inline-block; padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; background: #dcfce7; color: #15803d; }
         .off-badge { display: inline-block; padding: 4px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 500; background: #fee2e2; color: #991b1b; }
-        .pvz-name-small { font-size: 0.65rem; color: #0369a1; margin-top: 3px; display: block; white-space: nowrap; }
+        .pvz-name-small { font-size: 0.65rem; margin-top: 3px; display: block; white-space: nowrap; }
         .today-highlight { background-color: #fff3bf !important; }
         .legend-analytics { display: flex; gap: 20px; margin-bottom: 20px; padding: 10px 16px; background: #f8fafc; border-radius: 40px; flex-wrap: wrap; font-size: 0.75rem; }
         .legend-analytics span { display: inline-flex; align-items: center; gap: 8px; }
@@ -502,9 +508,15 @@
         .legend-dot.off { background: #fee2e2; border: 1px solid #991b1b; }
         .legend-dot.today { background: #fff3bf; border: 1px solid #f59e0b; }
         
+        /* Цвета для разных ПВЗ */
+        .pvz-color-0 { background-color: rgba(59, 130, 246, 0.15); }
+        .pvz-color-1 { background-color: rgba(34, 197, 94, 0.15); }
+        .pvz-color-2 { background-color: rgba(249, 115, 22, 0.15); }
+        .pvz-color-3 { background-color: rgba(168, 85, 247, 0.15); }
+        .pvz-color-default { background-color: rgba(100, 116, 139, 0.1); }
+        
         .no-results { text-align: center; padding: 40px; color: #64748b; font-size: 1rem; }
         
-        /* Стили для кнопок с анимацией */
         .action-btn {
             padding: 6px 14px;
             border-radius: 20px;
@@ -538,14 +550,7 @@
             opacity: 1;
             box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
         }
-        .header-corner-btn, .tab, .add-tab-btn, .send-notify-btn, .upload-btn, .delete-doc-btn {
-            transition: all 0.3s ease;
-        }
-        .header-corner-btn:hover, .tab:hover, .add-tab-btn:hover, .send-notify-btn:hover, .upload-btn:hover, .delete-doc-btn:hover {
-            transform: scale(1.02);
-        }
         
-        /* Модальное окно редактирования контактов */
         .edit-contacts-modal {
             display: none;
             position: fixed;
@@ -628,6 +633,7 @@
     <h1>
         🏪 График сотрудников
         <div class="header-buttons">
+            <button id="employeeModeBtn" class="header-corner-btn">📱 Сотрудникам</button>
             <button id="emergencyCornerBtn" class="header-corner-btn emergency-btn">🆘 Экстренные контакты</button>
             <button id="dashboardCornerBtn" class="header-corner-btn">💰 Дашборд</button>
         </div>
@@ -808,7 +814,6 @@
                 <div class="emergency-contacts-container">
                     <h3>🆘 Экстренные контакты всех сотрудников</h3>
                     
-                    <!-- Поиск -->
                     <div class="search-box">
                         <label>🔍 Поиск по имени сотрудника:</label>
                         <input type="text" id="emergencySearchInput" placeholder="Введите имя или фамилию..." oninput="filterEmergencyContacts()">
@@ -830,7 +835,7 @@
                 <span><span class="legend-dot work"></span> Рабочий день</span>
                 <span><span class="legend-dot off"></span> Выходной</span>
                 <span><span class="legend-dot today"></span> Сегодняшняя дата</span>
-                <span>🏪 В ячейке указан ПВЗ</span>
+                <span>🎨 Цвет ячейки зависит от ПВЗ</span>
             </div>
 
             <div class="analytics-controls">
@@ -842,6 +847,10 @@
                     <label>Месяц</label>
                     <select id="analyticsMonthSelect"></select>
                 </div>
+            </div>
+            
+            <div class="analytics-search">
+                <input type="text" id="analyticsSearchInput" placeholder="🔍 Поиск по имени сотрудника..." oninput="filterAnalyticsTable()">
             </div>
             
             <div class="analytics-table-wrapper">
@@ -862,10 +871,10 @@
             
             <div id="emergencyFormBlock">
                 <div class="emergency-form">
-                    <h3>📝 Выберите свое имя </h3>
+                    <h3>📝 Выберите сотрудника</h3>
                     <div class="emergency-form-row">
                         <select id="publicEmployeeSelect">
-                            <option value="">-- Выберите свое имя из списка --</option>
+                            <option value="">-- Выберите сотрудника из списка --</option>
                         </select>
                     </div>
                     <div class="emergency-form-row">
@@ -896,6 +905,45 @@
         </div>
     </div>
     
+    <!-- Мобильный режим для сотрудников -->
+    <div id="employeeModeContent" style="display: none;">
+        <div class="employee-mode-container">
+            <div class="employee-mode-header">
+                <h2>👋 Мои смены</h2>
+                <p>Выберите свой ПВЗ и имя, чтобы увидеть график работы</p>
+            </div>
+            
+            <div class="employee-selector-panel">
+                <select id="employeeModePVZSelect">
+                    <option value="">-- Выберите ПВЗ --</option>
+                </select>
+                <select id="employeeModeEmployeeSelect" disabled>
+                    <option value="">-- Сначала выберите ПВЗ --</option>
+                </select>
+                <select id="employeeModeMonthSelect">
+                    <option value="">-- Выберите месяц --</option>
+                </select>
+                <button id="employeeModeShowScheduleBtn">📅 Показать мой график</button>
+                <button id="employeeModeBackToAdminBtn" class="back-to-admin-btn">← Вернуться в админ-панель</button>
+            </div>
+            
+            <div id="employeeModeScheduleContainer" style="display: none;">
+                <div class="employee-schedule-title" id="employeeScheduleTitle"></div>
+                <div style="overflow-x: auto;">
+                    <table class="employee-schedule-table" id="employeeScheduleTable">
+                        <thead id="employeeTableHeader"></thead>
+                        <tbody id="employeeTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="legend-employee" id="employeeLegend"></div>
+            </div>
+            
+            <div id="employeeModeNoData" style="display: none; text-align: center; padding: 40px; color: #64748b;">
+                😔 Нет данных о графике за выбранный месяц
+            </div>
+        </div>
+    </div>
+    
     <div class="legend">
         <span>✅ <span class="badge-work">Рабочий день</span></span>
         <span>❌ <span class="badge-off">Выходной</span></span>
@@ -919,7 +967,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для редактирования контактов -->
 <div id="editContactsModal" class="edit-contacts-modal">
     <div class="edit-contacts-content">
         <span class="close-edit-modal">&times;</span>
@@ -945,7 +992,6 @@
 <script>
     // Скрытые пароли
     const _p1 = [112, 118, 122, 49, 53];
-    // Пароль дашборда: zina6535564
     const _p2 = [122, 105, 110, 97, 54, 53, 51, 53, 53, 54, 52];
     const SITE_ACCESS_PASSWORD = String.fromCharCode(..._p1);
     const DASHBOARD_PASSWORD = String.fromCharCode(..._p2);
@@ -966,7 +1012,7 @@
     const BOT_TOKEN_KEY = "telegram_bot_token";
     const AUTH_KEY = "app_authorized";
     
-    let allPVZData = {}; // Структура: { "ПВЗ Центральный": { employeesHistory: { "2024-5": ["Анна"], "2024-6": ["Иван"] }, schedules: { "Анна": { "2024-5-1": true } } } }
+    let allPVZData = {};
     let currentPVZ = "";
     let currentTab = "pvz";
     let selectedYear = new Date().getFullYear();
@@ -983,16 +1029,20 @@
     
     let analyticsYear = new Date().getFullYear();
     let analyticsMonth = new Date().getMonth() + 1;
+    let analyticsSearchTerm = "";
     
-    // Данные экстренных контактов: { employeeFullName: { address: "", contacts: [{ id, contactName, contactPhone, relation }], documents: { passport: "", questionnaire: "", contract: "", application: "" } } }
     let emergencyContacts = {};
-    
-    // Переменная для хранения текущего редактируемого сотрудника
     let currentEditingEmployee = null;
     
-    const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    // Мобильный режим
+    let isEmployeeModeActive = false;
+    let selectedEmployeePVZ = "";
+    let selectedEmployeeName = "";
+    let selectedEmployeeMonthYear = "";
     
-    // Типы документов
+    const weekdays = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
+    const weekdaysFull = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+    
     const DOC_TYPES = {
         passport: { label: '🛂 Паспорт', icon: '🛂' },
         questionnaire: { label: '📋 Трудовая анкета', icon: '📋' },
@@ -1000,22 +1050,33 @@
         application: { label: '📄 Заявление на расчет', icon: '📄' }
     };
     
-    // --- НОВЫЕ ФУНКЦИИ ДЛЯ ПРОВЕРКИ ЗАНЯТОСТИ В ПВЗ ---
+    // Функция для получения цвета ПВЗ (индекс)
+    function getPVZColorIndex(pvzName) {
+        const pvzList = Object.keys(allPVZData);
+        const index = pvzList.indexOf(pvzName);
+        return index % 6;
+    }
     
-    // Проверка, работает ли уже другой сотрудник в этом ПВЗ в указанный день
+    function getPVZColorClass(pvzName) {
+        const index = getPVZColorIndex(pvzName);
+        return `pvz-bg-${index}`;
+    }
+    
+    function getPVZTextClass(pvzName) {
+        const index = getPVZColorIndex(pvzName);
+        return `pvz-text-${index % 4}`;
+    }
+    
+    // --- ФУНКЦИИ ДЛЯ ПРОВЕРКИ ЗАНЯТОСТИ В ПВЗ ---
+    
     function isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, day, currentEmployeeName) {
         const pvz = allPVZData[pvzName];
         if (!pvz || !pvz.schedules) return false;
         
         const dateKey = `${year}-${month}-${day}`;
-        
-        // Перебираем всех сотрудников, которые есть в этом ПВЗ в этом месяце
         const employeesThisMonth = getEmployeesForMonth(pvzName, year, month);
         for (let emp of employeesThisMonth) {
-            // Пропускаем текущего сотрудника
             if (emp === currentEmployeeName) continue;
-            
-            // Проверяем, есть ли у него смена в этот день
             if (pvz.schedules[emp] && pvz.schedules[emp][dateKey] === true) {
                 return { isBusy: true, employeeName: emp };
             }
@@ -1023,9 +1084,7 @@
         return { isBusy: false, employeeName: null };
     }
     
-    // Проверка, может ли сотрудник работать в указанный день в данном ПВЗ (учитывая оба ограничения)
     function canEmployeeWorkOnDay(employeeFullName, year, month, day, targetPVZ) {
-        // 1. Проверка, не занят ли сотрудник в другом ПВЗ
         for (let pvzName in allPVZData) {
             if (pvzName === targetPVZ) continue;
             if (allPVZData[pvzName].schedules && allPVZData[pvzName].schedules[employeeFullName]) {
@@ -1036,7 +1095,6 @@
             }
         }
         
-        // 2. Проверка, не работает ли уже другой сотрудник в этом же ПВЗ
         const otherEmployeeCheck = isAnotherEmployeeWorkingInThisPVZ(targetPVZ, year, month, day, employeeFullName);
         if (otherEmployeeCheck.isBusy) {
             return { canWork: false, reason: `anotherInSamePVZ`, conflictingEmployee: otherEmployeeCheck.employeeName };
@@ -1045,24 +1103,20 @@
         return { canWork: true, reason: null };
     }
     
-    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ НОВОЙ ЛОГИКИ (ПО МЕСЯЦАМ) ---
+    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ЛОГИКИ ПО МЕСЯЦАМ ---
     
-    // Получить ключ месяца для истории сотрудников
     function getMonthHistoryKey(year, month) {
         return `${year}-${month}`;
     }
     
-    // Инициализировать историю сотрудников для ПВЗ, если её нет
     function initPVZHistoryIfNeeded(pvzName) {
         if (!allPVZData[pvzName]) return;
         if (!allPVZData[pvzName].employeesHistory) {
             allPVZData[pvzName].employeesHistory = {};
         }
-        // Инициализировать для базовых месяцев (на всякий случай)
         if (!allPVZData[pvzName].schedules) allPVZData[pvzName].schedules = {};
     }
     
-    // Получить список сотрудников для ПВЗ в конкретный месяц
     function getEmployeesForMonth(pvzName, year, month) {
         if (!allPVZData[pvzName] || !allPVZData[pvzName].employeesHistory) return [];
         const monthKey = getMonthHistoryKey(year, month);
@@ -1070,7 +1124,6 @@
             return [...allPVZData[pvzName].employeesHistory[monthKey]];
         }
         
-        // Если данных за этот месяц нет, пробуем найти ближайший предыдущий месяц с данными
         const allKeys = Object.keys(allPVZData[pvzName].employeesHistory).sort();
         if (allKeys.length === 0) return [];
         
@@ -1085,15 +1138,13 @@
         }
         
         if (lastKey) {
-            // Копируем данные из прошлого месяца, чтобы не создавать пустой список
             allPVZData[pvzName].employeesHistory[monthKey] = [...allPVZData[pvzName].employeesHistory[lastKey]];
             return [...allPVZData[pvzName].employeesHistory[monthKey]];
         }
         
-        return []; // Если нет вообще никаких данных
+        return [];
     }
     
-    // Установить список сотрудников для ПВЗ в конкретный месяц
     function setEmployeesForMonth(pvzName, year, month, employeesList) {
         if (!allPVZData[pvzName] || !allPVZData[pvzName].employeesHistory) {
             if (!allPVZData[pvzName]) allPVZData[pvzName] = { employeesHistory: {}, schedules: {} };
@@ -1103,7 +1154,6 @@
         allPVZData[pvzName].employeesHistory[monthKey] = [...employeesList];
     }
     
-    // Добавить сотрудника в ПВЗ на конкретный месяц
     function addEmployeeToMonth(pvzName, year, month, employeeName) {
         const currentEmps = getEmployeesForMonth(pvzName, year, month);
         if (!currentEmps.includes(employeeName)) {
@@ -1114,14 +1164,12 @@
         return false;
     }
     
-    // Удалить сотрудника из ПВЗ на конкретный месяц
     function removeEmployeeFromMonth(pvzName, year, month, employeeName) {
         const currentEmps = getEmployeesForMonth(pvzName, year, month);
         const index = currentEmps.indexOf(employeeName);
         if (index !== -1) {
             currentEmps.splice(index, 1);
             setEmployeesForMonth(pvzName, year, month, currentEmps);
-            // Также удаляем графики этого сотрудника за этот месяц
             if (allPVZData[pvzName].schedules && allPVZData[pvzName].schedules[employeeName]) {
                 const daysInMonth = new Date(year, month, 0).getDate();
                 for (let d = 1; d <= daysInMonth; d++) {
@@ -1136,9 +1184,8 @@
         return false;
     }
     
-    // --- ОСТАЛЬНЫЕ ФУНКЦИИ (КОМПРЕССИЯ, ДОКУМЕНТЫ, UI) ---
+    // --- ФУНКЦИИ ДЛЯ ДОКУМЕНТОВ ---
     
-    // Функция для сжатия изображения
     function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.6) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1174,7 +1221,6 @@
         });
     }
     
-    // Функция для чтения PDF как base64
     function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1189,7 +1235,6 @@
         });
     }
     
-    // Загрузка документа
     async function uploadDocument(empName, docType, fileInput) {
         const file = fileInput.files[0];
         if (!file) return;
@@ -1229,7 +1274,6 @@
         }
     }
     
-    // Удаление документа
     async function deleteDocument(empName, docType) {
         if (!confirm(`Удалить документ "${DOC_TYPES[docType].label}"?`)) return;
         
@@ -1241,7 +1285,6 @@
         }
     }
     
-    // Просмотр документа в модальном окне
     function openDocViewer(docData) {
         const modal = document.getElementById("docViewerModal");
         const content = document.getElementById("docViewerContent");
@@ -1260,7 +1303,6 @@
         document.getElementById("docViewerContent").innerHTML = "";
     }
     
-    // Отрисовка одного документа
     function renderDocumentCard(empName, docType) {
         const documents = emergencyContacts[empName]?.documents || {};
         const docData = documents[docType];
@@ -1296,13 +1338,11 @@
         return html;
     }
     
-    // Поиск и фильтрация
     function filterEmergencyContacts() {
         const searchTerm = document.getElementById("emergencySearchInput")?.value.toLowerCase().trim() || '';
         renderEmergencyContacts(searchTerm);
     }
     
-    // Функция открытия модального окна редактирования контактов
     function openEditContactsModal(empName) {
         currentEditingEmployee = empName;
         const data = emergencyContacts[empName] || { address: "", contacts: [] };
@@ -1310,13 +1350,11 @@
         document.getElementById("editEmployeeName").innerHTML = `👤 ${escapeHtml(empName)}`;
         document.getElementById("editAddress").value = data.address || "";
         
-        // Заполняем контакты
         const container = document.getElementById("editContactsContainer");
         container.innerHTML = "";
         
         const contacts = data.contacts || [];
         if (contacts.length === 0) {
-            // Добавляем пустую строку
             addEditContactRow("", "", "");
         } else {
             contacts.forEach(contact => {
@@ -1383,19 +1421,16 @@
         showNotification(`✅ Контакты для "${currentEditingEmployee}" обновлены`, false);
     }
     
-    // Функция для полного удаления сотрудника из экстренных контактов (включая все его данные)
     async function deleteEmployeeCompletely(empName) {
         if (!confirm(`ВНИМАНИЕ! Вы уверены, что хотите ПОЛНОСТЬЮ УДАЛИТЬ сотрудника "${empName}"? Это действие удалит все данные сотрудника (контакты, документы, графики, зарплатные данные) и его самого из системы. Оно необратимо.`)) {
             return;
         }
         
-        // 1. Удаляем сотрудника из глобального списка
         const employeeIndex = globalEmployees.findIndex(e => e.fullName === empName);
         if (employeeIndex !== -1) {
             globalEmployees.splice(employeeIndex, 1);
         }
         
-        // 2. Удаляем сотрудника из всех ПВЗ и их графиков (для всех месяцев)
         for (let pvzName in allPVZData) {
             const pvz = allPVZData[pvzName];
             if (pvz.employeesHistory) {
@@ -1411,17 +1446,14 @@
             }
         }
         
-        // 3. Удаляем зарплатные данные сотрудника
         if (salaryData[empName]) {
             delete salaryData[empName];
         }
         
-        // 4. Удаляем подработки сотрудника
         if (extraWorks[empName]) {
             delete extraWorks[empName];
         }
         
-        // 5. Удаляем экстренные контакты и документы сотрудника
         if (emergencyContacts[empName]) {
             delete emergencyContacts[empName];
         }
@@ -1444,7 +1476,6 @@
         showNotification(`✅ Сотрудник "${empName}" и все его данные полностью удалены.`, false);
     }
     
-    // Отрисовка списка экстренных контактов
     function renderEmergencyContacts(searchTerm = '') {
         const listDiv = document.getElementById("emergencyContactsList");
         if (!listDiv) return;
@@ -1532,25 +1563,10 @@
             salaryData[employeeName] = {};
         }
         if (!salaryData[employeeName][monthKey]) {
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
-            
-            let defaultRate = 1500;
-            let defaultTraineeRate = 800;
-            
-            if (year > currentYear || (year === currentYear && month > currentMonth)) {
-                defaultRate = 1500;
-                defaultTraineeRate = 800;
-            } else {
-                defaultRate = 1500;
-                defaultTraineeRate = 800;
-            }
-            
             salaryData[employeeName][monthKey] = {
-                rate: defaultRate,
+                rate: 1500,
                 traineeDays: 0,
-                traineeRate: defaultTraineeRate,
+                traineeRate: 800,
                 advance: 0,
                 moneyTransferred: 0,
                 fine: 0
@@ -2039,6 +2055,12 @@
         }
     }
     
+    function filterAnalyticsTable() {
+        const input = document.getElementById("analyticsSearchInput");
+        analyticsSearchTerm = input ? input.value.toLowerCase().trim() : "";
+        renderAnalytics();
+    }
+    
     function renderAnalytics() {
         const tbody = document.getElementById("analyticsTableBody");
         const thead = document.getElementById("analyticsTableHeader");
@@ -2068,7 +2090,19 @@
         
         tbody.innerHTML = '';
         
-        for (let emp of globalEmployees) {
+        let filteredEmployees = globalEmployees;
+        if (analyticsSearchTerm) {
+            filteredEmployees = globalEmployees.filter(emp => 
+                emp.fullName.toLowerCase().includes(analyticsSearchTerm)
+            );
+        }
+        
+        if (filteredEmployees.length === 0 && analyticsSearchTerm) {
+            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>';
+            return;
+        }
+        
+        for (let emp of filteredEmployees) {
             let rowHtml = '<tr>';
             rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</td>`;
             let workDaysCount = 0;
@@ -2078,26 +2112,27 @@
                 const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
                 const isToday = isCurrentMonth && today.getDate() === day;
                 let pvzName = '';
+                let colorClass = '';
                 
                 for (let pvz in allPVZData) {
                     const key = `${analyticsYear}-${analyticsMonth}-${day}`;
                     if (allPVZData[pvz].schedules[emp.fullName]?.[key] === true) {
                         pvzName = pvz;
                         workDaysCount++;
+                        colorClass = `pvz-color-${getPVZColorIndex(pvz)}`;
                         break;
                     }
                 }
                 
-                let cellClass = '';
+                let cellClass = colorClass;
                 let cellContent = '';
                 
                 if (pvzName) {
                     let shortName = pvzName.length > 12 ? pvzName.substring(0, 10) + '..' : pvzName;
                     cellContent = `<div class="work-badge">✅</div><span class="pvz-name-small">${escapeHtml(shortName)}</span>`;
-                    cellClass = 'work-day-bg';
                 } else {
                     cellContent = `<div class="off-badge">❌</div>`;
-                    if (isWeekend) cellClass = 'weekend-bg';
+                    if (isWeekend) cellClass = '';
                 }
                 
                 if (isToday) cellClass += ' today-highlight';
@@ -2123,26 +2158,221 @@
     
     function openAnalytics() {
         currentTab = 'analytics';
+        isEmployeeModeActive = false;
         renderTabs();
         document.getElementById("employeesTabContent").style.display = "none";
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "block";
         document.getElementById("emergencyContactsTabContent").style.display = "none";
+        document.getElementById("employeeModeContent").style.display = "none";
         populateAnalyticsSelects();
         renderAnalytics();
     }
     
     function openEmergencyContacts() {
         currentTab = 'emergency';
+        isEmployeeModeActive = false;
         renderTabs();
         document.getElementById("employeesTabContent").style.display = "none";
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "none";
         document.getElementById("emergencyContactsTabContent").style.display = "block";
+        document.getElementById("employeeModeContent").style.display = "none";
         loadPublicEmergencyForm();
     }
+    
+    // --- МОБИЛЬНЫЙ РЕЖИМ ДЛЯ СОТРУДНИКОВ ---
+    
+    function openEmployeeMode() {
+        currentTab = 'employee';
+        isEmployeeModeActive = true;
+        
+        // Скрываем все основные вкладки
+        document.getElementById("employeesTabContent").style.display = "none";
+        document.getElementById("pvzTabContent").style.display = "none";
+        document.getElementById("dashboardTabContent").style.display = "none";
+        document.getElementById("analyticsTabContent").style.display = "none";
+        document.getElementById("emergencyContactsTabContent").style.display = "none";
+        document.getElementById("employeeModeContent").style.display = "block";
+        
+        // Заполняем селекты
+        populateEmployeeModeSelects();
+    }
+    
+    function populateEmployeeModeSelects() {
+        // ПВЗ
+        const pvzSelect = document.getElementById("employeeModePVZSelect");
+        pvzSelect.innerHTML = '<option value="">-- Выберите ПВЗ --</option>';
+        for (let pvz in allPVZData) {
+            const option = document.createElement("option");
+            option.value = pvz;
+            option.textContent = pvz;
+            pvzSelect.appendChild(option);
+        }
+        
+        // Месяцы (последние 12 месяцев)
+        const monthSelect = document.getElementById("employeeModeMonthSelect");
+        monthSelect.innerHTML = '<option value="">-- Выберите месяц --</option>';
+        const now = new Date();
+        for (let offset = -6; offset <= 6; offset++) {
+            const date = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const option = document.createElement("option");
+            option.value = `${year}-${month}`;
+            option.textContent = `${getMonthName(month)} ${year}`;
+            monthSelect.appendChild(option);
+        }
+        
+        // Сотрудники обновляются при выборе ПВЗ
+        pvzSelect.addEventListener("change", () => {
+            const selectedPvz = pvzSelect.value;
+            const employeeSelect = document.getElementById("employeeModeEmployeeSelect");
+            
+            if (!selectedPvz) {
+                employeeSelect.innerHTML = '<option value="">-- Сначала выберите ПВЗ --</option>';
+                employeeSelect.disabled = true;
+                return;
+            }
+            
+            employeeSelect.disabled = false;
+            employeeSelect.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+            
+            // Получаем сотрудников для выбранного ПВЗ за текущий месяц
+            const currentDate = new Date();
+            const currentYear = currentDate.getFullYear();
+            const currentMonth = currentDate.getMonth() + 1;
+            const employees = getEmployeesForMonth(selectedPvz, currentYear, currentMonth);
+            
+            employees.forEach(emp => {
+                const option = document.createElement("option");
+                option.value = emp;
+                option.textContent = emp;
+                employeeSelect.appendChild(option);
+            });
+        });
+    }
+    
+    function showEmployeeSchedule() {
+        const pvzSelect = document.getElementById("employeeModePVZSelect");
+        const employeeSelect = document.getElementById("employeeModeEmployeeSelect");
+        const monthSelect = document.getElementById("employeeModeMonthSelect");
+        
+        const pvz = pvzSelect.value;
+        const employee = employeeSelect.value;
+        const monthYear = monthSelect.value;
+        
+        if (!pvz) {
+            showNotification("Пожалуйста, выберите ПВЗ", true);
+            return;
+        }
+        if (!employee) {
+            showNotification("Пожалуйста, выберите сотрудника", true);
+            return;
+        }
+        if (!monthYear) {
+            showNotification("Пожалуйста, выберите месяц", true);
+            return;
+        }
+        
+        const [year, month] = monthYear.split('-').map(Number);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const today = new Date();
+        const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
+        
+        // Собираем график сотрудника по всем ПВЗ за этот месяц
+        const scheduleMap = {}; // день -> название ПВЗ где работает
+        let hasAnyWork = false;
+        
+        for (let pvzName in allPVZData) {
+            const pvzData = allPVZData[pvzName];
+            if (pvzData.schedules && pvzData.schedules[employee]) {
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const key = `${year}-${month}-${day}`;
+                    if (pvzData.schedules[employee][key] === true) {
+                        scheduleMap[day] = pvzName;
+                        hasAnyWork = true;
+                    }
+                }
+            }
+        }
+        
+        if (!hasAnyWork) {
+            document.getElementById("employeeModeScheduleContainer").style.display = "none";
+            document.getElementById("employeeModeNoData").style.display = "block";
+            return;
+        }
+        
+        document.getElementById("employeeModeNoData").style.display = "none";
+        document.getElementById("employeeModeScheduleContainer").style.display = "block";
+        
+        // Заголовок
+        document.getElementById("employeeScheduleTitle").innerHTML = `📅 ${getMonthName(month)} ${year}<br>👤 ${escapeHtml(employee)}`;
+        
+        // Создаем таблицу: сверху дни недели, снизу даты с названием ПВЗ
+        let headerHtml = '<tr>';
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayOfWeek = getDayOfWeek(year, month, day);
+            headerHtml += `<th>${weekdaysFull[dayOfWeek]}<br><span style="font-size:0.7rem; opacity:0.8;">${day}</span></th>`;
+        }
+        headerHtml += '</tr>';
+        document.getElementById("employeeTableHeader").innerHTML = headerHtml;
+        
+        let bodyHtml = '<tr>';
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayOfWeek = getDayOfWeek(year, month, day);
+            const isToday = isCurrentMonth && today.getDate() === day;
+            const workingPVZ = scheduleMap[day];
+            
+            let cellClass = "day-cell";
+            let cellContent = "";
+            
+            if (workingPVZ) {
+                const colorClass = getPVZColorClass(workingPVZ);
+                cellClass += ` ${colorClass}`;
+                cellContent = `<div class="pvz-name-in-cell">🏪 ${escapeHtml(workingPVZ)}</div>`;
+            } else {
+                cellClass += " employee-off-cell";
+                cellContent = "❌ Выходной";
+            }
+            
+            if (isToday) cellClass += " today-highlight";
+            
+            bodyHtml += `<td class="${cellClass}">${cellContent}</td>`;
+        }
+        bodyHtml += '</tr>';
+        document.getElementById("employeeTableBody").innerHTML = bodyHtml;
+        
+        // Легенда с цветами ПВЗ
+        const legendHtml = buildEmployeeLegend();
+        document.getElementById("employeeLegend").innerHTML = legendHtml;
+    }
+    
+    function buildEmployeeLegend() {
+        const uniquePVZ = new Set();
+        for (let pvz in allPVZData) {
+            uniquePVZ.add(pvz);
+        }
+        
+        let html = '';
+        Array.from(uniquePVZ).forEach(pvz => {
+            const colorClass = getPVZColorClass(pvz);
+            html += `<span><div class="legend-color-box ${colorClass}" style="border: 1px solid #cbd5e1;"></div> ${escapeHtml(pvz)}</span>`;
+        });
+        html += `<span><div class="legend-color-box" style="background: #fee2e2; border: 1px solid #991b1b;"></div> Выходной</span>`;
+        html += `<span><div class="legend-color-box" style="background: #fff3bf; border: 1px solid #f59e0b;"></div> Сегодня</span>`;
+        
+        return html;
+    }
+    
+    function backToAdminMode() {
+        isEmployeeModeActive = false;
+        switchTab(currentPVZ);
+    }
+    
+    // --- ОСТАЛЬНЫЕ ФУНКЦИИ ---
     
     function checkInitialAuth() {
         const isAuth = localStorage.getItem(AUTH_KEY);
@@ -2228,21 +2458,17 @@
         };
     }
     
-    // Заполнение демо-данных для истории сотрудников и графиков
     function fillDemoSchedules(data) {
         const today = new Date();
-        // Создадим базовую историю сотрудников для нескольких месяцев
         for (let pvzName in data) {
             initPVZHistoryIfNeeded(pvzName);
             
-            // Базовый список сотрудников для каждого ПВЗ
             let baseEmployees = [];
             if (pvzName === "ПВЗ Центральный") baseEmployees = ["Анна Смирнова", "Иван Козлов"];
             else if (pvzName === "ПВЗ Северный") baseEmployees = ["Мария Орлова", "Дмитрий Павлов"];
             else if (pvzName === "ПВЗ Южный") baseEmployees = ["Елена Ветрова", "Зинаида Петрова"];
             else if (pvzName === "ПВЗ Восточный") baseEmployees = ["Дарья Сидорова"];
             
-            // Заполним для текущего и следующих месяцев
             for (let offset = -3; offset <= 6; offset++) {
                 const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
                 const year = date.getFullYear();
@@ -2253,7 +2479,6 @@
                 }
             }
             
-            // Заполним случайные графики
             for (let emp of baseEmployees) {
                 if (!data[pvzName].schedules[emp]) data[pvzName].schedules[emp] = {};
                 for (let offset = -3; offset <= 6; offset++) {
@@ -2264,7 +2489,6 @@
                     for (let d = 1; d <= daysCount; d++) {
                         const key = `${year}-${month}-${d}`;
                         if (data[pvzName].schedules[emp][key] === undefined) {
-                            // Делаем так, чтобы в один день не было двух сотрудников
                             const otherWorking = isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, d, emp);
                             if (!otherWorking.isBusy) {
                                 data[pvzName].schedules[emp][key] = Math.random() < 0.5;
@@ -2295,10 +2519,8 @@
             const pvzDoc = await db.collection("appData").doc("allPVZData").get();
             if (pvzDoc.exists) {
                 allPVZData = pvzDoc.data().data || {};
-                // Миграция старых данных в новую структуру, если необходимо
                 for (let pvz in allPVZData) {
                     if (!allPVZData[pvz].employeesHistory && allPVZData[pvz].employees) {
-                        // Старый формат: employees был массивом. Конвертируем для текущего месяца
                         const currentYear = new Date().getFullYear();
                         const currentMonth = new Date().getMonth() + 1;
                         const monthKey = getMonthHistoryKey(currentYear, currentMonth);
@@ -2381,7 +2603,6 @@
         const dateKey = `${year}-${month}-${day}`;
         const employeeShifts = {};
         for (let pvzName in allPVZData) {
-            // Получаем сотрудников за текущий месяц (месяц завтрашнего дня)
             const employeesForMonth = getEmployeesForMonth(pvzName, year, month);
             for (let employee of employeesForMonth) {
                 if (allPVZData[pvzName].schedules[employee]?.[dateKey] === true) {
@@ -2420,7 +2641,6 @@
         if (!select) return;
         const now = new Date();
         select.innerHTML = '';
-        // Расширяем диапазон до декабря 2028 года
         const maxYear = 2028;
         const maxMonth = 12;
         
@@ -2474,7 +2694,6 @@
         emp.telegramId = prompt("Telegram ID:", emp.telegramId || "") || "";
         
         for (let pvz in allPVZData) {
-            // Обновляем во всех месяцах истории
             if (allPVZData[pvz].employeesHistory) {
                 for (let monthKey in allPVZData[pvz].employeesHistory) {
                     const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(oldFullName);
@@ -2570,7 +2789,6 @@
     async function addEmployeeToPVZ() {
         const empFullName = document.getElementById("availableEmployeesSelect").value;
         if (!empFullName) { alert("Выберите сотрудника"); return; }
-        // Проверка на уникальность в рамках выбранного месяца
         const currentEmps = getEmployeesForMonth(currentPVZ, selectedYear, selectedMonth);
         if (!currentEmps.includes(empFullName)) {
             addEmployeeToMonth(currentPVZ, selectedYear, selectedMonth, empFullName);
@@ -2633,7 +2851,6 @@
         const newStatus = !currentStatus;
         
         if (newStatus) {
-            // Проверка, может ли сотрудник работать в этот день (учитывая оба ограничения)
             const conflict = canEmployeeWorkOnDay(emp, year, month, day, currentPVZ);
             if (!conflict.canWork) { 
                 if (conflict.reason === 'alreadyInOtherPVZ') {
@@ -2643,7 +2860,6 @@
                 }
                 return; 
             }
-            // Проверка, что сотрудник вообще числится в этом ПВЗ в этом месяце
             const employeesThisMonth = getEmployeesForMonth(currentPVZ, year, month);
             if (!employeesThisMonth.includes(emp)) {
                 showNotification(`⚠️ "${emp}" не числится в этом ПВЗ за ${getMonthName(month)} ${year}. Сначала добавьте его.`);
@@ -2688,7 +2904,7 @@
     function showDashboardPasswordModal(callback) {
         const overlay = document.createElement('div');
         overlay.className = 'dashboard-password-overlay';
-        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
+        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду зарплат</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
         document.body.appendChild(overlay);
         const input = overlay.querySelector('#dashboardPasswordInput'), submit = overlay.querySelector('#dashboardPasswordSubmit'), cancel = overlay.querySelector('#dashboardPasswordCancel'), error = overlay.querySelector('#dashboardPasswordError');
         const cleanup = () => overlay.remove();
@@ -2701,9 +2917,12 @@
     async function openDashboard() {
         showDashboardPasswordModal(granted => {
             if (granted) {
-                currentTab = 'dashboard'; renderTabs();
+                currentTab = 'dashboard';
+                isEmployeeModeActive = false;
+                renderTabs();
                 ["employeesTabContent","pvzTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
                 document.getElementById("dashboardTabContent").style.display = "block";
+                document.getElementById("employeeModeContent").style.display = "none";
                 populateDashboardMonthSelect(); populateExtraEmployeeSelect(); populatePVZSelect();
                 renderSalaryTable(); renderExtraWorksTable(); renderEmergencyContacts();
                 document.getElementById("dashboardMainTab").style.display = "block";
@@ -2737,7 +2956,8 @@
     }
     
     async function switchTab(tabId) {
-        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
+        isEmployeeModeActive = false;
+        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","emergencyContactsTabContent","employeeModeContent"].forEach(id => document.getElementById(id).style.display = "none");
         if (tabId === 'employees') { currentTab = 'employees'; document.getElementById("employeesTabContent").style.display = "block"; renderGlobalEmployeesTable(); }
         else if (tabId === 'dashboard') { await openDashboard(); return; }
         else if (tabId === 'analytics') { openAnalytics(); return; }
@@ -2761,7 +2981,6 @@
     function saveBotToken() { botToken = document.getElementById("botTokenInput").value.trim(); localStorage.setItem(BOT_TOKEN_KEY, botToken); closeModal(); showNotification(botToken ? "✅ Токен сохранён" : "❌ Токен удалён", false); }
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
     
-    // Обновление названия месяца в интерфейсе ПВЗ при смене месяца
     function updatePVZMonthName() {
         const monthSpan = document.getElementById("currentMonthNameForPVZ");
         if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`;
@@ -2795,17 +3014,20 @@
         document.getElementById("botConfigBtn")?.addEventListener("click", openModal);
         document.getElementById("dashboardCornerBtn")?.addEventListener("click", openDashboard);
         document.getElementById("emergencyCornerBtn")?.addEventListener("click", () => switchTab('emergency'));
+        document.getElementById("employeeModeBtn")?.addEventListener("click", openEmployeeMode);
+        document.getElementById("employeeModeShowScheduleBtn")?.addEventListener("click", showEmployeeSchedule);
+        document.getElementById("employeeModeBackToAdminBtn")?.addEventListener("click", () => switchTab(currentPVZ));
         document.getElementById("refreshSalaryBtn")?.addEventListener("click", refreshSalaryWorkDays);
         document.getElementById("dashboardMonthSelect")?.addEventListener("change", e => { [currentDashboardYear, currentDashboardMonth] = e.target.value.split("-").map(Number); renderSalaryTable(); });
         document.getElementById("addExtraWorkBtn")?.addEventListener("click", addExtraWork);
         document.getElementById("analyticsYearSelect")?.addEventListener("change", refreshAnalytics);
         document.getElementById("analyticsMonthSelect")?.addEventListener("change", refreshAnalytics);
+        document.getElementById("analyticsSearchInput")?.addEventListener("input", filterAnalyticsTable);
         document.getElementById("savePublicEmergencyContactsBtn")?.addEventListener("click", savePublicEmergencyContacts);
         document.getElementById("addMoreContactsBtn")?.addEventListener("click", addContactRow);
         document.querySelector(".close-doc-modal")?.addEventListener("click", closeDocViewer);
         document.getElementById("docViewerModal")?.addEventListener("click", function(e) { if (e.target === this) closeDocViewer(); });
         
-        // Модальное окно редактирования
         document.querySelector(".close-edit-modal")?.addEventListener("click", closeEditContactsModal);
         document.getElementById("cancelEditBtn")?.addEventListener("click", closeEditContactsModal);
         document.getElementById("saveEditBtn")?.addEventListener("click", saveEditedContacts);
@@ -2835,6 +3057,7 @@
         window.filterEmergencyContacts = filterEmergencyContacts;
         window.deleteEmployeeCompletely = deleteEmployeeCompletely;
         window.openEditContactsModal = openEditContactsModal;
+        window.filterAnalyticsTable = filterAnalyticsTable;
         window._emergencyContacts = emergencyContacts;
         
         await switchTab(currentPVZ);
