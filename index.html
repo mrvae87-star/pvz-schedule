@@ -635,7 +635,7 @@
             font-size: 0.75rem;
         }
 
-        /* НОВЫЕ СТИЛИ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ (КАЛЕНДАРЬ С ПВЗ ПОД ЧИСЛАМИ) */
+        /* НОВЫЕ СТИЛИ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ (КАЛЕНДАРЬ С ПВЗ ПОД ЧИСЛАМИ) - УЛУЧШЕННАЯ КОМПАКТНАЯ ВЕРСИЯ */
         .mobile-calendar-container {
             padding: 20px 0;
         }
@@ -671,50 +671,54 @@
         .calendar-mobile {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px; /* Уменьшил отступы между строками */
             background: white;
-            border-radius: 20px;
+            border-radius: 16px; /* Уменьшил скругление */
             overflow-x: auto;
+            border: 1px solid #e2e8f0; /* Добавил рамку для четкости */
         }
         .calendar-week-row {
             display: flex;
-            min-width: 600px; /* Чтобы таблица не сжималась на телефоне, но скроллилась */
+            min-width: 560px; /* Немного уменьшил минимальную ширину для компактности */
         }
         .calendar-day-header {
             flex: 1;
             text-align: center;
-            font-weight: 700;
-            padding: 10px 0;
+            font-weight: 600; /* Сделал чуть тоньше */
+            padding: 8px 0; /* Уменьшил отступы */
             background: #f1f5f9;
-            border-bottom: 2px solid #e2e8f0;
-            font-size: 0.8rem;
+            border-bottom: 1px solid #e2e8f0; /* Сделал линию тоньше */
+            font-size: 0.7rem; /* Уменьшил размер шрифта */
+            color: #475569;
         }
         .calendar-day-cell {
             flex: 1;
             text-align: center;
-            padding: 10px 4px;
+            padding: 6px 2px; /* Уменьшил внутренние отступы */
             border: 1px solid #e2e8f0;
-            font-size: 0.85rem;
+            font-size: 0.75rem; /* Уменьшил размер шрифта */
             background: white;
-            min-height: 70px;
+            min-height: 60px; /* Уменьшил минимальную высоту */
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: all 0.1s ease;
         }
         .calendar-day-number {
-            font-weight: 800;
-            font-size: 1rem;
+            font-weight: 700;
+            font-size: 0.9rem; /* Уменьшил размер цифр */
+            line-height: 1.2;
         }
         .calendar-pvz-name {
-            font-size: 0.7rem;
-            margin-top: 5px;
-            padding: 2px 6px;
-            border-radius: 12px;
+            font-size: 0.65rem; /* Уменьшил шрифт названия ПВЗ */
+            margin-top: 4px;
+            padding: 2px 5px; /* Уменьшил отступы */
+            border-radius: 10px; /* Уменьшил скругление */
             background: #e0f2fe;
             color: #0369a1;
             font-weight: 500;
-            max-width: 90%;
+            max-width: 95%;
             white-space: nowrap;
             overflow-x: hidden;
             text-overflow: ellipsis;
@@ -727,24 +731,28 @@
         }
         .day-today {
             background-color: #fff3bf;
-            border: 2px solid #f59e0b;
+            border: 1px solid #f59e0b; /* Уменьшил толщину рамки */
         }
         .calendar-header {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         .calendar-header h3 {
-            margin: 0 0 5px 0;
+            margin: 0 0 4px 0;
             color: #1e293b;
+            font-size: 1rem; /* Уменьшил размер заголовка */
         }
         .mobile-legend {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
-            margin: 15px 0;
-            font-size: 0.7rem;
+            margin: 12px 0;
+            font-size: 0.65rem; /* Уменьшил шрифт легенды */
             background: #f8fafc;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 30px;
+        }
+        .mobile-legend span {
+            white-space: nowrap;
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1040,12 +1048,12 @@
         </div>
     </div>
 
-    <!-- НОВАЯ ВКЛАДКА: МОБИЛЬНАЯ ВЕРСИЯ (КАЛЕНДАРЬ С ПВЗ) -->
+    <!-- НОВАЯ ВКЛАДКА: МОБИЛЬНАЯ ВЕРСИЯ (УЛУЧШЕННЫЙ КОМПАКТНЫЙ КАЛЕНДАРЬ) -->
     <div id="mobileVersionTabContent" style="display: none;">
         <div class="mobile-calendar-container">
             <div class="analytics-header" style="background: linear-gradient(135deg, #10b981, #059669);">
                 <h2>📱 Мобильная версия: календарь сотрудника</h2>
-                <p style="margin: 5px 0 0; opacity: 0.9;">Выберите сотрудника и месяц, чтобы увидеть где и когда он работает</p>
+                <p style="margin: 5px 0 0; opacity: 0.9; font-size: 0.85rem;">Выберите сотрудника и месяц, чтобы увидеть где и когда он работает</p>
             </div>
 
             <div class="employee-selector-mobile">
@@ -1060,7 +1068,7 @@
                     <select id="mobileMonthSelect"></select>
                 </div>
                 <div style="flex: 0;">
-                    <button id="refreshMobileCalendarBtn" style="background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 40px; cursor: pointer; font-weight: 500;">Показать</button>
+                    <button id="refreshMobileCalendarBtn" style="background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-weight: 500;">Показать</button>
                 </div>
             </div>
 
@@ -1068,13 +1076,12 @@
                 <span>🟢 Рабочий день</span>
                 <span>🔴 Выходной</span>
                 <span>🟡 Сегодня</span>
-                <span>🏷️ Название ПВЗ под числом</span>
+                <span>🏷️ ПВЗ</span>
             </div>
 
             <div id="mobileCalendarWrapper" style="overflow-x: auto;">
-                <!-- Здесь динамически будет отрисовываться календарь -->
                 <div id="mobileCalendarContent" style="min-width: 100%;">
-                    <div class="calendar-header" style="text-align: center; padding: 15px;">
+                    <div class="calendar-header" style="text-align: center; padding: 8px;">
                         <h3 id="mobileCalendarTitle"></h3>
                     </div>
                     <div id="mobileCalendarGrid" class="calendar-mobile">
@@ -2236,7 +2243,7 @@
         select.value = `${now.getFullYear()}-${now.getMonth()+1}`;
     }
 
-    // ГЛАВНАЯ ФУНКЦИЯ ДЛЯ ОТРИСОВКИ МОБИЛЬНОГО КАЛЕНДАРЯ
+    // ГЛАВНАЯ ФУНКЦИЯ ДЛЯ ОТРИСОВКИ МОБИЛЬНОГО КАЛЕНДАРЯ (УЛУЧШЕННАЯ КОМПАКТНАЯ ВЕРСИЯ)
     function renderMobileCalendar() {
         const employeeName = document.getElementById("mobileEmployeeSelect").value;
         const monthYear = document.getElementById("mobileMonthSelect").value;
@@ -2282,7 +2289,7 @@
         const today = new Date();
         const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
         
-        // Строим заголовки дней недели (Пн, Вт, Ср, Чт, Пт, Сб, Вс)
+        // Строим заголовки дней недели (Пн, Вт, Ср, Чт, Пт, Сб, Вс) - компактные
         let headersHtml = '<div class="calendar-week-row">';
         const weekdaysShort = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
         for (let i = 0; i < 7; i++) {
@@ -2318,11 +2325,11 @@
             if (dayNumber) {
                 cellsHtml += `<div class="calendar-day-number">${dayNumber}</div>`;
                 if (pvzForDay) {
-                    // Отображаем название ПВЗ под числом
-                    let shortPVZ = pvzForDay.length > 18 ? pvzForDay.substring(0, 15) + '..' : pvzForDay;
+                    // Отображаем название ПВЗ под числом, сокращаем для компактности
+                    let shortPVZ = pvzForDay.length > 12 ? pvzForDay.substring(0, 10) + '..' : pvzForDay;
                     cellsHtml += `<div class="calendar-pvz-name" title="${escapeHtml(pvzForDay)}">${escapeHtml(shortPVZ)}</div>`;
                 } else {
-                    cellsHtml += `<div class="calendar-pvz-name" style="background:#e2e8f0; color:#64748b;">Выходной</div>`;
+                    cellsHtml += `<div class="calendar-pvz-name" style="background:#e2e8f0; color:#64748b;">—</div>`;
                 }
             } else {
                 cellsHtml += `<div class="calendar-day-number" style="opacity:0.3;"> </div>`;
