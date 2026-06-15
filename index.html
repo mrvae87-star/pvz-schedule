@@ -632,7 +632,7 @@
             font-size: 0.75rem;
         }
 
-        /* Мобильная версия аналитики - исправленная таблица */
+        /* Мобильная версия аналитики - исправленная таблица с цветами */
         .mobile-analytics-container {
             padding: 10px 0;
         }
@@ -706,15 +706,19 @@
             cursor: pointer;
             transition: 0.1s;
         }
+        /* Рабочий день - зеленый фон */
         .calendar-day.work-day {
             background: #dcfce7;
         }
+        /* Выходной день (нерабочий) - красный фон */
         .calendar-day.off-day {
             background: #fee2e2;
         }
+        /* Сегодня - желтый фон */
         .calendar-day.today {
             background: #fff3bf;
             border: 1px solid #f59e0b;
+            font-weight: bold;
         }
         .calendar-day .day-number {
             font-weight: 600;
@@ -1992,7 +1996,7 @@
         const daysInMonth = new Date(analyticsYear, analyticsMonth, 0).getDate();
         const today = new Date();
         const isCurrentMonth = (today.getFullYear() === analyticsYear && (today.getMonth() + 1) === analyticsMonth);
-        let headerHtml = '<table><th style="min-width: 140px; position: sticky; left: 0; background: #1e293b; z-index: 20;">👤 Сотрудник</th>';
+        let headerHtml = '<tr><th style="min-width: 140px; position: sticky; left: 0; background: #1e293b; z-index: 20;">👤 Сотрудник</th>';
         for (let day = 1; day <= daysInMonth; day++) {
             const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
@@ -2009,7 +2013,7 @@
         if (analyticsSearchTerm) filteredEmployees = globalEmployees.filter(emp => emp.fullName.toLowerCase().includes(analyticsSearchTerm));
         if (filteredEmployees.length === 0 && analyticsSearchTerm) { tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>'; return; }
         for (let emp of filteredEmployees) {
-            let rowHtml = '<tr><td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</td>';
+            let rowHtml = `<tr><td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</td>`;
             let workDaysCount = 0;
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
@@ -2055,16 +2059,18 @@
         const workDayMap = new Map(); workDays.forEach(wd => workDayMap.set(wd.day, wd.pvzName));
         let startOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
         let calendarHtml = `<div class="mobile-calendar"><div class="mobile-month-header">${getMonthName(month)} ${year}</div><div class="calendar-wrapper"><div class="calendar-weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div><div class="calendar-days">`;
-        for (let i = 0; i < startOffset; i++) calendarHtml += `<div class="calendar-day" style="background: #f8fafc; opacity: 0.5;"></div>`;
+        for (let i = 0; i < startOffset; i++) calendarHtml += `<div class="calendar-day" style="background: #f1f5f9;"></div>`;
         for (let day = 1; day <= daysInMonth; day++) {
             const pvzName = workDayMap.get(day);
             const isWorkDay = !!pvzName;
             const isToday = isCurrentMonth && today.getDate() === day;
-            const dayOfWeek = getDayOfWeek(year, month, day);
-            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
             let cellClass = 'calendar-day';
-            if (isWorkDay) cellClass += ' work-day';
-            else if (!isWorkDay && !isWeekend) cellClass += ' off-day';
+            // Устанавливаем класс в зависимости от того, рабочий день или нет
+            if (isWorkDay) {
+                cellClass += ' work-day';  // зеленый фон
+            } else {
+                cellClass += ' off-day';   // красный фон для нерабочих дней
+            }
             if (isToday) cellClass += ' today';
             let pvzShort = ''; if (pvzName) pvzShort = pvzName.length > 20 ? pvzName.substring(0, 18) + '..' : pvzName;
             calendarHtml += `<div class="${cellClass}"><div class="day-number">${day}</div>${pvzShort ? `<div class="pvz-label">${escapeHtml(pvzShort)}</div>` : ''}</div>`;
