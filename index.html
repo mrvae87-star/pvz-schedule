@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -635,124 +634,143 @@
             font-size: 0.75rem;
         }
 
-        /* НОВЫЕ СТИЛИ ДЛЯ МОБИЛЬНОЙ ВЕРСИИ (КАЛЕНДАРЬ С ПВЗ ПОД ЧИСЛАМИ) - УЛУЧШЕННАЯ КОМПАКТНАЯ ВЕРСИЯ */
-        .mobile-calendar-container {
-            padding: 20px 0;
+        /* Стили для мобильной версии аналитики */
+        .mobile-analytics-container {
+            padding: 15px 0;
         }
-        .employee-selector-mobile {
+        .mobile-employee-selector {
             background: #f8fafc;
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 16px;
             margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: flex-end;
         }
-        .employee-selector-mobile label {
+        .mobile-employee-selector label {
+            font-size: 0.75rem;
             font-weight: 600;
             color: #475569;
-            font-size: 0.8rem;
-            margin-bottom: 4px;
             display: block;
+            margin-bottom: 5px;
         }
-        .employee-selector-mobile select {
-            flex: 1;
-            min-width: 200px;
-            padding: 10px 12px;
+        .mobile-employee-selector select {
+            width: 100%;
+            padding: 10px;
             border-radius: 12px;
             border: 1px solid #cbd5e1;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             background: white;
         }
-        .month-selector-mobile {
+        .mobile-calendar {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
             margin-bottom: 20px;
         }
-        .calendar-mobile {
-            display: flex;
-            flex-direction: column;
-            gap: 4px; /* Уменьшил отступы между строками */
-            background: white;
-            border-radius: 16px; /* Уменьшил скругление */
-            overflow-x: auto;
-            border: 1px solid #e2e8f0; /* Добавил рамку для четкости */
-        }
-        .calendar-week-row {
-            display: flex;
-            min-width: 560px; /* Немного уменьшил минимальную ширину для компактности */
-        }
-        .calendar-day-header {
-            flex: 1;
+        .mobile-month-header {
+            background: #3b82f6;
+            color: white;
+            padding: 10px;
             text-align: center;
-            font-weight: 600; /* Сделал чуть тоньше */
-            padding: 8px 0; /* Уменьшил отступы */
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .calendar-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
             background: #f1f5f9;
-            border-bottom: 1px solid #e2e8f0; /* Сделал линию тоньше */
-            font-size: 0.7rem; /* Уменьшил размер шрифта */
-            color: #475569;
-        }
-        .calendar-day-cell {
-            flex: 1;
             text-align: center;
-            padding: 6px 2px; /* Уменьшил внутренние отступы */
-            border: 1px solid #e2e8f0;
-            font-size: 0.75rem; /* Уменьшил размер шрифта */
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #475569;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            background: #e2e8f0;
+        }
+        .calendar-day {
             background: white;
-            min-height: 60px; /* Уменьшил минимальную высоту */
+            aspect-ratio: 1 / 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: all 0.1s ease;
+            font-size: 0.7rem;
+            padding: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.1s;
         }
-        .calendar-day-number {
-            font-weight: 700;
-            font-size: 0.9rem; /* Уменьшил размер цифр */
-            line-height: 1.2;
+        .calendar-day.work-day {
+            background: #dcfce7;
+            color: #15803d;
         }
-        .calendar-pvz-name {
-            font-size: 0.65rem; /* Уменьшил шрифт названия ПВЗ */
-            margin-top: 4px;
-            padding: 2px 5px; /* Уменьшил отступы */
-            border-radius: 10px; /* Уменьшил скругление */
-            background: #e0f2fe;
-            color: #0369a1;
-            font-weight: 500;
-            max-width: 95%;
+        .calendar-day.off-day {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .calendar-day.today {
+            background: #fff3bf;
+            border: 1px solid #f59e0b;
+        }
+        .calendar-day .day-number {
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        .calendar-day .pvz-label {
+            font-size: 0.55rem;
+            margin-top: 2px;
             white-space: nowrap;
-            overflow-x: hidden;
+            overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 100%;
         }
-        .day-work {
-            background-color: #dcfce7;
-        }
-        .day-off {
-            background-color: #fee2e2;
-        }
-        .day-today {
-            background-color: #fff3bf;
-            border: 1px solid #f59e0b; /* Уменьшил толщину рамки */
-        }
-        .calendar-header {
-            margin-bottom: 12px;
-        }
-        .calendar-header h3 {
-            margin: 0 0 4px 0;
-            color: #1e293b;
-            font-size: 1rem; /* Уменьшил размер заголовка */
-        }
-        .mobile-legend {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            margin: 12px 0;
-            font-size: 0.65rem; /* Уменьшил шрифт легенды */
+        .mobile-work-days-list {
             background: #f8fafc;
-            padding: 6px 10px;
-            border-radius: 30px;
+            border-radius: 16px;
+            padding: 12px;
+            margin-top: 15px;
         }
-        .mobile-legend span {
-            white-space: nowrap;
+        .mobile-work-days-list h4 {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 10px 0;
+        }
+        .work-days-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .work-day-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 10px;
+            border-left: 3px solid #3b82f6;
+            font-size: 0.7rem;
+        }
+        .work-day-date {
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .work-day-pvz {
+            color: #3b82f6;
+            background: #e0f2fe;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+        }
+        .no-data-message {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+            font-size: 0.75rem;
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1017,76 +1035,66 @@
                 <h2>📊 Аналитика работы сотрудников</h2>
             </div>
             
-            <div class="legend-analytics">
-                <span><span class="legend-dot work"></span> Рабочий день</span>
-                <span><span class="legend-dot off"></span> Выходной</span>
-                <span><span class="legend-dot today"></span> Сегодняшняя дата</span>
-                <span>🎨 Цвет ячейки зависит от ПВЗ</span>
+            <!-- Подвкладки аналитики -->
+            <div class="dashboard-sub-tabs" style="margin-bottom: 15px;">
+                <button class="sub-tab analytics-sub-tab active" data-analytics-subtab="standard">📊 Стандартная</button>
+                <button class="sub-tab analytics-sub-tab" data-analytics-subtab="mobile">📱 Мобильная версия</button>
             </div>
-
-            <div class="analytics-controls">
-                <div class="control-group">
-                    <label>Год</label>
-                    <select id="analyticsYearSelect"></select>
+            
+            <!-- Стандартная аналитика (существующая таблица) -->
+            <div id="analyticsStandardView">
+                <div class="legend-analytics">
+                    <span><span class="legend-dot work"></span> Рабочий день</span>
+                    <span><span class="legend-dot off"></span> Выходной</span>
+                    <span><span class="legend-dot today"></span> Сегодняшняя дата</span>
+                    <span>🎨 Цвет ячейки зависит от ПВЗ</span>
                 </div>
-                <div class="control-group">
-                    <label>Месяц</label>
-                    <select id="analyticsMonthSelect"></select>
+
+                <div class="analytics-controls">
+                    <div class="control-group">
+                        <label>Год</label>
+                        <select id="analyticsYearSelect"></select>
+                    </div>
+                    <div class="control-group">
+                        <label>Месяц</label>
+                        <select id="analyticsMonthSelect"></select>
+                    </div>
+                </div>
+                
+                <div class="analytics-search">
+                    <input type="text" id="analyticsSearchInput" placeholder="🔍 Поиск по имени сотрудника..." oninput="filterAnalyticsTable()">
+                </div>
+                
+                <div class="analytics-table-wrapper">
+                    <table class="analytics-table" id="analyticsTable">
+                        <thead id="analyticsTableHeader"></thead>
+                        <tbody id="analyticsTableBody"></tbody>
+                    </table>
                 </div>
             </div>
             
-            <div class="analytics-search">
-                <input type="text" id="analyticsSearchInput" placeholder="🔍 Поиск по имени сотрудника..." oninput="filterAnalyticsTable()">
-            </div>
-            
-            <div class="analytics-table-wrapper">
-                <table class="analytics-table" id="analyticsTable">
-                    <thead id="analyticsTableHeader"></thead>
-                    <tbody id="analyticsTableBody"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- НОВАЯ ВКЛАДКА: МОБИЛЬНАЯ ВЕРСИЯ (УЛУЧШЕННЫЙ КОМПАКТНЫЙ КАЛЕНДАРЬ) -->
-    <div id="mobileVersionTabContent" style="display: none;">
-        <div class="mobile-calendar-container">
-            <div class="analytics-header" style="background: linear-gradient(135deg, #10b981, #059669);">
-                <h2>📱 Мобильная версия: календарь сотрудника</h2>
-                <p style="margin: 5px 0 0; opacity: 0.9; font-size: 0.85rem;">Выберите сотрудника и месяц, чтобы увидеть где и когда он работает</p>
-            </div>
-
-            <div class="employee-selector-mobile">
-                <div style="flex: 2;">
-                    <label>👤 Выберите сотрудника:</label>
-                    <select id="mobileEmployeeSelect">
-                        <option value="">-- Выберите сотрудника --</option>
-                    </select>
-                </div>
-                <div style="flex: 1;">
-                    <label>📅 Месяц:</label>
-                    <select id="mobileMonthSelect"></select>
-                </div>
-                <div style="flex: 0;">
-                    <button id="refreshMobileCalendarBtn" style="background: #10b981; color: white; border: none; padding: 8px 16px; border-radius: 40px; cursor: pointer; font-weight: 500;">Показать</button>
-                </div>
-            </div>
-
-            <div class="mobile-legend">
-                <span>🟢 Рабочий день</span>
-                <span>🔴 Выходной</span>
-                <span>🟡 Сегодня</span>
-                <span>🏷️ ПВЗ</span>
-            </div>
-
-            <div id="mobileCalendarWrapper" style="overflow-x: auto;">
-                <div id="mobileCalendarContent" style="min-width: 100%;">
-                    <div class="calendar-header" style="text-align: center; padding: 8px;">
-                        <h3 id="mobileCalendarTitle"></h3>
+            <!-- Мобильная версия аналитики (новая) -->
+            <div id="analyticsMobileView" style="display: none;">
+                <div class="mobile-analytics-container">
+                    <div class="mobile-employee-selector">
+                        <label>👤 Выберите сотрудника</label>
+                        <select id="mobileEmployeeSelect">
+                            <option value="">-- Выберите сотрудника --</option>
+                        </select>
                     </div>
-                    <div id="mobileCalendarGrid" class="calendar-mobile">
-                        <!-- Заголовки дней недели и ячейки будут вставлены JS -->
+                    
+                    <div class="analytics-controls" style="margin-bottom: 15px;">
+                        <div class="control-group">
+                            <label>Год</label>
+                            <select id="mobileYearSelect"></select>
+                        </div>
+                        <div class="control-group">
+                            <label>Месяц</label>
+                            <select id="mobileMonthSelect"></select>
+                        </div>
                     </div>
+                    
+                    <div id="mobileCalendarContainer"></div>
                 </div>
             </div>
         </div>
@@ -1224,6 +1232,7 @@
     let analyticsYear = new Date().getFullYear();
     let analyticsMonth = new Date().getMonth() + 1;
     let analyticsSearchTerm = "";
+    let currentAnalyticsSubtab = "standard"; // standard или mobile
     
     let emergencyContacts = {};
     let currentEditingEmployee = null;
@@ -1664,11 +1673,11 @@
             populateFineEmployeeSelect(); 
             renderEmergencyContacts(); 
         }
-        if (currentTab === 'analytics') renderAnalytics();
+        if (currentTab === 'analytics') {
+            populateMobileEmployeeSelect();
+            renderAnalytics();
+        }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
-        
-        // Обновляем селекты в мобильной версии
-        populateMobileEmployeeSelect();
         
         showNotification(`✅ Сотрудник "${empName}" и все его данные полностью удалены.`, false);
     }
@@ -1749,7 +1758,7 @@
         populateExtraEmployeeSelect();
         populateFineEmployeeSelect();
         populatePublicEmployeeSelect();
-        populateMobileEmployeeSelect(); // Добавляем обновление для мобильной версии
+        populateMobileEmployeeSelect();
     }
     
     function getMonthKey(year, month) {
@@ -1842,6 +1851,7 @@
         const traineeBonus = monthData.traineeDays * monthData.traineeRate;
         const extraAmount = calculateTotalExtraForMonth(empFullName, year, month);
         const totalFines = calculateTotalFinesForMonth(empFullName, year, month);
+        // Обновляем штраф в salaryData для отображения в таблице, но в расчете используем сумму из fines
         monthData.fine = totalFines;
         const total = baseSalary + extraAmount + traineeBonus - monthData.advance - monthData.moneyTransferred - totalFines;
         return Math.max(0, total);
@@ -2211,140 +2221,6 @@
         });
     }
     
-    // Функция для заполнения селекта сотрудников в мобильной версии
-    function populateMobileEmployeeSelect() {
-        const select = document.getElementById("mobileEmployeeSelect");
-        if (!select) return;
-        select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
-        globalEmployees.forEach(emp => {
-            const option = document.createElement("option");
-            option.value = emp.fullName;
-            option.textContent = emp.fullName;
-            select.appendChild(option);
-        });
-    }
-
-    function populateMobileMonthSelect() {
-        const select = document.getElementById("mobileMonthSelect");
-        if (!select) return;
-        const now = new Date();
-        select.innerHTML = '';
-        // Показываем последние 12 месяцев и следующие 6
-        for (let offset = -12; offset <= 6; offset++) {
-            const date = new Date(now.getFullYear(), now.getMonth() + offset, 1);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const option = document.createElement("option");
-            option.value = `${year}-${month}`;
-            option.textContent = `${getMonthName(month)} ${year}`;
-            select.appendChild(option);
-        }
-        // По умолчанию выбран текущий месяц
-        select.value = `${now.getFullYear()}-${now.getMonth()+1}`;
-    }
-
-    // ГЛАВНАЯ ФУНКЦИЯ ДЛЯ ОТРИСОВКИ МОБИЛЬНОГО КАЛЕНДАРЯ (УЛУЧШЕННАЯ КОМПАКТНАЯ ВЕРСИЯ)
-    function renderMobileCalendar() {
-        const employeeName = document.getElementById("mobileEmployeeSelect").value;
-        const monthYear = document.getElementById("mobileMonthSelect").value;
-        
-        if (!employeeName) {
-            document.getElementById("mobileCalendarGrid").innerHTML = '<div style="text-align:center; padding:40px;">👈 Пожалуйста, выберите сотрудника</div>';
-            document.getElementById("mobileCalendarTitle").innerHTML = '';
-            return;
-        }
-        
-        if (!monthYear) {
-            document.getElementById("mobileCalendarGrid").innerHTML = '<div style="text-align:center; padding:40px;">👈 Выберите месяц</div>';
-            return;
-        }
-        
-        const [year, month] = monthYear.split('-').map(Number);
-        const daysInMonth = new Date(year, month, 0).getDate();
-        const firstDayOfWeek = new Date(year, month-1, 1).getDay(); // 0 - вс, 1 - пн ...
-        
-        // Получаем расписание сотрудника по всем ПВЗ
-        const employeeSchedule = {};
-        for (let pvzName in allPVZData) {
-            const schedules = allPVZData[pvzName].schedules[employeeName];
-            if (schedules) {
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const key = `${year}-${month}-${day}`;
-                    if (schedules[key] === true) {
-                        employeeSchedule[day] = pvzName;
-                    } else if (schedules[key] === false && !employeeSchedule[day]) {
-                        employeeSchedule[day] = null; // Выходной
-                    }
-                }
-            }
-        }
-        
-        // Заполняем дни, которые не определены, как выходные (по умолчанию)
-        for (let day = 1; day <= daysInMonth; day++) {
-            if (employeeSchedule[day] === undefined) {
-                employeeSchedule[day] = null;
-            }
-        }
-        
-        const today = new Date();
-        const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
-        
-        // Строим заголовки дней недели (Пн, Вт, Ср, Чт, Пт, Сб, Вс) - компактные
-        let headersHtml = '<div class="calendar-week-row">';
-        const weekdaysShort = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-        for (let i = 0; i < 7; i++) {
-            headersHtml += `<div class="calendar-day-header">${weekdaysShort[i]}</div>`;
-        }
-        headersHtml += '</div>';
-        
-        // Строим ячейки
-        let cellsHtml = '';
-        let dayCounter = 1;
-        const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
-        // Корректируем firstDayOfWeek для понедельника как первого дня (0 - вс, 1 - пн)
-        let startOffset = (firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1);
-        
-        for (let i = 0; i < totalCells; i++) {
-            if (i % 7 === 0) {
-                if (cellsHtml !== '') cellsHtml += '</div>';
-                cellsHtml += '<div class="calendar-week-row">';
-            }
-            
-            let dayNumber = dayCounter <= daysInMonth ? dayCounter : null;
-            let pvzForDay = dayNumber ? employeeSchedule[dayNumber] : null;
-            let isToday = isCurrentMonth && dayNumber === today.getDate();
-            
-            let cellClass = 'calendar-day-cell';
-            if (dayNumber) {
-                if (pvzForDay) cellClass += ' day-work';
-                else cellClass += ' day-off';
-                if (isToday) cellClass += ' day-today';
-            }
-            
-            cellsHtml += `<div class="${cellClass}">`;
-            if (dayNumber) {
-                cellsHtml += `<div class="calendar-day-number">${dayNumber}</div>`;
-                if (pvzForDay) {
-                    // Отображаем название ПВЗ под числом, сокращаем для компактности
-                    let shortPVZ = pvzForDay.length > 12 ? pvzForDay.substring(0, 10) + '..' : pvzForDay;
-                    cellsHtml += `<div class="calendar-pvz-name" title="${escapeHtml(pvzForDay)}">${escapeHtml(shortPVZ)}</div>`;
-                } else {
-                    cellsHtml += `<div class="calendar-pvz-name" style="background:#e2e8f0; color:#64748b;">—</div>`;
-                }
-            } else {
-                cellsHtml += `<div class="calendar-day-number" style="opacity:0.3;"> </div>`;
-            }
-            cellsHtml += `</div>`;
-            
-            if (dayNumber) dayCounter++;
-        }
-        cellsHtml += '</div>';
-        
-        const calendarHtml = headersHtml + cellsHtml;
-        document.getElementById("mobileCalendarGrid").innerHTML = calendarHtml;
-        document.getElementById("mobileCalendarTitle").innerHTML = `📅 ${getMonthName(month)} ${year} | ${escapeHtml(employeeName)}`;
-    }
-    
     function addContactRow() {
         const container = document.getElementById("publicContactsContainer");
         const newRow = document.createElement('div');
@@ -2502,6 +2378,43 @@
         }
     }
     
+    function populateMobileSelects() {
+        const yearSelect = document.getElementById("mobileYearSelect");
+        const monthSelect = document.getElementById("mobileMonthSelect");
+        if (!yearSelect || !monthSelect) return;
+        
+        const currentYear = new Date().getFullYear();
+        yearSelect.innerHTML = '';
+        for (let y = currentYear - 2; y <= currentYear + 1; y++) {
+            const option = document.createElement("option");
+            option.value = y;
+            option.textContent = y;
+            if (y === analyticsYear) option.selected = true;
+            yearSelect.appendChild(option);
+        }
+        
+        monthSelect.innerHTML = '';
+        for (let m = 1; m <= 12; m++) {
+            const option = document.createElement("option");
+            option.value = m;
+            option.textContent = getMonthName(m);
+            if (m === analyticsMonth) option.selected = true;
+            monthSelect.appendChild(option);
+        }
+    }
+    
+    function populateMobileEmployeeSelect() {
+        const select = document.getElementById("mobileEmployeeSelect");
+        if (!select) return;
+        select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
+        globalEmployees.forEach(emp => {
+            const option = document.createElement("option");
+            option.value = emp.fullName;
+            option.textContent = emp.fullName;
+            select.appendChild(option);
+        });
+    }
+    
     function filterAnalyticsTable() {
         const input = document.getElementById("analyticsSearchInput");
         analyticsSearchTerm = input ? input.value.toLowerCase().trim() : "";
@@ -2509,6 +2422,14 @@
     }
     
     function renderAnalytics() {
+        if (currentAnalyticsSubtab === 'standard') {
+            renderStandardAnalytics();
+        } else {
+            renderMobileAnalytics();
+        }
+    }
+    
+    function renderStandardAnalytics() {
         const tbody = document.getElementById("analyticsTableBody");
         const thead = document.getElementById("analyticsTableHeader");
         if (!tbody || !thead) return;
@@ -2537,7 +2458,6 @@
         
         tbody.innerHTML = '';
         
-        // Фильтрация сотрудников по поиску
         let filteredEmployees = globalEmployees;
         if (analyticsSearchTerm) {
             filteredEmployees = globalEmployees.filter(emp => 
@@ -2546,7 +2466,7 @@
         }
         
         if (filteredEmployees.length === 0 && analyticsSearchTerm) {
-            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td>' + '</tr>';
+            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>';
             return;
         }
         
@@ -2594,12 +2514,128 @@
         }
     }
     
+    function renderMobileAnalytics() {
+        const container = document.getElementById("mobileCalendarContainer");
+        if (!container) return;
+        
+        const employeeSelect = document.getElementById("mobileEmployeeSelect");
+        const selectedEmployee = employeeSelect ? employeeSelect.value : "";
+        
+        const year = parseInt(document.getElementById("mobileYearSelect")?.value) || analyticsYear;
+        const month = parseInt(document.getElementById("mobileMonthSelect")?.value) || analyticsMonth;
+        
+        if (!selectedEmployee) {
+            container.innerHTML = '<div class="no-data-message">👈 Выберите сотрудника для просмотра графика</div>';
+            return;
+        }
+        
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const firstDayOfMonth = new Date(year, month - 1, 1).getDay(); // 0 = воскресенье
+        const today = new Date();
+        const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
+        
+        // Собираем рабочие дни сотрудника
+        const workDays = [];
+        for (let day = 1; day <= daysInMonth; day++) {
+            for (let pvz in allPVZData) {
+                const key = `${year}-${month}-${day}`;
+                if (allPVZData[pvz].schedules[selectedEmployee]?.[key] === true) {
+                    workDays.push({ day, pvzName: pvz });
+                    break;
+                }
+            }
+        }
+        
+        // Создаем карту для быстрого доступа
+        const workDayMap = new Map();
+        workDays.forEach(wd => workDayMap.set(wd.day, wd.pvzName));
+        
+        // Генерация календаря
+        let calendarHtml = `
+            <div class="mobile-calendar">
+                <div class="mobile-month-header">${getMonthName(month)} ${year}</div>
+                <div class="calendar-weekdays">
+                    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+                </div>
+                <div class="calendar-days">
+        `;
+        
+        // Корректировка: первый день недели - понедельник
+        let startOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+        
+        // Пустые ячейки до начала месяца
+        for (let i = 0; i < startOffset; i++) {
+            calendarHtml += `<div class="calendar-day" style="background: #f8fafc; opacity: 0.5;"></div>`;
+        }
+        
+        // Дни месяца
+        for (let day = 1; day <= daysInMonth; day++) {
+            const pvzName = workDayMap.get(day);
+            const isWorkDay = !!pvzName;
+            const isToday = isCurrentMonth && today.getDate() === day;
+            const dayOfWeek = getDayOfWeek(year, month, day);
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+            
+            let cellClass = 'calendar-day';
+            if (isWorkDay) cellClass += ' work-day';
+            else if (!isWorkDay && !isWeekend) cellClass += ' off-day';
+            if (isToday) cellClass += ' today';
+            
+            let pvzShort = '';
+            if (pvzName) {
+                pvzShort = pvzName.length > 20 ? pvzName.substring(0, 18) + '..' : pvzName;
+            }
+            
+            calendarHtml += `
+                <div class="${cellClass}">
+                    <div class="day-number">${day}</div>
+                    ${pvzShort ? `<div class="pvz-label">${escapeHtml(pvzShort)}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        calendarHtml += `</div></div>`;
+        
+        // Список рабочих дней с ПВЗ
+        let workDaysListHtml = `
+            <div class="mobile-work-days-list">
+                <h4>📋 Рабочие дни в ${getMonthName(month)}</h4>
+                <div class="work-days-grid">
+        `;
+        
+        if (workDays.length === 0) {
+            workDaysListHtml += `<div class="no-data-message" style="padding: 15px;">Нет рабочих дней в этом месяце</div>`;
+        } else {
+            workDays.forEach(wd => {
+                workDaysListHtml += `
+                    <div class="work-day-item">
+                        <span class="work-day-date">${wd.day} ${getMonthName(month)}</span>
+                        <span class="work-day-pvz">${escapeHtml(wd.pvzName)}</span>
+                    </div>
+                `;
+            });
+        }
+        
+        workDaysListHtml += `</div></div>`;
+        
+        container.innerHTML = calendarHtml + workDaysListHtml;
+    }
+    
     function refreshAnalytics() {
-        const yearSelect = document.getElementById("analyticsYearSelect");
-        const monthSelect = document.getElementById("analyticsMonthSelect");
-        if (yearSelect && monthSelect) {
-            analyticsYear = parseInt(yearSelect.value);
-            analyticsMonth = parseInt(monthSelect.value);
+        if (currentAnalyticsSubtab === 'standard') {
+            const yearSelect = document.getElementById("analyticsYearSelect");
+            const monthSelect = document.getElementById("analyticsMonthSelect");
+            if (yearSelect && monthSelect) {
+                analyticsYear = parseInt(yearSelect.value);
+                analyticsMonth = parseInt(monthSelect.value);
+            }
+        } else {
+            const yearSelect = document.getElementById("mobileYearSelect");
+            const monthSelect = document.getElementById("mobileMonthSelect");
+            if (yearSelect && monthSelect) {
+                analyticsYear = parseInt(yearSelect.value);
+                analyticsMonth = parseInt(monthSelect.value);
+            }
         }
         renderAnalytics();
     }
@@ -2611,25 +2647,36 @@
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "block";
-        document.getElementById("mobileVersionTabContent").style.display = "none";
         document.getElementById("emergencyContactsTabContent").style.display = "none";
+        
+        // Показываем стандартную вью по умолчанию
+        currentAnalyticsSubtab = "standard";
+        document.getElementById("analyticsStandardView").style.display = "block";
+        document.getElementById("analyticsMobileView").style.display = "none";
+        
         populateAnalyticsSelects();
-        renderAnalytics();
-    }
-    
-    // Функция открытия мобильной версии (новая вкладка)
-    function openMobileVersion() {
-        currentTab = 'mobile';
-        renderTabs();
-        document.getElementById("employeesTabContent").style.display = "none";
-        document.getElementById("pvzTabContent").style.display = "none";
-        document.getElementById("dashboardTabContent").style.display = "none";
-        document.getElementById("analyticsTabContent").style.display = "none";
-        document.getElementById("mobileVersionTabContent").style.display = "block";
-        document.getElementById("emergencyContactsTabContent").style.display = "none";
+        populateMobileSelects();
         populateMobileEmployeeSelect();
-        populateMobileMonthSelect();
-        renderMobileCalendar();
+        renderAnalytics();
+        
+        // Добавляем обработчики для подвкладок аналитики
+        document.querySelectorAll('.analytics-sub-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.analytics-sub-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const subtab = btn.getAttribute('data-analytics-subtab');
+                currentAnalyticsSubtab = subtab;
+                if (subtab === 'standard') {
+                    document.getElementById("analyticsStandardView").style.display = "block";
+                    document.getElementById("analyticsMobileView").style.display = "none";
+                    renderStandardAnalytics();
+                } else {
+                    document.getElementById("analyticsStandardView").style.display = "none";
+                    document.getElementById("analyticsMobileView").style.display = "block";
+                    renderMobileAnalytics();
+                }
+            });
+        });
     }
     
     function openEmergencyContacts() {
@@ -2639,7 +2686,6 @@
         document.getElementById("pvzTabContent").style.display = "none";
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "none";
-        document.getElementById("mobileVersionTabContent").style.display = "none";
         document.getElementById("emergencyContactsTabContent").style.display = "block";
         loadPublicEmergencyForm();
     }
@@ -2940,7 +2986,7 @@
                 <td><strong>${escapeHtml(emp.surname)}</strong></td>
                 <td>${escapeHtml(emp.email || '—')}</td>
                 <td>${escapeHtml(emp.phone || '—')}</td>
-                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</div></td>
+                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</td>
                 <td>
                     <button class="edit-employee-btn" data-idx="${idx}">✏️</button>
                     <button class="delete-employee-btn" data-idx="${idx}">🗑</button>
@@ -2990,9 +3036,11 @@
             populateFineEmployeeSelect(); 
             renderEmergencyContacts(); 
         }
-        if (currentTab === 'analytics') renderAnalytics();
+        if (currentTab === 'analytics') {
+            populateMobileEmployeeSelect();
+            renderAnalytics();
+        }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
-        populateMobileEmployeeSelect(); // обновляем селект в мобильной версии
         await saveAndSync();
         showNotification(`✅ Сотрудник обновлён`, false);
     }
@@ -3027,9 +3075,11 @@
             populateFineEmployeeSelect(); 
             renderEmergencyContacts(); 
         }
-        if (currentTab === 'analytics') renderAnalytics();
+        if (currentTab === 'analytics') {
+            populateMobileEmployeeSelect();
+            renderAnalytics();
+        }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
-        populateMobileEmployeeSelect(); // обновляем селект в мобильной версии
         await saveAndSync();
         showNotification(`❌ Сотрудник "${deletedName}" удалён из списка. Данные экстренных контактов сохранены.`, false);
     }
@@ -3051,9 +3101,11 @@
             populateExtraEmployeeSelect(); 
             populateFineEmployeeSelect(); 
         }
-        if (currentTab === 'analytics') renderAnalytics();
+        if (currentTab === 'analytics') {
+            populateMobileEmployeeSelect();
+            renderAnalytics();
+        }
         updateAvailableEmployeesSelect();
-        populateMobileEmployeeSelect(); // обновляем селект в мобильной версии
         ["newEmpName","newEmpSurname","newEmpEmail","newEmpPhone","newEmpTelegram"].forEach(id => { if (document.getElementById(id)) document.getElementById(id).value = ""; });
         await saveAndSync();
         showNotification(`✅ Сотрудник "${fullName}" добавлен`, false);
@@ -3166,7 +3218,7 @@
         allPVZData[currentPVZ].schedules[emp][`${year}-${month}-${day}`] = newStatus;
         renderSchedule();
         if (currentTab === 'dashboard' && currentDashboardYear === year && currentDashboardMonth === month) renderSalaryTable();
-        if (currentTab === 'analytics' && analyticsYear === year && analyticsMonth === month) renderAnalytics();
+        if (currentTab === 'analytics') renderAnalytics();
         await saveAndSync();
         showNotification(`${emp}: ${newStatus ? '✅ рабочий день' : '❌ выходной'} на ${day}.${month}.${year}`, false);
     }
@@ -3176,7 +3228,7 @@
         allPVZData[newName] = allPVZData[oldName]; delete allPVZData[oldName];
         if (currentPVZ === oldName) currentPVZ = newName;
         renderTabs();
-        if (!['employees','dashboard','analytics','mobile','emergency'].includes(currentTab)) { updatePVZEmployeesUI(); renderSchedule(); }
+        if (!['employees','dashboard','analytics','emergency'].includes(currentTab)) { updatePVZEmployeesUI(); renderSchedule(); }
         if (currentTab === 'analytics') renderAnalytics();
         await saveAndSync();
         showNotification(`✅ ПВЗ переименован`, false);
@@ -3199,7 +3251,7 @@
     function showDashboardPasswordModal(callback) {
         const overlay = document.createElement('div');
         overlay.className = 'dashboard-password-overlay';
-        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
+        overlay.innerHTML = `<div class="dashboard-password-card"><h3>🔐 Доступ к дашборду зарплат</h3><p>Введите пароль для продолжения</p><input type="password" id="dashboardPasswordInput" placeholder="Пароль" autocomplete="off"><div style="margin-top:20px;"><button id="dashboardPasswordSubmit" style="background:#3b82f6;color:white;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Войти</button><button id="dashboardPasswordCancel" style="background:#cbd5e1;margin-left:10px;padding:8px 20px;border:none;border-radius:40px;cursor:pointer;">Отмена</button></div><div id="dashboardPasswordError" style="color:red;margin-top:10px;"></div></div>`;
         document.body.appendChild(overlay);
         const input = overlay.querySelector('#dashboardPasswordInput'), submit = overlay.querySelector('#dashboardPasswordSubmit'), cancel = overlay.querySelector('#dashboardPasswordCancel'), error = overlay.querySelector('#dashboardPasswordError');
         const cleanup = () => overlay.remove();
@@ -3213,7 +3265,7 @@
         showDashboardPasswordModal(granted => {
             if (granted) {
                 currentTab = 'dashboard'; renderTabs();
-                ["employeesTabContent","pvzTabContent","analyticsTabContent","mobileVersionTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
+                ["employeesTabContent","pvzTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
                 document.getElementById("dashboardTabContent").style.display = "block";
                 populateDashboardMonthSelect(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); populatePVZSelect();
                 renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); renderEmergencyContacts();
@@ -3240,11 +3292,7 @@
         addBtn.className = 'add-tab-btn'; addBtn.innerHTML = '➕ Добавить ПВЗ'; addBtn.onclick = () => addNewPVZ();
         tabsLeft.appendChild(addBtn);
         tabsRight.innerHTML = '';
-        [
-            ['employees','👥 Все сотрудники'], 
-            ['analytics','📊 Аналитика'],
-            ['mobile','📱 Мобильная версия'] // Новая вкладка
-        ].forEach(([id,label]) => {
+        [['employees','👥 Все сотрудники'],['analytics','📊 Аналитика']].forEach(([id,label]) => {
             const tab = document.createElement('button');
             tab.className = `tab ${currentTab === id ? 'active' : ''}`;
             tab.innerHTML = label; tab.onclick = () => switchTab(id);
@@ -3253,11 +3301,10 @@
     }
     
     async function switchTab(tabId) {
-        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","mobileVersionTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
+        ["employeesTabContent","pvzTabContent","dashboardTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
         if (tabId === 'employees') { currentTab = 'employees'; document.getElementById("employeesTabContent").style.display = "block"; renderGlobalEmployeesTable(); }
         else if (tabId === 'dashboard') { await openDashboard(); return; }
         else if (tabId === 'analytics') { openAnalytics(); return; }
-        else if (tabId === 'mobile') { openMobileVersion(); return; }
         else if (tabId === 'emergency') { openEmergencyContacts(); return; }
         else { currentPVZ = tabId; currentTab = tabId; document.getElementById("pvzTabContent").style.display = "block"; updatePVZEmployeesUI(); populateMonthSelect(); renderSchedule(); }
         renderTabs();
@@ -3318,15 +3365,13 @@
         document.getElementById("analyticsYearSelect")?.addEventListener("change", refreshAnalytics);
         document.getElementById("analyticsMonthSelect")?.addEventListener("change", refreshAnalytics);
         document.getElementById("analyticsSearchInput")?.addEventListener("input", filterAnalyticsTable);
+        document.getElementById("mobileYearSelect")?.addEventListener("change", refreshAnalytics);
+        document.getElementById("mobileMonthSelect")?.addEventListener("change", refreshAnalytics);
+        document.getElementById("mobileEmployeeSelect")?.addEventListener("change", () => renderMobileAnalytics());
         document.getElementById("savePublicEmergencyContactsBtn")?.addEventListener("click", savePublicEmergencyContacts);
         document.getElementById("addMoreContactsBtn")?.addEventListener("click", addContactRow);
         document.querySelector(".close-doc-modal")?.addEventListener("click", closeDocViewer);
         document.getElementById("docViewerModal")?.addEventListener("click", function(e) { if (e.target === this) closeDocViewer(); });
-        
-        // События для мобильной версии
-        document.getElementById("refreshMobileCalendarBtn")?.addEventListener("click", renderMobileCalendar);
-        document.getElementById("mobileEmployeeSelect")?.addEventListener("change", renderMobileCalendar);
-        document.getElementById("mobileMonthSelect")?.addEventListener("change", renderMobileCalendar);
         
         document.querySelector(".close-edit-modal")?.addEventListener("click", closeEditContactsModal);
         document.getElementById("cancelEditBtn")?.addEventListener("click", closeEditContactsModal);
@@ -3336,6 +3381,7 @@
         
         document.querySelectorAll('.sub-tab').forEach(btn => {
             btn.addEventListener('click', () => {
+                if (btn.classList.contains('analytics-sub-tab')) return;
                 document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const subtab = btn.getAttribute('data-subtab');
