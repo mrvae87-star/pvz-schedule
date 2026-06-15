@@ -1,7 +1,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>График сотрудников по ПВЗ + Дашборд ЗП</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80'%3E🏪%3C/text%3E%3C/svg%3E"> 
     <style>
@@ -21,6 +21,11 @@
             box-shadow: 0 8px 24px rgba(0,0,0,0.1);
             overflow: hidden;
             padding: 20px 24px 24px 24px;
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.3rem; }
         }
         h1 {
             font-size: 1.7rem;
@@ -160,7 +165,6 @@
             transform: scale(1.02);
         }
         
-        /* Поиск по сотрудникам */
         .search-box {
             background: #f8fafc;
             padding: 15px 20px;
@@ -188,7 +192,6 @@
             margin-bottom: 8px;
         }
         
-        /* Стили для документов */
         .employee-block {
             background: white;
             border: 2px solid #e2e8f0;
@@ -355,7 +358,6 @@
             cursor: pointer;
         }
         
-        /* Остальные стили */
         .employees-table-container { overflow-x: auto; margin-bottom: 20px; }
         .employees-table { width: 100%; border-collapse: collapse; background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .employees-table th { background: #f1f5f9; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e2e8f0; }
@@ -479,7 +481,6 @@
         .success-message h3 { color: #15803d; margin: 0 0 10px 0; }
         .success-message p { color: #166534; margin: 0; }
 
-        /* Стили для аналитики с цветами ПВЗ */
         .analytics-container { padding: 20px 0; }
         .analytics-header { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 15px 20px; border-radius: 16px; margin-bottom: 20px; }
         .analytics-header h2 { margin: 0; font-size: 1.3rem; }
@@ -521,16 +522,14 @@
         .legend-dot.off { background: #fee2e2; border: 1px solid #991b1b; }
         .legend-dot.today { background: #fff3bf; border: 1px solid #f59e0b; }
         
-        /* Цвета для разных ПВЗ */
-        .pvz-color-0 { background-color: rgba(59, 130, 246, 0.15); } /* Синий - Центральный */
-        .pvz-color-1 { background-color: rgba(34, 197, 94, 0.15); } /* Зеленый - Северный */
-        .pvz-color-2 { background-color: rgba(249, 115, 22, 0.15); } /* Оранжевый - Южный */
-        .pvz-color-3 { background-color: rgba(168, 85, 247, 0.15); } /* Фиолетовый - Восточный */
-        .pvz-color-default { background-color: rgba(100, 116, 139, 0.1); } /* Серый - остальные */
+        .pvz-color-0 { background-color: rgba(59, 130, 246, 0.15); }
+        .pvz-color-1 { background-color: rgba(34, 197, 94, 0.15); }
+        .pvz-color-2 { background-color: rgba(249, 115, 22, 0.15); }
+        .pvz-color-3 { background-color: rgba(168, 85, 247, 0.15); }
+        .pvz-color-default { background-color: rgba(100, 116, 139, 0.1); }
         
         .no-results { text-align: center; padding: 40px; color: #64748b; font-size: 1rem; }
         
-        /* Стили для кнопок с анимацией */
         .action-btn {
             padding: 6px 14px;
             border-radius: 20px;
@@ -571,7 +570,6 @@
             transform: scale(1.02);
         }
         
-        /* Модальное окно редактирования контактов */
         .edit-contacts-modal {
             display: none;
             position: fixed;
@@ -634,18 +632,18 @@
             font-size: 0.75rem;
         }
 
-        /* Стили для мобильной версии аналитики */
+        /* Мобильная версия аналитики - исправленная таблица */
         .mobile-analytics-container {
-            padding: 15px 0;
+            padding: 10px 0;
         }
         .mobile-employee-selector {
             background: #f8fafc;
-            padding: 15px;
+            padding: 12px;
             border-radius: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .mobile-employee-selector label {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: #475569;
             display: block;
@@ -663,32 +661,36 @@
             background: white;
             border-radius: 16px;
             border: 1px solid #e2e8f0;
-            overflow: hidden;
-            margin-bottom: 20px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            margin-bottom: 16px;
         }
         .mobile-month-header {
             background: #3b82f6;
             color: white;
-            padding: 10px;
+            padding: 8px;
             text-align: center;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+        .calendar-wrapper {
+            min-width: 320px;
         }
         .calendar-weekdays {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(44px, 1fr));
             background: #f1f5f9;
             text-align: center;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: #475569;
-            padding: 8px 0;
+            padding: 6px 0;
             border-bottom: 1px solid #e2e8f0;
         }
         .calendar-days {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 2px;
+            grid-template-columns: repeat(7, minmax(44px, 1fr));
+            gap: 1px;
             background: #e2e8f0;
         }
         .calendar-day {
@@ -698,19 +700,17 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
-            padding: 4px;
+            font-size: 0.65rem;
+            padding: 4px 2px;
             text-align: center;
             cursor: pointer;
             transition: 0.1s;
         }
         .calendar-day.work-day {
             background: #dcfce7;
-            color: #15803d;
         }
         .calendar-day.off-day {
             background: #fee2e2;
-            color: #991b1b;
         }
         .calendar-day.today {
             background: #fff3bf;
@@ -718,21 +718,23 @@
         }
         .calendar-day .day-number {
             font-weight: 600;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
         }
         .calendar-day .pvz-label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             margin-top: 2px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 100%;
+            padding: 0 2px;
+            color: #3b82f6;
         }
         .mobile-work-days-list {
             background: #f8fafc;
             border-radius: 16px;
             padding: 12px;
-            margin-top: 15px;
+            margin-top: 16px;
         }
         .mobile-work-days-list h4 {
             font-size: 0.75rem;
@@ -749,7 +751,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 10px;
+            padding: 8px 12px;
             background: white;
             border-radius: 10px;
             border-left: 3px solid #3b82f6;
@@ -764,13 +766,39 @@
             background: #e0f2fe;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
+            max-width: 60%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .no-data-message {
             text-align: center;
             padding: 30px;
             color: #94a3b8;
             font-size: 0.75rem;
+        }
+        
+        @media (max-width: 480px) {
+            .calendar-weekdays {
+                grid-template-columns: repeat(7, minmax(38px, 1fr));
+            }
+            .calendar-days {
+                grid-template-columns: repeat(7, minmax(38px, 1fr));
+            }
+            .calendar-day .day-number {
+                font-size: 0.65rem;
+            }
+            .work-day-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .work-day-pvz {
+                max-width: 100%;
+                white-space: normal;
+                word-break: break-word;
+            }
         }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1017,7 +1045,6 @@
                 <div class="emergency-contacts-container">
                     <h3>🆘 Экстренные контакты всех сотрудников</h3>
                     
-                    <!-- Поиск -->
                     <div class="search-box">
                         <label>🔍 Поиск по имени сотрудника:</label>
                         <input type="text" id="emergencySearchInput" placeholder="Введите имя или фамилию..." oninput="filterEmergencyContacts()">
@@ -1035,13 +1062,11 @@
                 <h2>📊 Аналитика работы сотрудников</h2>
             </div>
             
-            <!-- Подвкладки аналитики -->
             <div class="dashboard-sub-tabs" style="margin-bottom: 15px;">
                 <button class="sub-tab analytics-sub-tab active" data-analytics-subtab="standard">📊 Стандартная</button>
                 <button class="sub-tab analytics-sub-tab" data-analytics-subtab="mobile">📱 Мобильная версия</button>
             </div>
             
-            <!-- Стандартная аналитика (существующая таблица) -->
             <div id="analyticsStandardView">
                 <div class="legend-analytics">
                     <span><span class="legend-dot work"></span> Рабочий день</span>
@@ -1073,7 +1098,6 @@
                 </div>
             </div>
             
-            <!-- Мобильная версия аналитики (новая) -->
             <div id="analyticsMobileView" style="display: none;">
                 <div class="mobile-analytics-container">
                     <div class="mobile-employee-selector">
@@ -1166,7 +1190,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для редактирования контактов -->
 <div id="editContactsModal" class="edit-contacts-modal">
     <div class="edit-contacts-content">
         <span class="close-edit-modal">&times;</span>
@@ -1190,9 +1213,7 @@
 </div>
 
 <script>
-    // Скрытые пароли
     const _p1 = [112, 118, 122, 49, 53];
-    // Пароль дашборда: zina6535564
     const _p2 = [122, 105, 110, 97, 54, 53, 51, 53, 53, 54, 52];
     const SITE_ACCESS_PASSWORD = String.fromCharCode(..._p1);
     const DASHBOARD_PASSWORD = String.fromCharCode(..._p2);
@@ -1232,7 +1253,7 @@
     let analyticsYear = new Date().getFullYear();
     let analyticsMonth = new Date().getMonth() + 1;
     let analyticsSearchTerm = "";
-    let currentAnalyticsSubtab = "standard"; // standard или mobile
+    let currentAnalyticsSubtab = "standard";
     
     let emergencyContacts = {};
     let currentEditingEmployee = null;
@@ -1246,7 +1267,6 @@
         application: { label: '📄 Заявление на расчет', icon: '📄' }
     };
     
-    // Функция для получения цвета ПВЗ
     function getPVZColorClass(pvzName) {
         const pvzColors = {
             "ПВЗ Центральный": "pvz-color-0",
@@ -1256,15 +1276,6 @@
         };
         return pvzColors[pvzName] || "pvz-color-default";
     }
-    
-    // Функция для получения индекса цвета ПВЗ
-    function getPVZColorIndex(pvzName) {
-        const pvzList = Object.keys(allPVZData);
-        const index = pvzList.indexOf(pvzName);
-        return index % 4; // 4 базовых цвета
-    }
-    
-    // --- ФУНКЦИИ ДЛЯ ПРОВЕРКИ ЗАНЯТОСТИ В ПВЗ ---
     
     function isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, day, currentEmployeeName) {
         const pvz = allPVZData[pvzName];
@@ -1299,8 +1310,6 @@
         
         return { canWork: true, reason: null };
     }
-    
-    // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ ЛОГИКИ ПО МЕСЯЦАМ ---
     
     function getMonthHistoryKey(year, month) {
         return `${year}-${month}`;
@@ -1381,8 +1390,6 @@
         return false;
     }
     
-    // --- ФУНКЦИИ ДЛЯ ДОКУМЕНТОВ ---
-    
     function compressImage(file, maxWidth = 800, maxHeight = 800, quality = 0.6) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -1391,22 +1398,12 @@
                 img.onload = function() {
                     let width = img.width;
                     let height = img.height;
-                    
-                    if (width > maxWidth) {
-                        height = (maxWidth / width) * height;
-                        width = maxWidth;
-                    }
-                    if (height > maxHeight) {
-                        width = (maxHeight / height) * width;
-                        height = maxHeight;
-                    }
-                    
+                    if (width > maxWidth) { height = (maxWidth / width) * height; width = maxWidth; }
+                    if (height > maxHeight) { width = (maxHeight / height) * width; height = maxHeight; }
                     const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
+                    canvas.width = width; canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    
                     const dataUrl = canvas.toDataURL('image/jpeg', quality);
                     resolve(dataUrl);
                 };
@@ -1421,12 +1418,7 @@
     function readFileAsBase64(file) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = function(e) {
-                resolve({
-                    dataUrl: e.target.result,
-                    fileName: file.name
-                });
-            };
+            reader.onload = function(e) { resolve({ dataUrl: e.target.result, fileName: file.name }); };
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
@@ -1435,45 +1427,28 @@
     async function uploadDocument(empName, docType, fileInput) {
         const file = fileInput.files[0];
         if (!file) return;
-        
         try {
             showNotification("🔄 Загрузка документа...", false);
-            
             let documentData;
             const isPDF = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-            
             if (isPDF) {
                 documentData = await readFileAsBase64(file);
                 documentData.isPDF = true;
             } else {
                 const compressedImage = await compressImage(file);
-                documentData = {
-                    dataUrl: compressedImage,
-                    isPDF: false
-                };
+                documentData = { dataUrl: compressedImage, isPDF: false };
             }
-            
-            if (!emergencyContacts[empName]) {
-                emergencyContacts[empName] = { address: "", contacts: [], documents: {} };
-            }
-            if (!emergencyContacts[empName].documents) {
-                emergencyContacts[empName].documents = {};
-            }
-            
+            if (!emergencyContacts[empName]) emergencyContacts[empName] = { address: "", contacts: [], documents: {} };
+            if (!emergencyContacts[empName].documents) emergencyContacts[empName].documents = {};
             emergencyContacts[empName].documents[docType] = documentData;
-            
             await autoSaveSalary();
             renderEmergencyContacts();
             showNotification(`✅ Документ загружен для ${empName}`, false);
-        } catch (error) {
-            console.error("Ошибка загрузки:", error);
-            showNotification("❌ Ошибка при загрузке документа", true);
-        }
+        } catch (error) { console.error("Ошибка загрузки:", error); showNotification("❌ Ошибка при загрузке документа", true); }
     }
     
     async function deleteDocument(empName, docType) {
         if (!confirm(`Удалить документ "${DOC_TYPES[docType].label}"?`)) return;
-        
         if (emergencyContacts[empName] && emergencyContacts[empName].documents) {
             delete emergencyContacts[empName].documents[docType];
             await autoSaveSalary();
@@ -1485,13 +1460,8 @@
     function openDocViewer(docData) {
         const modal = document.getElementById("docViewerModal");
         const content = document.getElementById("docViewerContent");
-        
-        if (docData.isPDF) {
-            content.innerHTML = `<iframe src="${docData.dataUrl}" width="90%" height="85%" style="border: none; border-radius: 12px;"></iframe>`;
-        } else {
-            content.innerHTML = `<img src="${docData.dataUrl}" alt="Документ">`;
-        }
-        
+        if (docData.isPDF) content.innerHTML = `<iframe src="${docData.dataUrl}" width="90%" height="85%" style="border: none; border-radius: 12px;"></iframe>`;
+        else content.innerHTML = `<img src="${docData.dataUrl}" alt="Документ">`;
         modal.style.display = "flex";
     }
     
@@ -1504,34 +1474,14 @@
         const documents = emergencyContacts[empName]?.documents || {};
         const docData = documents[docType];
         const docInfo = DOC_TYPES[docType];
-        
-        let html = `<div class="document-card">`;
-        html += `<div class="doc-label">${docInfo.label}</div>`;
-        html += `<div class="doc-preview">`;
-        
+        let html = `<div class="document-card"><div class="doc-label">${docInfo.label}</div><div class="doc-preview">`;
         if (docData) {
-            if (docData.isPDF) {
-                html += `<div class="pdf-preview" onclick="openDocViewer(window._emergencyContacts['${empName}'].documents['${docType}'])">
-                    <span class="pdf-icon">📕</span>
-                    <span class="pdf-name">PDF документ</span>
-                </div>`;
-            } else {
-                html += `<img src="${docData.dataUrl}" onclick="openDocViewer(window._emergencyContacts['${empName}'].documents['${docType}'])" alt="${docInfo.label}">`;
-            }
-        } else {
-            html += `<span style="color: #94a3b8; font-size: 0.75rem;">Не загружен</span>`;
-        }
-        
-        html += `</div>`;
-        html += `<div class="doc-actions">`;
-        html += `<input type="file" accept="image/*,.pdf" onchange="uploadDocument('${empName}', '${docType}', this)" style="display: none;" id="file-${empName}-${docType}">`;
-        html += `<button class="upload-btn" onclick="document.getElementById('file-${empName}-${docType}').click()">📎 Загрузить</button>`;
-        if (docData) {
-            html += `<button class="delete-doc-btn" onclick="deleteDocument('${empName}', '${docType}')">🗑 Удалить</button>`;
-        }
-        html += `</div>`;
-        html += `</div>`;
-        
+            if (docData.isPDF) html += `<div class="pdf-preview" onclick="openDocViewer(window._emergencyContacts['${empName}'].documents['${docType}'])"><span class="pdf-icon">📕</span><span class="pdf-name">PDF документ</span></div>`;
+            else html += `<img src="${docData.dataUrl}" onclick="openDocViewer(window._emergencyContacts['${empName}'].documents['${docType}'])" alt="${docInfo.label}">`;
+        } else html += `<span style="color: #94a3b8; font-size: 0.75rem;">Не загружен</span>`;
+        html += `</div><div class="doc-actions"><input type="file" accept="image/*,.pdf" onchange="uploadDocument('${empName}', '${docType}', this)" style="display: none;" id="file-${empName}-${docType}"><button class="upload-btn" onclick="document.getElementById('file-${empName}-${docType}').click()">📎 Загрузить</button>`;
+        if (docData) html += `<button class="delete-doc-btn" onclick="deleteDocument('${empName}', '${docType}')">🗑 Удалить</button>`;
+        html += `</div></div>`;
         return html;
     }
     
@@ -1543,22 +1493,13 @@
     function openEditContactsModal(empName) {
         currentEditingEmployee = empName;
         const data = emergencyContacts[empName] || { address: "", contacts: [] };
-        
         document.getElementById("editEmployeeName").innerHTML = `👤 ${escapeHtml(empName)}`;
         document.getElementById("editAddress").value = data.address || "";
-        
         const container = document.getElementById("editContactsContainer");
         container.innerHTML = "";
-        
         const contacts = data.contacts || [];
-        if (contacts.length === 0) {
-            addEditContactRow("", "", "");
-        } else {
-            contacts.forEach(contact => {
-                addEditContactRow(contact.contactName || "", contact.contactPhone || "", contact.relation || "", contact.id);
-            });
-        }
-        
+        if (contacts.length === 0) addEditContactRow("", "", "");
+        else contacts.forEach(contact => addEditContactRow(contact.contactName || "", contact.contactPhone || "", contact.relation || "", contact.id));
         document.getElementById("editContactsModal").style.display = "flex";
     }
     
@@ -1568,12 +1509,7 @@
         const row = document.createElement("div");
         row.className = "edit-contact-row";
         row.setAttribute("data-contact-id", rowId);
-        row.innerHTML = `
-            <input type="text" class="edit-contact-name" placeholder="ФИО контакта *" value="${escapeHtml(name)}">
-            <input type="text" class="edit-contact-phone" placeholder="Телефон *" value="${escapeHtml(phone)}">
-            <input type="text" class="edit-contact-relation" placeholder="Кем приходится" value="${escapeHtml(relation)}">
-            <button class="remove-edit-contact" onclick="this.closest('.edit-contact-row').remove()">✕</button>
-        `;
+        row.innerHTML = `<input type="text" class="edit-contact-name" placeholder="ФИО контакта *" value="${escapeHtml(name)}"><input type="text" class="edit-contact-phone" placeholder="Телефон *" value="${escapeHtml(phone)}"><input type="text" class="edit-contact-relation" placeholder="Кем приходится" value="${escapeHtml(relation)}"><button class="remove-edit-contact" onclick="this.closest('.edit-contact-row').remove()">✕</button>`;
         container.appendChild(row);
     }
     
@@ -1584,34 +1520,18 @@
     
     async function saveEditedContacts() {
         if (!currentEditingEmployee) return;
-        
         const address = document.getElementById("editAddress").value.trim();
-        
         const contacts = [];
         const rows = document.querySelectorAll("#editContactsContainer .edit-contact-row");
-        
         rows.forEach(row => {
             const name = row.querySelector(".edit-contact-name").value.trim();
             const phone = row.querySelector(".edit-contact-phone").value.trim();
             const relation = row.querySelector(".edit-contact-relation").value.trim();
-            
-            if (name && phone) {
-                contacts.push({
-                    id: row.getAttribute("data-contact-id") || Date.now().toString() + Math.random().toString(),
-                    contactName: name,
-                    contactPhone: phone,
-                    relation: relation
-                });
-            }
+            if (name && phone) contacts.push({ id: row.getAttribute("data-contact-id") || Date.now().toString() + Math.random().toString(), contactName: name, contactPhone: phone, relation: relation });
         });
-        
-        if (!emergencyContacts[currentEditingEmployee]) {
-            emergencyContacts[currentEditingEmployee] = { address: "", contacts: [], documents: {} };
-        }
-        
+        if (!emergencyContacts[currentEditingEmployee]) emergencyContacts[currentEditingEmployee] = { address: "", contacts: [], documents: {} };
         emergencyContacts[currentEditingEmployee].address = address;
         emergencyContacts[currentEditingEmployee].contacts = contacts;
-        
         await autoSaveSalary();
         renderEmergencyContacts();
         closeEditContactsModal();
@@ -1619,183 +1539,79 @@
     }
     
     async function deleteEmployeeCompletely(empName) {
-        if (!confirm(`ВНИМАНИЕ! Вы уверены, что хотите ПОЛНОСТЬЮ УДАЛИТЬ сотрудника "${empName}"? Это действие удалит все данные сотрудника (контакты, документы, графики, зарплатные данные) и его самого из системы. Оно необратимо.`)) {
-            return;
-        }
-        
+        if (!confirm(`ВНИМАНИЕ! Вы уверены, что хотите ПОЛНОСТЬЮ УДАЛИТЬ сотрудника "${empName}"? Это действие удалит все данные сотрудника (контакты, документы, графики, зарплатные данные) и его самого из системы. Оно необратимо.`)) return;
         const employeeIndex = globalEmployees.findIndex(e => e.fullName === empName);
-        if (employeeIndex !== -1) {
-            globalEmployees.splice(employeeIndex, 1);
-        }
-        
+        if (employeeIndex !== -1) globalEmployees.splice(employeeIndex, 1);
         for (let pvzName in allPVZData) {
             const pvz = allPVZData[pvzName];
             if (pvz.employeesHistory) {
                 for (let monthKey in pvz.employeesHistory) {
                     const empIndexInMonth = pvz.employeesHistory[monthKey].indexOf(empName);
-                    if (empIndexInMonth !== -1) {
-                        pvz.employeesHistory[monthKey].splice(empIndexInMonth, 1);
-                    }
+                    if (empIndexInMonth !== -1) pvz.employeesHistory[monthKey].splice(empIndexInMonth, 1);
                 }
             }
-            if (pvz.schedules && pvz.schedules[empName]) {
-                delete pvz.schedules[empName];
-            }
+            if (pvz.schedules && pvz.schedules[empName]) delete pvz.schedules[empName];
         }
-        
-        if (salaryData[empName]) {
-            delete salaryData[empName];
-        }
-        
-        if (extraWorks[empName]) {
-            delete extraWorks[empName];
-        }
-        
-        if (fines[empName]) {
-            delete fines[empName];
-        }
-        
-        if (emergencyContacts[empName]) {
-            delete emergencyContacts[empName];
-        }
-        
+        if (salaryData[empName]) delete salaryData[empName];
+        if (extraWorks[empName]) delete extraWorks[empName];
+        if (fines[empName]) delete fines[empName];
+        if (emergencyContacts[empName]) delete emergencyContacts[empName];
         await autoSaveSalary();
         await saveToFirestore();
-        
         renderGlobalEmployeesTable();
         updatePVZEmployeesUI(); 
         renderSchedule();
-        if (currentTab === 'dashboard') { 
-            renderSalaryTable(); 
-            renderExtraWorksTable(); 
-            renderFinesTable(); 
-            populateExtraEmployeeSelect(); 
-            populateFineEmployeeSelect(); 
-            renderEmergencyContacts(); 
-        }
-        if (currentTab === 'analytics') {
-            populateMobileEmployeeSelect();
-            renderAnalytics();
-        }
+        if (currentTab === 'dashboard') { renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); renderEmergencyContacts(); }
+        if (currentTab === 'analytics') { populateMobileEmployeeSelect(); renderAnalytics(); }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
-        
         showNotification(`✅ Сотрудник "${empName}" и все его данные полностью удалены.`, false);
     }
     
     function renderEmergencyContacts(searchTerm = '') {
         const listDiv = document.getElementById("emergencyContactsList");
         if (!listDiv) return;
-        
         window._emergencyContacts = emergencyContacts;
-        
         const employeesWithContacts = Object.keys(emergencyContacts);
         const allEmployeeNames = new Set([...globalEmployees.map(e => e.fullName), ...employeesWithContacts]);
-        
         let html = '';
         let foundCount = 0;
-        
         const sortedEmployees = Array.from(allEmployeeNames).sort((a, b) => a.localeCompare(b));
-        
         for (let empName of sortedEmployees) {
-            if (searchTerm && !empName.toLowerCase().includes(searchTerm)) {
-                continue;
-            }
-            
+            if (searchTerm && !empName.toLowerCase().includes(searchTerm)) continue;
             const data = emergencyContacts[empName] || { address: "", contacts: [], documents: {} };
             const isStillEmployee = globalEmployees.some(e => e.fullName === empName);
-            
             foundCount++;
-            
-            html += `<div class="employee-block">`;
-            html += `<div class="emp-header">`;
-            html += `<div>
-                <div class="emp-name">👤 ${escapeHtml(empName)}${!isStillEmployee ? ' <span style="font-size:0.7rem; color:#ef4444;">(удалён из сотрудников)</span>' : ''}</div>
-                ${data.address ? `<div class="emp-address">📍 ${escapeHtml(data.address)}</div>` : ''}
-            </div>`;
-            html += `<div style="display: flex; gap: 8px;">
-                        <button class="action-btn edit-emergency-btn" onclick="openEditContactsModal('${empName}')">✏️ Редактировать</button>
-                        <button class="action-btn delete-emergency-btn" onclick="deleteEmployeeCompletely('${empName}')">🗑 Удалить сотрудника</button>
-                    </div>`;
-            html += `</div>`;
-            
-            if (data.contacts && data.contacts.length > 0) {
-                html += `<div class="contacts-section">`;
-                html += `<h5>📞 Экстренные контакты:</h5>`;
-                data.contacts.forEach(contact => {
-                    html += `<span class="contact-tag">
-                        ${escapeHtml(contact.contactName)} - ${escapeHtml(contact.contactPhone)}
-                        ${contact.relation ? ` (${escapeHtml(contact.relation)})` : ''}
-                    </span>`;
-                });
-                html += `</div>`;
-            } else {
-                html += `<div class="contacts-section">`;
-                html += `<h5>📞 Экстренные контакты:</h5>`;
-                html += `<span style="color: #94a3b8; font-size: 0.75rem;">Не добавлены</span>`;
-                html += `</div>`;
-            }
-            
+            html += `<div class="employee-block"><div class="emp-header"><div><div class="emp-name">👤 ${escapeHtml(empName)}${!isStillEmployee ? ' <span style="font-size:0.7rem; color:#ef4444;">(удалён из сотрудников)</span>' : ''}</div>${data.address ? `<div class="emp-address">📍 ${escapeHtml(data.address)}</div>` : ''}</div><div style="display: flex; gap: 8px;"><button class="action-btn edit-emergency-btn" onclick="openEditContactsModal('${empName}')">✏️ Редактировать</button><button class="action-btn delete-emergency-btn" onclick="deleteEmployeeCompletely('${empName}')">🗑 Удалить сотрудника</button></div></div>`;
+            if (data.contacts && data.contacts.length > 0) { html += `<div class="contacts-section"><h5>📞 Экстренные контакты:</h5>`; data.contacts.forEach(contact => { html += `<span class="contact-tag">${escapeHtml(contact.contactName)} - ${escapeHtml(contact.contactPhone)}${contact.relation ? ` (${escapeHtml(contact.relation)})` : ''}</span>`; }); html += `</div>`; }
+            else html += `<div class="contacts-section"><h5>📞 Экстренные контакты:</h5><span style="color: #94a3b8; font-size: 0.75rem;">Не добавлены</span></div>`;
             html += `<div class="documents-grid">`;
-            for (let docType in DOC_TYPES) {
-                html += renderDocumentCard(empName, docType);
-            }
-            html += `</div>`;
-            html += `</div>`;
+            for (let docType in DOC_TYPES) html += renderDocumentCard(empName, docType);
+            html += `</div></div>`;
         }
-        
-        if (html === '' || foundCount === 0) {
-            if (searchTerm) {
-                html = '<div class="no-results">🔍 Сотрудники не найдены</div>';
-            } else {
-                html = '<div class="no-results">Нет сохраненных экстренных контактов</div>';
-            }
-        }
-        
+        if (html === '' || foundCount === 0) html = searchTerm ? '<div class="no-results">🔍 Сотрудники не найдены</div>' : '<div class="no-results">Нет сохраненных экстренных контактов</div>';
         listDiv.innerHTML = html;
     }
     
-    function updateAllEmployeeSelects() {
-        populateExtraEmployeeSelect();
-        populateFineEmployeeSelect();
-        populatePublicEmployeeSelect();
-        populateMobileEmployeeSelect();
-    }
+    function updateAllEmployeeSelects() { populateExtraEmployeeSelect(); populateFineEmployeeSelect(); populatePublicEmployeeSelect(); populateMobileEmployeeSelect(); }
     
-    function getMonthKey(year, month) {
-        return `${year}-${month}`;
-    }
+    function getMonthKey(year, month) { return `${year}-${month}`; }
     
     function getEmployeeMonthData(employeeName, year, month) {
         const monthKey = getMonthKey(year, month);
-        if (!salaryData[employeeName]) {
-            salaryData[employeeName] = {};
-        }
-        if (!salaryData[employeeName][monthKey]) {
-            salaryData[employeeName][monthKey] = {
-                rate: 1500,
-                traineeDays: 0,
-                traineeRate: 800,
-                advance: 0,
-                moneyTransferred: 0,
-                fine: 0
-            };
-        }
+        if (!salaryData[employeeName]) salaryData[employeeName] = {};
+        if (!salaryData[employeeName][monthKey]) salaryData[employeeName][monthKey] = { rate: 1500, traineeDays: 0, traineeRate: 800, advance: 0, moneyTransferred: 0, fine: 0 };
         return salaryData[employeeName][monthKey];
     }
     
     function calculateWorkDaysForEmployee(employeeFullName, year, month) {
         let totalWorkDays = 0;
         const daysInMonth = new Date(year, month, 0).getDate();
-        
         for (let pvzName in allPVZData) {
             const schedules = allPVZData[pvzName].schedules[employeeFullName];
             if (!schedules) continue;
-            
             for (let day = 1; day <= daysInMonth; day++) {
                 const key = `${year}-${month}-${day}`;
-                if (schedules[key] === true) {
-                    totalWorkDays++;
-                }
+                if (schedules[key] === true) totalWorkDays++;
             }
         }
         return totalWorkDays;
@@ -1806,9 +1622,7 @@
         const works = extraWorks[employeeFullName] || [];
         for (let work of works) {
             const [workYear, workMonth] = work.date.split('-');
-            if (parseInt(workYear) === year && parseInt(workMonth) === month) {
-                total += work.amount || 0;
-            }
+            if (parseInt(workYear) === year && parseInt(workMonth) === month) total += work.amount || 0;
         }
         return total;
     }
@@ -1818,9 +1632,7 @@
         const employeeFines = fines[employeeFullName] || [];
         for (let fine of employeeFines) {
             const [fineYear, fineMonth] = fine.date.split('-');
-            if (parseInt(fineYear) === year && parseInt(fineMonth) === month) {
-                total += fine.amount || 0;
-            }
+            if (parseInt(fineYear) === year && parseInt(fineMonth) === month) total += fine.amount || 0;
         }
         return total;
     }
@@ -1828,19 +1640,8 @@
     function initSalaryData() {
         const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
         for (let emp of globalEmployees) {
-            if (!salaryData[emp.fullName]) {
-                salaryData[emp.fullName] = {};
-            }
-            if (!salaryData[emp.fullName][currentKey]) {
-                salaryData[emp.fullName][currentKey] = {
-                    rate: 1500,
-                    traineeDays: 0,
-                    traineeRate: 800,
-                    advance: 0,
-                    moneyTransferred: 0,
-                    fine: 0
-                };
-            }
+            if (!salaryData[emp.fullName]) salaryData[emp.fullName] = {};
+            if (!salaryData[emp.fullName][currentKey]) salaryData[emp.fullName][currentKey] = { rate: 1500, traineeDays: 0, traineeRate: 800, advance: 0, moneyTransferred: 0, fine: 0 };
         }
     }
     
@@ -1851,7 +1652,6 @@
         const traineeBonus = monthData.traineeDays * monthData.traineeRate;
         const extraAmount = calculateTotalExtraForMonth(empFullName, year, month);
         const totalFines = calculateTotalFinesForMonth(empFullName, year, month);
-        // Обновляем штраф в salaryData для отображения в таблице, но в расчете используем сумму из fines
         monthData.fine = totalFines;
         const total = baseSalary + extraAmount + traineeBonus - monthData.advance - monthData.moneyTransferred - totalFines;
         return Math.max(0, total);
@@ -1859,14 +1659,9 @@
     
     function updateTotalSalary() {
         let totalMonthSalary = 0;
-        document.querySelectorAll('.net-salary-amount').forEach(el => {
-            const val = parseFloat(el.innerText);
-            if (!isNaN(val)) totalMonthSalary += val;
-        });
+        document.querySelectorAll('.net-salary-amount').forEach(el => { const val = parseFloat(el.innerText); if (!isNaN(val)) totalMonthSalary += val; });
         const totalSpan = document.getElementById("totalSalaryAmount");
-        if (totalSpan) {
-            totalSpan.innerText = totalMonthSalary.toLocaleString('ru-RU');
-        }
+        if (totalSpan) totalSpan.innerText = totalMonthSalary.toLocaleString('ru-RU');
     }
     
     async function autoSaveSalary() {
@@ -1876,23 +1671,19 @@
             await db.collection("appData").doc("fines").set({ data: fines });
             await db.collection("appData").doc("emergencyContacts").set({ data: emergencyContacts });
             console.log("Автосохранение данных");
-        } catch(e) {
-            console.error("Ошибка автосохранения:", e);
-        }
+        } catch(e) { console.error("Ошибка автосохранения:", e); }
     }
     
     function renderSalaryTable() {
         const tbody = document.getElementById("salaryTableBody");
         if (!tbody) return;
         tbody.innerHTML = "";
-        
         for (let emp of globalEmployees) {
             const monthData = getEmployeeMonthData(emp.fullName, currentDashboardYear, currentDashboardMonth);
             const workDays = calculateWorkDaysForEmployee(emp.fullName, currentDashboardYear, currentDashboardMonth);
             const extraThisMonth = calculateTotalExtraForMonth(emp.fullName, currentDashboardYear, currentDashboardMonth);
             const finesThisMonth = calculateTotalFinesForMonth(emp.fullName, currentDashboardYear, currentDashboardMonth);
             const netSalary = calculateNetSalary(emp.fullName, currentDashboardYear, currentDashboardMonth);
-            
             const row = tbody.insertRow();
             row.insertCell(0).innerHTML = `<strong>${escapeHtml(emp.fullName)}</strong>`;
             row.insertCell(1).innerHTML = `<span class="readonly-cell" style="display:inline-block; width:100%; text-align:center; font-weight:700;">${workDays}</span>`;
@@ -1905,9 +1696,7 @@
             row.insertCell(8).innerHTML = `<span class="fine-display" data-name="${emp.fullName}" style="font-weight:700; color:#dc2626;">${finesThisMonth}</span>`;
             row.insertCell(9).innerHTML = `<span class="net-salary-amount" data-name="${emp.fullName}" style="font-weight:700; color:#15803d;">${netSalary} ₽</span>`;
         }
-        
         updateTotalSalary();
-        
         const inputs = document.querySelectorAll('#salaryTableBody input');
         inputs.forEach(input => {
             input.addEventListener('change', async function() {
@@ -1919,13 +1708,9 @@
                     if (this.classList.contains('salary-trainee-rate')) monthData.traineeRate = parseFloat(this.value) || 0;
                     if (this.classList.contains('salary-advance')) monthData.advance = parseFloat(this.value) || 0;
                     if (this.classList.contains('salary-money-transferred')) monthData.moneyTransferred = parseFloat(this.value) || 0;
-                    
                     const newNetSalary = calculateNetSalary(empName, currentDashboardYear, currentDashboardMonth);
                     const netSpan = document.querySelector(`.net-salary-amount[data-name="${empName}"]`);
-                    if (netSpan) {
-                        netSpan.innerText = `${newNetSalary} ₽`;
-                    }
-                    
+                    if (netSpan) netSpan.innerText = `${newNetSalary} ₽`;
                     updateTotalSalary();
                     await autoSaveSalary();
                 }
@@ -1933,10 +1718,7 @@
         });
     }
     
-    function refreshSalaryWorkDays() {
-        renderSalaryTable();
-        showNotification(`Рабочие дни пересчитаны за ${getMonthName(currentDashboardMonth)} ${currentDashboardYear}`, false);
-    }
+    function refreshSalaryWorkDays() { renderSalaryTable(); showNotification(`Рабочие дни пересчитаны за ${getMonthName(currentDashboardMonth)} ${currentDashboardYear}`, false); }
     
     function populateDashboardMonthSelect() {
         const select = document.getElementById("dashboardMonthSelect");
@@ -1956,61 +1738,20 @@
     }
     
     async function loadExtraWorksFromFirestore() {
-        try {
-            const doc = await db.collection("appData").doc("extraWorks").get();
-            if (doc.exists && doc.data().data) {
-                extraWorks = doc.data().data;
-            } else {
-                extraWorks = {};
-            }
-        } catch(e) {
-            console.error(e);
-            extraWorks = {};
-        }
+        try { const doc = await db.collection("appData").doc("extraWorks").get(); extraWorks = doc.exists && doc.data().data ? doc.data().data : {}; } catch(e) { console.error(e); extraWorks = {}; }
     }
-
     async function loadFinesFromFirestore() {
-        try {
-            const doc = await db.collection("appData").doc("fines").get();
-            if (doc.exists && doc.data().data) {
-                fines = doc.data().data;
-            } else {
-                fines = {};
-            }
-        } catch(e) {
-            console.error(e);
-            fines = {};
-        }
+        try { const doc = await db.collection("appData").doc("fines").get(); fines = doc.exists && doc.data().data ? doc.data().data : {}; } catch(e) { console.error(e); fines = {}; }
     }
-    
     async function loadEmergencyContactsFromFirestore() {
-        try {
-            const doc = await db.collection("appData").doc("emergencyContacts").get();
-            if (doc.exists && doc.data().data) {
-                emergencyContacts = doc.data().data;
-            } else {
-                emergencyContacts = {};
-            }
-        } catch(e) {
-            console.error(e);
-            emergencyContacts = {};
-        }
+        try { const doc = await db.collection("appData").doc("emergencyContacts").get(); emergencyContacts = doc.exists && doc.data().data ? doc.data().data : {}; } catch(e) { console.error(e); emergencyContacts = {}; }
     }
-    
     async function loadSalaryDataFromFirestore() {
         try {
             const doc = await db.collection("appData").doc("salaryData").get();
-            if (doc.exists && doc.data().data) {
-                salaryData = doc.data().data;
-            } else {
-                salaryData = {};
-                initSalaryData();
-            }
-        } catch(e) {
-            console.error(e);
-            salaryData = {};
+            salaryData = doc.exists && doc.data().data ? doc.data().data : {};
             initSalaryData();
-        }
+        } catch(e) { console.error(e); salaryData = {}; initSalaryData(); }
         renderSalaryTable();
     }
     
@@ -2018,29 +1759,16 @@
         const select = document.getElementById("extraPVZSelect");
         if (!select) return;
         select.innerHTML = '<option value="">-- Выберите --</option>';
-        for (let pvzName in allPVZData) {
-            const option = document.createElement("option");
-            option.value = pvzName;
-            option.textContent = pvzName;
-            select.appendChild(option);
-        }
+        for (let pvzName in allPVZData) { const option = document.createElement("option"); option.value = pvzName; option.textContent = pvzName; select.appendChild(option); }
     }
     
     function renderExtraWorksTable() {
         const tbody = document.getElementById("extraWorkTableBody");
         if (!tbody) return;
         tbody.innerHTML = "";
-        
         const allEntries = [];
-        for (let empName in extraWorks) {
-            const works = extraWorks[empName];
-            for (let work of works) {
-                allEntries.push({ empName, ...work });
-            }
-        }
-        
+        for (let empName in extraWorks) { for (let work of extraWorks[empName]) allEntries.push({ empName, ...work }); }
         allEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
         for (let entry of allEntries) {
             const row = tbody.insertRow();
             row.insertCell(0).innerHTML = `<strong>${escapeHtml(entry.empName)}</strong>`;
@@ -2052,40 +1780,29 @@
             row.insertCell(6).innerHTML = `<strong>${entry.amount} ₽</strong>`;
             row.insertCell(7).innerHTML = `<button class="delete-extra-btn" data-id="${entry.id}" data-emp="${entry.empName}">🗑</button>`;
         }
-        
-        document.querySelectorAll('.delete-extra-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const empName = btn.getAttribute('data-emp');
-                const id = btn.getAttribute('data-id');
-                if (confirm('Удалить запись о подработке?')) {
-                    if (extraWorks[empName]) {
-                        extraWorks[empName] = extraWorks[empName].filter(w => w.id !== id);
-                        if (extraWorks[empName].length === 0) delete extraWorks[empName];
-                        await autoSaveSalary();
-                        renderExtraWorksTable();
-                        renderSalaryTable();
-                        showNotification('Запись удалена', false);
-                    }
+        document.querySelectorAll('.delete-extra-btn').forEach(btn => btn.addEventListener('click', async () => {
+            const empName = btn.getAttribute('data-emp');
+            const id = btn.getAttribute('data-id');
+            if (confirm('Удалить запись о подработке?')) {
+                if (extraWorks[empName]) {
+                    extraWorks[empName] = extraWorks[empName].filter(w => w.id !== id);
+                    if (extraWorks[empName].length === 0) delete extraWorks[empName];
+                    await autoSaveSalary();
+                    renderExtraWorksTable();
+                    renderSalaryTable();
+                    showNotification('Запись удалена', false);
                 }
-            });
-        });
+            }
+        }));
     }
 
     function renderFinesTable() {
         const tbody = document.getElementById("finesTableBody");
         if (!tbody) return;
         tbody.innerHTML = "";
-        
         const allEntries = [];
-        for (let empName in fines) {
-            const employeeFines = fines[empName];
-            for (let fine of employeeFines) {
-                allEntries.push({ empName, ...fine });
-            }
-        }
-        
+        for (let empName in fines) { for (let fine of fines[empName]) allEntries.push({ empName, ...fine }); }
         allEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
         for (let entry of allEntries) {
             const row = tbody.insertRow();
             row.insertCell(0).innerHTML = `<strong>${escapeHtml(entry.empName)}</strong>`;
@@ -2094,23 +1811,20 @@
             row.insertCell(3).innerHTML = escapeHtml(entry.desc) || '—';
             row.insertCell(4).innerHTML = `<button class="delete-fine-btn" data-id="${entry.id}" data-emp="${entry.empName}">🗑</button>`;
         }
-        
-        document.querySelectorAll('.delete-fine-btn').forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const empName = btn.getAttribute('data-emp');
-                const id = btn.getAttribute('data-id');
-                if (confirm('Удалить запись о штрафе?')) {
-                    if (fines[empName]) {
-                        fines[empName] = fines[empName].filter(f => f.id !== id);
-                        if (fines[empName].length === 0) delete fines[empName];
-                        await autoSaveSalary();
-                        renderFinesTable();
-                        renderSalaryTable();
-                        showNotification('Запись о штрафе удалена', false);
-                    }
+        document.querySelectorAll('.delete-fine-btn').forEach(btn => btn.addEventListener('click', async () => {
+            const empName = btn.getAttribute('data-emp');
+            const id = btn.getAttribute('data-id');
+            if (confirm('Удалить запись о штрафе?')) {
+                if (fines[empName]) {
+                    fines[empName] = fines[empName].filter(f => f.id !== id);
+                    if (fines[empName].length === 0) delete fines[empName];
+                    await autoSaveSalary();
+                    renderFinesTable();
+                    renderSalaryTable();
+                    showNotification('Запись о штрафе удалена', false);
                 }
-            });
-        });
+            }
+        }));
     }
     
     async function addExtraWork() {
@@ -2120,37 +1834,22 @@
         const hours = parseFloat(document.getElementById("extraHours").value);
         const hourlyRate = parseFloat(document.getElementById("extraHourlyRate").value);
         const desc = document.getElementById("extraDesc").value.trim();
-        
         if (!empFullName) { alert("Выберите сотрудника"); return; }
         if (!pvzName) { alert("Выберите ПВЗ"); return; }
         if (!date) { alert("Выберите дату"); return; }
         if (isNaN(hours) || hours <= 0) { alert("Введите корректное количество часов"); return; }
         if (isNaN(hourlyRate) || hourlyRate <= 0) { alert("Введите корректную ставку в час"); return; }
-        
         const amount = Math.round(hours * hourlyRate);
-        
-        const newWork = {
-            id: Date.now() + Math.random() + empFullName,
-            pvz: pvzName,
-            date: date,
-            hours: hours,
-            hourlyRate: hourlyRate,
-            desc: desc || "Подработка",
-            amount: amount
-        };
-        
+        const newWork = { id: Date.now() + Math.random() + empFullName, pvz: pvzName, date: date, hours: hours, hourlyRate: hourlyRate, desc: desc || "Подработка", amount: amount };
         if (!extraWorks[empFullName]) extraWorks[empFullName] = [];
         extraWorks[empFullName].push(newWork);
-        
         await autoSaveSalary();
         renderExtraWorksTable();
         renderSalaryTable();
-        
         document.getElementById("extraDate").value = "";
         document.getElementById("extraHours").value = "";
         document.getElementById("extraHourlyRate").value = "200";
         document.getElementById("extraDesc").value = "";
-        
         showNotification(`✅ Добавлена подработка: ${empFullName} | ${pvzName} | ${hours}ч × ${hourlyRate}₽ = ${amount}₽`, false);
     }
 
@@ -2159,29 +1858,18 @@
         const date = document.getElementById("fineDate").value;
         const amount = parseFloat(document.getElementById("fineAmount").value);
         const desc = document.getElementById("fineDesc").value.trim();
-        
         if (!empFullName) { alert("Выберите сотрудника"); return; }
         if (!date) { alert("Выберите дату"); return; }
         if (isNaN(amount) || amount <= 0) { alert("Введите корректную сумму штрафа"); return; }
-        
-        const newFine = {
-            id: Date.now() + Math.random() + empFullName,
-            date: date,
-            amount: amount,
-            desc: desc || "Штраф"
-        };
-        
+        const newFine = { id: Date.now() + Math.random() + empFullName, date: date, amount: amount, desc: desc || "Штраф" };
         if (!fines[empFullName]) fines[empFullName] = [];
         fines[empFullName].push(newFine);
-        
         await autoSaveSalary();
         renderFinesTable();
         renderSalaryTable();
-        
         document.getElementById("fineDate").value = "";
         document.getElementById("fineAmount").value = "1000";
         document.getElementById("fineDesc").value = "";
-        
         showNotification(`⚠️ Добавлен штраф: ${empFullName} | ${amount}₽ | ${desc || "Штраф"}`, false);
     }
     
@@ -2189,230 +1877,101 @@
         const select = document.getElementById("extraEmployeeSelect");
         if (!select) return;
         select.innerHTML = '<option value="">-- Выберите --</option>';
-        globalEmployees.forEach(emp => {
-            const option = document.createElement("option");
-            option.value = emp.fullName;
-            option.textContent = emp.fullName;
-            select.appendChild(option);
-        });
+        globalEmployees.forEach(emp => { const option = document.createElement("option"); option.value = emp.fullName; option.textContent = emp.fullName; select.appendChild(option); });
     }
-
     function populateFineEmployeeSelect() {
         const select = document.getElementById("fineEmployeeSelect");
         if (!select) return;
         select.innerHTML = '<option value="">-- Выберите --</option>';
-        globalEmployees.forEach(emp => {
-            const option = document.createElement("option");
-            option.value = emp.fullName;
-            option.textContent = emp.fullName;
-            select.appendChild(option);
-        });
+        globalEmployees.forEach(emp => { const option = document.createElement("option"); option.value = emp.fullName; option.textContent = emp.fullName; select.appendChild(option); });
     }
-    
     function populatePublicEmployeeSelect() {
         const select = document.getElementById("publicEmployeeSelect");
         if (!select) return;
         select.innerHTML = '<option value="">-- Выберите сотрудника из списка --</option>';
-        globalEmployees.forEach(emp => {
-            const option = document.createElement("option");
-            option.value = emp.fullName;
-            option.textContent = emp.fullName;
-            select.appendChild(option);
-        });
+        globalEmployees.forEach(emp => { const option = document.createElement("option"); option.value = emp.fullName; option.textContent = emp.fullName; select.appendChild(option); });
     }
     
     function addContactRow() {
         const container = document.getElementById("publicContactsContainer");
         const newRow = document.createElement('div');
         newRow.className = 'emergency-form-row contact-row';
-        newRow.innerHTML = `
-            <input type="text" class="contact-name-input" placeholder="ФИО контакта *">
-            <input type="text" class="contact-phone-input" placeholder="Телефон *">
-            <input type="text" class="contact-relation-input" placeholder="Кем приходится">
-            <button type="button" class="delete-contact-btn remove-contact-row">✕</button>
-        `;
+        newRow.innerHTML = `<input type="text" class="contact-name-input" placeholder="ФИО контакта *"><input type="text" class="contact-phone-input" placeholder="Телефон *"><input type="text" class="contact-relation-input" placeholder="Кем приходится"><button type="button" class="delete-contact-btn remove-contact-row">✕</button>`;
         container.appendChild(newRow);
-        
-        newRow.querySelector('.remove-contact-row').addEventListener('click', () => {
-            if (container.querySelectorAll('.contact-row').length > 1) {
-                newRow.remove();
-            } else {
-                showNotification("Должен быть хотя бы один контакт", true);
-            }
-        });
-        
+        newRow.querySelector('.remove-contact-row').addEventListener('click', () => { if (container.querySelectorAll('.contact-row').length > 1) newRow.remove(); else showNotification("Должен быть хотя бы один контакт", true); });
         updateRemoveButtons();
     }
     
     function updateRemoveButtons() {
         const rows = document.querySelectorAll('#publicContactsContainer .contact-row');
-        rows.forEach(row => {
-            const btn = row.querySelector('.remove-contact-row');
-            if (btn) {
-                btn.style.display = rows.length > 1 ? 'inline-flex' : 'none';
-            }
-        });
+        rows.forEach(row => { const btn = row.querySelector('.remove-contact-row'); if (btn) btn.style.display = rows.length > 1 ? 'inline-flex' : 'none'; });
     }
     
     function clearPublicEmergencyForm() {
         document.getElementById("publicEmployeeSelect").value = "";
         document.getElementById("publicEmployeeAddress").value = "";
-        
         const container = document.getElementById("publicContactsContainer");
-        container.innerHTML = `
-            <div class="emergency-form-row contact-row">
-                <input type="text" class="contact-name-input" placeholder="ФИО контакта *">
-                <input type="text" class="contact-phone-input" placeholder="Телефон *">
-                <input type="text" class="contact-relation-input" placeholder="Кем приходится">
-                <button type="button" class="delete-contact-btn remove-contact-row" style="display: none;">✕</button>
-            </div>
-        `;
-        
+        container.innerHTML = `<div class="emergency-form-row contact-row"><input type="text" class="contact-name-input" placeholder="ФИО контакта *"><input type="text" class="contact-phone-input" placeholder="Телефон *"><input type="text" class="contact-relation-input" placeholder="Кем приходится"><button type="button" class="delete-contact-btn remove-contact-row" style="display: none;">✕</button></div>`;
         const newRow = container.querySelector('.contact-row');
-        if (newRow) {
-            newRow.querySelector('.remove-contact-row').addEventListener('click', () => {
-                if (container.querySelectorAll('.contact-row').length > 1) {
-                    newRow.remove();
-                    updateRemoveButtons();
-                } else {
-                    showNotification("Должен быть хотя бы один контакт", true);
-                }
-            });
-        }
-        
+        if (newRow) newRow.querySelector('.remove-contact-row').addEventListener('click', () => { if (container.querySelectorAll('.contact-row').length > 1) { newRow.remove(); updateRemoveButtons(); } else showNotification("Должен быть хотя бы один контакт", true); });
         updateRemoveButtons();
     }
     
-    function loadPublicEmergencyForm() {
-        populatePublicEmployeeSelect();
-        clearPublicEmergencyForm();
-        document.getElementById("emergencyFormBlock").style.display = "block";
-        document.getElementById("emergencySuccessMessage").style.display = "none";
-    }
+    function loadPublicEmergencyForm() { populatePublicEmployeeSelect(); clearPublicEmergencyForm(); document.getElementById("emergencyFormBlock").style.display = "block"; document.getElementById("emergencySuccessMessage").style.display = "none"; }
     
     async function savePublicEmergencyContacts() {
         const selectedEmployee = document.getElementById("publicEmployeeSelect").value;
-        
-        if (!selectedEmployee) {
-            alert("Выберите сотрудника из списка");
-            return;
-        }
-        
+        if (!selectedEmployee) { alert("Выберите сотрудника из списка"); return; }
         const address = document.getElementById("publicEmployeeAddress").value.trim();
-        if (!address) {
-            alert("Введите место проживания");
-            return;
-        }
-        
+        if (!address) { alert("Введите место проживания"); return; }
         const contacts = [];
         const rows = document.querySelectorAll('#publicContactsContainer .contact-row');
         let hasError = false;
-        
         rows.forEach(row => {
             const name = row.querySelector('.contact-name-input').value.trim();
             const phone = row.querySelector('.contact-phone-input').value.trim();
             const relation = row.querySelector('.contact-relation-input').value.trim();
-            
-            if (!name || !phone) {
-                hasError = true;
-            }
-            
-            if (name && phone) {
-                contacts.push({
-                    id: Date.now().toString() + Math.random().toString(),
-                    contactName: name,
-                    contactPhone: phone,
-                    relation: relation
-                });
-            }
+            if (!name || !phone) hasError = true;
+            if (name && phone) contacts.push({ id: Date.now().toString() + Math.random().toString(), contactName: name, contactPhone: phone, relation: relation });
         });
-        
-        if (hasError || contacts.length === 0) {
-            alert("Заполните все обязательные поля (ФИО и телефон) хотя бы для одного контакта");
-            return;
-        }
-        
-        if (!emergencyContacts[selectedEmployee]) {
-            emergencyContacts[selectedEmployee] = { address: "", contacts: [], documents: {} };
-        }
-        
+        if (hasError || contacts.length === 0) { alert("Заполните все обязательные поля (ФИО и телефон) хотя бы для одного контакта"); return; }
+        if (!emergencyContacts[selectedEmployee]) emergencyContacts[selectedEmployee] = { address: "", contacts: [], documents: {} };
         emergencyContacts[selectedEmployee].address = address;
         emergencyContacts[selectedEmployee].contacts = contacts;
-        
         await autoSaveSalary();
-        
         document.getElementById("emergencyFormBlock").style.display = "none";
         document.getElementById("emergencySuccessMessage").style.display = "block";
-        
         showNotification("✅ Экстренные контакты сохранены!", false);
-        
-        setTimeout(() => {
-            clearPublicEmergencyForm();
-            document.getElementById("emergencyFormBlock").style.display = "block";
-            document.getElementById("emergencySuccessMessage").style.display = "none";
-        }, 3000);
+        setTimeout(() => { clearPublicEmergencyForm(); document.getElementById("emergencyFormBlock").style.display = "block"; document.getElementById("emergencySuccessMessage").style.display = "none"; }, 3000);
     }
     
     function populateAnalyticsSelects() {
         const yearSelect = document.getElementById("analyticsYearSelect");
         const monthSelect = document.getElementById("analyticsMonthSelect");
         if (!yearSelect || !monthSelect) return;
-        
         const currentYear = new Date().getFullYear();
         yearSelect.innerHTML = '';
-        for (let y = currentYear - 2; y <= currentYear + 1; y++) {
-            const option = document.createElement("option");
-            option.value = y;
-            option.textContent = y;
-            if (y === analyticsYear) option.selected = true;
-            yearSelect.appendChild(option);
-        }
-        
+        for (let y = currentYear - 2; y <= currentYear + 1; y++) { const option = document.createElement("option"); option.value = y; option.textContent = y; if (y === analyticsYear) option.selected = true; yearSelect.appendChild(option); }
         monthSelect.innerHTML = '';
-        for (let m = 1; m <= 12; m++) {
-            const option = document.createElement("option");
-            option.value = m;
-            option.textContent = getMonthName(m);
-            if (m === analyticsMonth) option.selected = true;
-            monthSelect.appendChild(option);
-        }
+        for (let m = 1; m <= 12; m++) { const option = document.createElement("option"); option.value = m; option.textContent = getMonthName(m); if (m === analyticsMonth) option.selected = true; monthSelect.appendChild(option); }
     }
     
     function populateMobileSelects() {
         const yearSelect = document.getElementById("mobileYearSelect");
         const monthSelect = document.getElementById("mobileMonthSelect");
         if (!yearSelect || !monthSelect) return;
-        
         const currentYear = new Date().getFullYear();
         yearSelect.innerHTML = '';
-        for (let y = currentYear - 2; y <= currentYear + 1; y++) {
-            const option = document.createElement("option");
-            option.value = y;
-            option.textContent = y;
-            if (y === analyticsYear) option.selected = true;
-            yearSelect.appendChild(option);
-        }
-        
+        for (let y = currentYear - 2; y <= currentYear + 1; y++) { const option = document.createElement("option"); option.value = y; option.textContent = y; if (y === analyticsYear) option.selected = true; yearSelect.appendChild(option); }
         monthSelect.innerHTML = '';
-        for (let m = 1; m <= 12; m++) {
-            const option = document.createElement("option");
-            option.value = m;
-            option.textContent = getMonthName(m);
-            if (m === analyticsMonth) option.selected = true;
-            monthSelect.appendChild(option);
-        }
+        for (let m = 1; m <= 12; m++) { const option = document.createElement("option"); option.value = m; option.textContent = getMonthName(m); if (m === analyticsMonth) option.selected = true; monthSelect.appendChild(option); }
     }
     
     function populateMobileEmployeeSelect() {
         const select = document.getElementById("mobileEmployeeSelect");
         if (!select) return;
         select.innerHTML = '<option value="">-- Выберите сотрудника --</option>';
-        globalEmployees.forEach(emp => {
-            const option = document.createElement("option");
-            option.value = emp.fullName;
-            option.textContent = emp.fullName;
-            select.appendChild(option);
-        });
+        globalEmployees.forEach(emp => { const option = document.createElement("option"); option.value = emp.fullName; option.textContent = emp.fullName; select.appendChild(option); });
     }
     
     function filterAnalyticsTable() {
@@ -2422,24 +1981,18 @@
     }
     
     function renderAnalytics() {
-        if (currentAnalyticsSubtab === 'standard') {
-            renderStandardAnalytics();
-        } else {
-            renderMobileAnalytics();
-        }
+        if (currentAnalyticsSubtab === 'standard') renderStandardAnalytics();
+        else renderMobileAnalytics();
     }
     
     function renderStandardAnalytics() {
         const tbody = document.getElementById("analyticsTableBody");
         const thead = document.getElementById("analyticsTableHeader");
         if (!tbody || !thead) return;
-        
         const daysInMonth = new Date(analyticsYear, analyticsMonth, 0).getDate();
         const today = new Date();
         const isCurrentMonth = (today.getFullYear() === analyticsYear && (today.getMonth() + 1) === analyticsMonth);
-        
-        let headerHtml = '<tr>';
-        headerHtml += '<th style="min-width: 140px; position: sticky; left: 0; background: #1e293b; z-index: 20;">👤 Сотрудник</th>';
+        let headerHtml = '<table><th style="min-width: 140px; position: sticky; left: 0; background: #1e293b; z-index: 20;">👤 Сотрудник</th>';
         for (let day = 1; day <= daysInMonth; day++) {
             const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
@@ -2447,69 +2000,35 @@
             let bgStyle = '';
             if (isWeekend) bgStyle = 'background: #991b1b;';
             if (isToday) bgStyle = 'background: #f59e0b;';
-            headerHtml += `<th style="${bgStyle} width: 70px;">
-                <div>${day}</div>
-                <div style="font-size: 0.65rem; opacity: 0.8;">${weekdays[dayOfWeek]}</div>
-            </th>`;
+            headerHtml += `<th style="${bgStyle} width: 70px;"><div>${day}</div><div style="font-size: 0.65rem; opacity: 0.8;">${weekdays[dayOfWeek]}</div></th>`;
         }
-        headerHtml += '<th style="min-width: 70px;">📊 Дней</th>';
-        headerHtml += '</tr>';
+        headerHtml += '<th style="min-width: 70px;">📊 Дней</th></tr>';
         thead.innerHTML = headerHtml;
-        
         tbody.innerHTML = '';
-        
         let filteredEmployees = globalEmployees;
-        if (analyticsSearchTerm) {
-            filteredEmployees = globalEmployees.filter(emp => 
-                emp.fullName.toLowerCase().includes(analyticsSearchTerm)
-            );
-        }
-        
-        if (filteredEmployees.length === 0 && analyticsSearchTerm) {
-            tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>';
-            return;
-        }
-        
+        if (analyticsSearchTerm) filteredEmployees = globalEmployees.filter(emp => emp.fullName.toLowerCase().includes(analyticsSearchTerm));
+        if (filteredEmployees.length === 0 && analyticsSearchTerm) { tbody.innerHTML = '<tr><td colspan="' + (daysInMonth + 2) + '" style="text-align:center; padding:40px;">🔍 Сотрудник не найден</td></tr>'; return; }
         for (let emp of filteredEmployees) {
-            let rowHtml = '<tr>';
-            rowHtml += `<td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</td>`;
+            let rowHtml = '<tr><td class="employee-name-cell" style="position: sticky; left: 0; background: #f8fafc; z-index: 5;">${escapeHtml(emp.fullName)}</td>';
             let workDaysCount = 0;
-            
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayOfWeek = getDayOfWeek(analyticsYear, analyticsMonth, day);
                 const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
                 const isToday = isCurrentMonth && today.getDate() === day;
                 let pvzName = '';
                 let colorClass = '';
-                
                 for (let pvz in allPVZData) {
                     const key = `${analyticsYear}-${analyticsMonth}-${day}`;
-                    if (allPVZData[pvz].schedules[emp.fullName]?.[key] === true) {
-                        pvzName = pvz;
-                        workDaysCount++;
-                        colorClass = getPVZColorClass(pvz);
-                        break;
-                    }
+                    if (allPVZData[pvz].schedules[emp.fullName]?.[key] === true) { pvzName = pvz; workDaysCount++; colorClass = getPVZColorClass(pvz); break; }
                 }
-                
                 let cellClass = colorClass;
                 let cellContent = '';
-                
-                if (pvzName) {
-                    let shortName = pvzName.length > 12 ? pvzName.substring(0, 10) + '..' : pvzName;
-                    cellContent = `<div class="work-badge">✅</div><span class="pvz-name-small">${escapeHtml(shortName)}</span>`;
-                } else {
-                    cellContent = `<div class="off-badge">❌</div>`;
-                    if (isWeekend) cellClass = '';
-                }
-                
+                if (pvzName) { let shortName = pvzName.length > 12 ? pvzName.substring(0, 10) + '..' : pvzName; cellContent = `<div class="work-badge">✅</div><span class="pvz-name-small">${escapeHtml(shortName)}</span>`; } 
+                else { cellContent = `<div class="off-badge">❌</div>`; if (isWeekend) cellClass = ''; }
                 if (isToday) cellClass += ' today-highlight';
-                
                 rowHtml += `<td class="${cellClass}" style="vertical-align: middle;">${cellContent}</td>`;
             }
-            
-            rowHtml += `<td style="text-align: center; font-weight: 700; background: #e0f2fe;">${workDaysCount}</td>`;
-            rowHtml += '</tr>';
+            rowHtml += `<td style="text-align: center; font-weight: 700; background: #e0f2fe;">${workDaysCount}</td></tr>`;
             tbody.innerHTML += rowHtml;
         }
     }
@@ -2517,107 +2036,44 @@
     function renderMobileAnalytics() {
         const container = document.getElementById("mobileCalendarContainer");
         if (!container) return;
-        
         const employeeSelect = document.getElementById("mobileEmployeeSelect");
         const selectedEmployee = employeeSelect ? employeeSelect.value : "";
-        
         const year = parseInt(document.getElementById("mobileYearSelect")?.value) || analyticsYear;
         const month = parseInt(document.getElementById("mobileMonthSelect")?.value) || analyticsMonth;
-        
-        if (!selectedEmployee) {
-            container.innerHTML = '<div class="no-data-message">👈 Выберите сотрудника для просмотра графика</div>';
-            return;
-        }
-        
+        if (!selectedEmployee) { container.innerHTML = '<div class="no-data-message">👈 Выберите сотрудника для просмотра графика</div>'; return; }
         const daysInMonth = new Date(year, month, 0).getDate();
-        const firstDayOfMonth = new Date(year, month - 1, 1).getDay(); // 0 = воскресенье
+        const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
         const today = new Date();
         const isCurrentMonth = (today.getFullYear() === year && (today.getMonth() + 1) === month);
-        
-        // Собираем рабочие дни сотрудника
         const workDays = [];
         for (let day = 1; day <= daysInMonth; day++) {
             for (let pvz in allPVZData) {
                 const key = `${year}-${month}-${day}`;
-                if (allPVZData[pvz].schedules[selectedEmployee]?.[key] === true) {
-                    workDays.push({ day, pvzName: pvz });
-                    break;
-                }
+                if (allPVZData[pvz].schedules[selectedEmployee]?.[key] === true) { workDays.push({ day, pvzName: pvz }); break; }
             }
         }
-        
-        // Создаем карту для быстрого доступа
-        const workDayMap = new Map();
-        workDays.forEach(wd => workDayMap.set(wd.day, wd.pvzName));
-        
-        // Генерация календаря
-        let calendarHtml = `
-            <div class="mobile-calendar">
-                <div class="mobile-month-header">${getMonthName(month)} ${year}</div>
-                <div class="calendar-weekdays">
-                    <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-                </div>
-                <div class="calendar-days">
-        `;
-        
-        // Корректировка: первый день недели - понедельник
+        const workDayMap = new Map(); workDays.forEach(wd => workDayMap.set(wd.day, wd.pvzName));
         let startOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
-        
-        // Пустые ячейки до начала месяца
-        for (let i = 0; i < startOffset; i++) {
-            calendarHtml += `<div class="calendar-day" style="background: #f8fafc; opacity: 0.5;"></div>`;
-        }
-        
-        // Дни месяца
+        let calendarHtml = `<div class="mobile-calendar"><div class="mobile-month-header">${getMonthName(month)} ${year}</div><div class="calendar-wrapper"><div class="calendar-weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div><div class="calendar-days">`;
+        for (let i = 0; i < startOffset; i++) calendarHtml += `<div class="calendar-day" style="background: #f8fafc; opacity: 0.5;"></div>`;
         for (let day = 1; day <= daysInMonth; day++) {
             const pvzName = workDayMap.get(day);
             const isWorkDay = !!pvzName;
             const isToday = isCurrentMonth && today.getDate() === day;
             const dayOfWeek = getDayOfWeek(year, month, day);
             const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-            
             let cellClass = 'calendar-day';
             if (isWorkDay) cellClass += ' work-day';
             else if (!isWorkDay && !isWeekend) cellClass += ' off-day';
             if (isToday) cellClass += ' today';
-            
-            let pvzShort = '';
-            if (pvzName) {
-                pvzShort = pvzName.length > 20 ? pvzName.substring(0, 18) + '..' : pvzName;
-            }
-            
-            calendarHtml += `
-                <div class="${cellClass}">
-                    <div class="day-number">${day}</div>
-                    ${pvzShort ? `<div class="pvz-label">${escapeHtml(pvzShort)}</div>` : ''}
-                </div>
-            `;
+            let pvzShort = ''; if (pvzName) pvzShort = pvzName.length > 20 ? pvzName.substring(0, 18) + '..' : pvzName;
+            calendarHtml += `<div class="${cellClass}"><div class="day-number">${day}</div>${pvzShort ? `<div class="pvz-label">${escapeHtml(pvzShort)}</div>` : ''}</div>`;
         }
-        
-        calendarHtml += `</div></div>`;
-        
-        // Список рабочих дней с ПВЗ
-        let workDaysListHtml = `
-            <div class="mobile-work-days-list">
-                <h4>📋 Рабочие дни в ${getMonthName(month)}</h4>
-                <div class="work-days-grid">
-        `;
-        
-        if (workDays.length === 0) {
-            workDaysListHtml += `<div class="no-data-message" style="padding: 15px;">Нет рабочих дней в этом месяце</div>`;
-        } else {
-            workDays.forEach(wd => {
-                workDaysListHtml += `
-                    <div class="work-day-item">
-                        <span class="work-day-date">${wd.day} ${getMonthName(month)}</span>
-                        <span class="work-day-pvz">${escapeHtml(wd.pvzName)}</span>
-                    </div>
-                `;
-            });
-        }
-        
+        calendarHtml += `</div></div></div>`;
+        let workDaysListHtml = `<div class="mobile-work-days-list"><h4>📋 Рабочие дни в ${getMonthName(month)}</h4><div class="work-days-grid">`;
+        if (workDays.length === 0) workDaysListHtml += `<div class="no-data-message" style="padding: 15px;">Нет рабочих дней в этом месяце</div>`;
+        else workDays.forEach(wd => { workDaysListHtml += `<div class="work-day-item"><span class="work-day-date">${wd.day} ${getMonthName(month)}</span><span class="work-day-pvz">${escapeHtml(wd.pvzName)}</span></div>`; });
         workDaysListHtml += `</div></div>`;
-        
         container.innerHTML = calendarHtml + workDaysListHtml;
     }
     
@@ -2625,17 +2081,11 @@
         if (currentAnalyticsSubtab === 'standard') {
             const yearSelect = document.getElementById("analyticsYearSelect");
             const monthSelect = document.getElementById("analyticsMonthSelect");
-            if (yearSelect && monthSelect) {
-                analyticsYear = parseInt(yearSelect.value);
-                analyticsMonth = parseInt(monthSelect.value);
-            }
+            if (yearSelect && monthSelect) { analyticsYear = parseInt(yearSelect.value); analyticsMonth = parseInt(monthSelect.value); }
         } else {
             const yearSelect = document.getElementById("mobileYearSelect");
             const monthSelect = document.getElementById("mobileMonthSelect");
-            if (yearSelect && monthSelect) {
-                analyticsYear = parseInt(yearSelect.value);
-                analyticsMonth = parseInt(monthSelect.value);
-            }
+            if (yearSelect && monthSelect) { analyticsYear = parseInt(yearSelect.value); analyticsMonth = parseInt(monthSelect.value); }
         }
         renderAnalytics();
     }
@@ -2648,33 +2098,21 @@
         document.getElementById("dashboardTabContent").style.display = "none";
         document.getElementById("analyticsTabContent").style.display = "block";
         document.getElementById("emergencyContactsTabContent").style.display = "none";
-        
-        // Показываем стандартную вью по умолчанию
         currentAnalyticsSubtab = "standard";
         document.getElementById("analyticsStandardView").style.display = "block";
         document.getElementById("analyticsMobileView").style.display = "none";
-        
         populateAnalyticsSelects();
         populateMobileSelects();
         populateMobileEmployeeSelect();
         renderAnalytics();
-        
-        // Добавляем обработчики для подвкладок аналитики
         document.querySelectorAll('.analytics-sub-tab').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.analytics-sub-tab').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const subtab = btn.getAttribute('data-analytics-subtab');
                 currentAnalyticsSubtab = subtab;
-                if (subtab === 'standard') {
-                    document.getElementById("analyticsStandardView").style.display = "block";
-                    document.getElementById("analyticsMobileView").style.display = "none";
-                    renderStandardAnalytics();
-                } else {
-                    document.getElementById("analyticsStandardView").style.display = "none";
-                    document.getElementById("analyticsMobileView").style.display = "block";
-                    renderMobileAnalytics();
-                }
+                if (subtab === 'standard') { document.getElementById("analyticsStandardView").style.display = "block"; document.getElementById("analyticsMobileView").style.display = "none"; renderStandardAnalytics(); } 
+                else { document.getElementById("analyticsStandardView").style.display = "none"; document.getElementById("analyticsMobileView").style.display = "block"; renderMobileAnalytics(); }
             });
         });
     }
@@ -2692,22 +2130,14 @@
     
     function checkInitialAuth() {
         const isAuth = localStorage.getItem(AUTH_KEY);
-        if (isAuth === "true") {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainAppContent').style.display = 'block';
-            return true;
-        } else {
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainAppContent').style.display = 'none';
-            return false;
-        }
+        if (isAuth === "true") { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('mainAppContent').style.display = 'block'; return true; } 
+        else { document.getElementById('loginScreen').style.display = 'flex'; document.getElementById('mainAppContent').style.display = 'none'; return false; }
     }
     
     function setupLoginListener() {
         const loginBtn = document.getElementById('submitLoginBtn');
         const passwordInput = document.getElementById('passwordInput');
         const errorDiv = document.getElementById('loginError');
-        
         const tryLogin = () => {
             const enteredPassword = passwordInput.value.trim();
             if (enteredPassword === SITE_ACCESS_PASSWORD) {
@@ -2717,20 +2147,11 @@
                 errorDiv.textContent = '';
                 passwordInput.value = '';
                 showNotification("Доступ разрешён! Загрузка данных...", false);
-                if (isLoading) {
-                    initApp();
-                }
-            } else {
-                errorDiv.textContent = '❌ Неверный пароль! Попробуйте снова.';
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
+                if (isLoading) initApp();
+            } else { errorDiv.textContent = '❌ Неверный пароль! Попробуйте снова.'; passwordInput.value = ''; passwordInput.focus(); }
         };
-        
         loginBtn.addEventListener('click', tryLogin);
-        passwordInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') tryLogin();
-        });
+        passwordInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') tryLogin(); });
     }
     
     function getDefaultEmployees() {
@@ -2748,53 +2169,38 @@
     async function migrateOldEmployeeData(oldEmployees) {
         if (!oldEmployees || oldEmployees.length === 0) return getDefaultEmployees();
         if (oldEmployees[0] && oldEmployees[0].surname !== undefined) return oldEmployees;
-        
         const newEmployees = [];
         for (const emp of oldEmployees) {
             let name = emp.name || "";
             let surname = "";
             const parts = name.trim().split(' ');
-            if (parts.length >= 2) {
-                name = parts[0];
-                surname = parts.slice(1).join(' ');
-            } else {
-                surname = name;
-            }
+            if (parts.length >= 2) { name = parts[0]; surname = parts.slice(1).join(' '); } 
+            else { surname = name; }
             newEmployees.push({ name, surname, fullName: emp.name, email: emp.email || "", phone: emp.phone || "", telegramId: emp.telegramId || "" });
         }
         return newEmployees;
     }
     
     function getDefaultPVZData() {
-        return {
-            "ПВЗ Центральный": { employeesHistory: {}, schedules: {} },
-            "ПВЗ Северный": { employeesHistory: {}, schedules: {} },
-            "ПВЗ Южный": { employeesHistory: {}, schedules: {} },
-            "ПВЗ Восточный": { employeesHistory: {}, schedules: {} }
-        };
+        return { "ПВЗ Центральный": { employeesHistory: {}, schedules: {} }, "ПВЗ Северный": { employeesHistory: {}, schedules: {} }, "ПВЗ Южный": { employeesHistory: {}, schedules: {} }, "ПВЗ Восточный": { employeesHistory: {}, schedules: {} } };
     }
     
     function fillDemoSchedules(data) {
         const today = new Date();
         for (let pvzName in data) {
             initPVZHistoryIfNeeded(pvzName);
-            
             let baseEmployees = [];
             if (pvzName === "ПВЗ Центральный") baseEmployees = ["Анна Смирнова", "Иван Козлов"];
             else if (pvzName === "ПВЗ Северный") baseEmployees = ["Мария Орлова", "Дмитрий Павлов"];
             else if (pvzName === "ПВЗ Южный") baseEmployees = ["Елена Ветрова", "Зинаида Петрова"];
             else if (pvzName === "ПВЗ Восточный") baseEmployees = ["Дарья Сидорова"];
-            
             for (let offset = -3; offset <= 6; offset++) {
                 const date = new Date(today.getFullYear(), today.getMonth() + offset, 1);
                 const year = date.getFullYear();
                 const month = date.getMonth() + 1;
                 const monthKey = getMonthHistoryKey(year, month);
-                if (!data[pvzName].employeesHistory[monthKey]) {
-                    data[pvzName].employeesHistory[monthKey] = [...baseEmployees];
-                }
+                if (!data[pvzName].employeesHistory[monthKey]) data[pvzName].employeesHistory[monthKey] = [...baseEmployees];
             }
-            
             for (let emp of baseEmployees) {
                 if (!data[pvzName].schedules[emp]) data[pvzName].schedules[emp] = {};
                 for (let offset = -3; offset <= 6; offset++) {
@@ -2806,11 +2212,8 @@
                         const key = `${year}-${month}-${d}`;
                         if (data[pvzName].schedules[emp][key] === undefined) {
                             const otherWorking = isAnotherEmployeeWorkingInThisPVZ(pvzName, year, month, d, emp);
-                            if (!otherWorking.isBusy) {
-                                data[pvzName].schedules[emp][key] = Math.random() < 0.5;
-                            } else {
-                                data[pvzName].schedules[emp][key] = false;
-                            }
+                            if (!otherWorking.isBusy) data[pvzName].schedules[emp][key] = Math.random() < 0.5;
+                            else data[pvzName].schedules[emp][key] = false;
                         }
                     }
                 }
@@ -2824,14 +2227,8 @@
         showNotification("🔄 Загрузка данных из облака...", false);
         try {
             const employeesDoc = await db.collection("appData").doc("globalEmployees").get();
-            if (employeesDoc.exists) {
-                globalEmployees = await migrateOldEmployeeData(employeesDoc.data().employees || []);
-                await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
-            } else {
-                globalEmployees = getDefaultEmployees();
-                await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
-            }
-            
+            if (employeesDoc.exists) { globalEmployees = await migrateOldEmployeeData(employeesDoc.data().employees || []); await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees }); } 
+            else { globalEmployees = getDefaultEmployees(); await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees }); }
             const pvzDoc = await db.collection("appData").doc("allPVZData").get();
             if (pvzDoc.exists) {
                 allPVZData = pvzDoc.data().data || {};
@@ -2847,107 +2244,32 @@
                     if (!allPVZData[pvz].employeesHistory) allPVZData[pvz].employeesHistory = {};
                     if (!allPVZData[pvz].schedules) allPVZData[pvz].schedules = {};
                 }
-            } else {
-                allPVZData = fillDemoSchedules(getDefaultPVZData());
-                await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
-            }
-            
+            } else { allPVZData = fillDemoSchedules(getDefaultPVZData()); await db.collection("appData").doc("allPVZData").set({ data: allPVZData }); }
             const currentPVZDoc = await db.collection("appData").doc("currentPVZ").get();
             currentPVZ = (currentPVZDoc.exists && allPVZData[currentPVZDoc.data().name]) ? currentPVZDoc.data().name : Object.keys(allPVZData)[0];
-            
             botToken = localStorage.getItem(BOT_TOKEN_KEY) || "";
             await loadExtraWorksFromFirestore();
             await loadFinesFromFirestore();
             await loadSalaryDataFromFirestore();
             await loadEmergencyContactsFromFirestore();
-            
             isLoading = false;
             showNotification("✅ Данные загружены из облака", false);
             return true;
-        } catch (error) {
-            console.error("Ошибка загрузки:", error);
-            showNotification("❌ Ошибка загрузки данных!", true);
-            isLoading = false;
-            return false;
-        }
+        } catch (error) { console.error("Ошибка загрузки:", error); showNotification("❌ Ошибка загрузки данных!", true); isLoading = false; return false; }
     }
     
-    async function saveToFirestore() {
-        if (isLoading) return;
-        try {
-            await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees });
-            await db.collection("appData").doc("allPVZData").set({ data: allPVZData });
-            await db.collection("appData").doc("currentPVZ").set({ name: currentPVZ });
-            await autoSaveSalary();
-        } catch (error) {
-            console.error("Ошибка сохранения:", error);
-            showNotification("⚠️ Ошибка сохранения в облако!", true);
-        }
-    }
-    
+    async function saveToFirestore() { if (isLoading) return; try { await db.collection("appData").doc("globalEmployees").set({ employees: globalEmployees }); await db.collection("appData").doc("allPVZData").set({ data: allPVZData }); await db.collection("appData").doc("currentPVZ").set({ name: currentPVZ }); await autoSaveSalary(); } catch (error) { console.error("Ошибка сохранения:", error); showNotification("⚠️ Ошибка сохранения в облако!", true); } }
     async function saveAndSync() { await saveToFirestore(); }
     
-    function showNotification(message, isError = true) {
-        const notification = document.createElement('div');
-        notification.className = `notification ${!isError ? 'success' : ''}`;
-        notification.innerHTML = message;
-        document.body.appendChild(notification);
-        setTimeout(() => notification.remove(), 4000);
-    }
+    function showNotification(message, isError = true) { const notification = document.createElement('div'); notification.className = `notification ${!isError ? 'success' : ''}`; notification.innerHTML = message; document.body.appendChild(notification); setTimeout(() => notification.remove(), 4000); }
     
-    function checkPassword() {
-        const pwd = prompt("Введите пароль администратора:");
-        return pwd === ADMIN_PASSWORD ? true : (alert("Неверный пароль!"), false);
-    }
+    function checkPassword() { const pwd = prompt("Введите пароль администратора:"); return pwd === ADMIN_PASSWORD ? true : (alert("Неверный пароль!"), false); }
     
-    async function sendTelegramMessage(chatId, message) {
-        if (!botToken) return false;
-        try {
-            const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'HTML' })
-            });
-            return (await response.json()).ok;
-        } catch (error) { return false; }
-    }
+    async function sendTelegramMessage(chatId, message) { if (!botToken) return false; try { const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'HTML' }) }); return (await response.json()).ok; } catch (error) { return false; } }
     
-    async function sendTomorrowNotifications() {
-        if (!botToken) { showNotification("⚠️ Сначала настройте Telegram бота!", true); return; }
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        const year = tomorrow.getFullYear(), month = tomorrow.getMonth() + 1, day = tomorrow.getDate();
-        const dateKey = `${year}-${month}-${day}`;
-        const employeeShifts = {};
-        for (let pvzName in allPVZData) {
-            const employeesForMonth = getEmployeesForMonth(pvzName, year, month);
-            for (let employee of employeesForMonth) {
-                if (allPVZData[pvzName].schedules[employee]?.[dateKey] === true) {
-                    if (!employeeShifts[employee]) employeeShifts[employee] = [];
-                    employeeShifts[employee].push({ pvzName, date: `${day}.${month}.${year}` });
-                }
-            }
-        }
-        if (Object.keys(employeeShifts).length === 0) { showNotification("ℹ️ На завтра нет смен", false); return; }
-        let success = 0, fail = 0;
-        for (let empFullName in employeeShifts) {
-            const employee = globalEmployees.find(e => e.fullName === empFullName);
-            if (!employee || !employee.telegramId) { fail++; continue; }
-            const shiftText = employeeShifts[empFullName].map(s => `🏪 ${s.pvzName} — ${s.date}`).join("\n");
-            (await sendTelegramMessage(employee.telegramId, `🔔 <b>Напоминание о смене!</b>\n\n${empFullName}, завтра у вас смена:\n${shiftText}\n\nПриходите вовремя!`)) ? success++ : fail++;
-        }
-        showNotification(`📱 Отправлено: ✅ ${success}, ❌ ${fail}`, false);
-    }
+    async function sendTomorrowNotifications() { if (!botToken) { showNotification("⚠️ Сначала настройте Telegram бота!", true); return; } const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1); const year = tomorrow.getFullYear(), month = tomorrow.getMonth() + 1, day = tomorrow.getDate(); const dateKey = `${year}-${month}-${day}`; const employeeShifts = {}; for (let pvzName in allPVZData) { const employeesForMonth = getEmployeesForMonth(pvzName, year, month); for (let employee of employeesForMonth) { if (allPVZData[pvzName].schedules[employee]?.[dateKey] === true) { if (!employeeShifts[employee]) employeeShifts[employee] = []; employeeShifts[employee].push({ pvzName, date: `${day}.${month}.${year}` }); } } } if (Object.keys(employeeShifts).length === 0) { showNotification("ℹ️ На завтра нет смен", false); return; } let success = 0, fail = 0; for (let empFullName in employeeShifts) { const employee = globalEmployees.find(e => e.fullName === empFullName); if (!employee || !employee.telegramId) { fail++; continue; } const shiftText = employeeShifts[empFullName].map(s => `🏪 ${s.pvzName} — ${s.date}`).join("\n"); (await sendTelegramMessage(employee.telegramId, `🔔 <b>Напоминание о смене!</b>\n\n${empFullName}, завтра у вас смена:\n${shiftText}\n\nПриходите вовремя!`)) ? success++ : fail++; } showNotification(`📱 Отправлено: ✅ ${success}, ❌ ${fail}`, false); }
     
-    async function sendTestNotification() {
-        if (!botToken) { showNotification("⚠️ Сначала настройте Telegram бота!", true); return; }
-        let success = 0, fail = 0;
-        for (let emp of globalEmployees) {
-            if (!emp.telegramId) continue;
-            (await sendTelegramMessage(emp.telegramId, "🧪 Тестовое сообщение от системы графиков ПВЗ")) ? success++ : fail++;
-        }
-        showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false);
-    }
+    async function sendTestNotification() { if (!botToken) { showNotification("⚠️ Сначала настройте Telegram бота!", true); return; } let success = 0, fail = 0; for (let emp of globalEmployees) { if (!emp.telegramId) continue; (await sendTelegramMessage(emp.telegramId, "🧪 Тестовое сообщение от системы графиков ПВЗ")) ? success++ : fail++; } showNotification(`🔔 Тест: ✅ ${success}, ❌ ${fail}`, false); }
     
     function getDayOfWeek(year, month, day) { return new Date(year, month - 1, day).getDay(); }
     function isToday(year, month, day) { const today = new Date(); return today.getFullYear() === year && today.getMonth() + 1 === month && today.getDate() === day; }
@@ -2960,39 +2282,19 @@
         select.innerHTML = '';
         const maxYear = 2028;
         const maxMonth = 12;
-        
         let startYear = now.getFullYear() - 1;
         let startMonth = now.getMonth() + 1;
-        
         for (let year = startYear; year <= maxYear; year++) {
             let monthStart = (year === startYear) ? startMonth : 1;
             let monthEnd = (year === maxYear) ? maxMonth : 12;
-            for (let month = monthStart; month <= monthEnd; month++) {
-                const option = document.createElement("option");
-                option.value = `${year}-${month}`;
-                option.textContent = `${getMonthName(month)} ${year}`;
-                if (year === selectedYear && month === selectedMonth) option.selected = true;
-                select.appendChild(option);
-            }
+            for (let month = monthStart; month <= monthEnd; month++) { const option = document.createElement("option"); option.value = `${year}-${month}`; option.textContent = `${getMonthName(month)} ${year}`; if (year === selectedYear && month === selectedMonth) option.selected = true; select.appendChild(option); }
         }
     }
     
     function renderGlobalEmployeesTable() {
         const tbody = document.getElementById("employeesTableBody");
         if (!tbody) return;
-        tbody.innerHTML = globalEmployees.map((emp, idx) => `
-            <tr>
-                <td><strong>${escapeHtml(emp.name)}</strong></td>
-                <td><strong>${escapeHtml(emp.surname)}</strong></td>
-                <td>${escapeHtml(emp.email || '—')}</td>
-                <td>${escapeHtml(emp.phone || '—')}</td>
-                <td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</td>
-                <td>
-                    <button class="edit-employee-btn" data-idx="${idx}">✏️</button>
-                    <button class="delete-employee-btn" data-idx="${idx}">🗑</button>
-                </td>
-            </tr>
-        `).join('');
+        tbody.innerHTML = globalEmployees.map((emp, idx) => `<tr><td><strong>${escapeHtml(emp.name)}</strong></td><td><strong>${escapeHtml(emp.surname)}</strong></td><td>${escapeHtml(emp.email || '—')}</td><td>${escapeHtml(emp.phone || '—')}</td><td>${emp.telegramId ? escapeHtml(emp.telegramId) : '—'}</td><td><button class="edit-employee-btn" data-idx="${idx}">✏️</button><button class="delete-employee-btn" data-idx="${idx}">🗑</button></td></tr>`).join('');
         document.querySelectorAll('.edit-employee-btn').forEach(btn => btn.addEventListener('click', () => editGlobalEmployee(parseInt(btn.dataset.idx))));
         document.querySelectorAll('.delete-employee-btn').forEach(btn => btn.addEventListener('click', () => deleteGlobalEmployee(parseInt(btn.dataset.idx))));
     }
@@ -3000,46 +2302,24 @@
     async function editGlobalEmployee(idx) {
         if (!checkPassword()) return;
         const emp = globalEmployees[idx];
-        const newName = prompt("Имя:", emp.name);
-        if (!newName) return;
-        const newSurname = prompt("Фамилия:", emp.surname);
-        if (!newSurname) return;
+        const newName = prompt("Имя:", emp.name); if (!newName) return;
+        const newSurname = prompt("Фамилия:", emp.surname); if (!newSurname) return;
         const oldFullName = emp.fullName;
         emp.name = newName; emp.surname = newSurname; emp.fullName = `${newName} ${newSurname}`;
         emp.email = prompt("Email:", emp.email || "") || "";
         emp.phone = prompt("Телефон:", emp.phone || "") || "";
         emp.telegramId = prompt("Telegram ID:", emp.telegramId || "") || "";
-        
         for (let pvz in allPVZData) {
-            if (allPVZData[pvz].employeesHistory) {
-                for (let monthKey in allPVZData[pvz].employeesHistory) {
-                    const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(oldFullName);
-                    if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey][idx2] = emp.fullName;
-                }
-            }
-            if (allPVZData[pvz].schedules[oldFullName]) { 
-                allPVZData[pvz].schedules[emp.fullName] = allPVZData[pvz].schedules[oldFullName]; 
-                delete allPVZData[pvz].schedules[oldFullName]; 
-            }
+            if (allPVZData[pvz].employeesHistory) { for (let monthKey in allPVZData[pvz].employeesHistory) { const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(oldFullName); if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey][idx2] = emp.fullName; } }
+            if (allPVZData[pvz].schedules[oldFullName]) { allPVZData[pvz].schedules[emp.fullName] = allPVZData[pvz].schedules[oldFullName]; delete allPVZData[pvz].schedules[oldFullName]; }
         }
         if (salaryData[oldFullName]) { salaryData[emp.fullName] = salaryData[oldFullName]; delete salaryData[oldFullName]; }
         if (extraWorks[oldFullName]) { extraWorks[emp.fullName] = extraWorks[oldFullName]; delete extraWorks[oldFullName]; }
         if (fines[oldFullName]) { fines[emp.fullName] = fines[oldFullName]; delete fines[oldFullName]; }
         if (emergencyContacts[oldFullName]) { emergencyContacts[emp.fullName] = emergencyContacts[oldFullName]; delete emergencyContacts[oldFullName]; }
-        
         updatePVZEmployeesUI(); renderSchedule(); renderGlobalEmployeesTable();
-        if (currentTab === 'dashboard') { 
-            renderSalaryTable(); 
-            renderExtraWorksTable(); 
-            renderFinesTable(); 
-            populateExtraEmployeeSelect(); 
-            populateFineEmployeeSelect(); 
-            renderEmergencyContacts(); 
-        }
-        if (currentTab === 'analytics') {
-            populateMobileEmployeeSelect();
-            renderAnalytics();
-        }
+        if (currentTab === 'dashboard') { renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); renderEmergencyContacts(); }
+        if (currentTab === 'analytics') { populateMobileEmployeeSelect(); renderAnalytics(); }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
         await saveAndSync();
         showNotification(`✅ Сотрудник обновлён`, false);
@@ -3049,36 +2329,18 @@
         if (!checkPassword()) return;
         const emp = globalEmployees[idx];
         if (!confirm(`Удалить "${emp.fullName}" из списка сотрудников? Данные экстренных контактов и документы будут сохранены.`)) return;
-        
         const deletedName = emp.fullName;
-        
         globalEmployees.splice(idx, 1);
         for (let pvz in allPVZData) {
-            if (allPVZData[pvz].employeesHistory) {
-                for (let monthKey in allPVZData[pvz].employeesHistory) {
-                    const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(deletedName);
-                    if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey].splice(idx2, 1);
-                }
-            }
+            if (allPVZData[pvz].employeesHistory) { for (let monthKey in allPVZData[pvz].employeesHistory) { const idx2 = allPVZData[pvz].employeesHistory[monthKey].indexOf(deletedName); if (idx2 !== -1) allPVZData[pvz].employeesHistory[monthKey].splice(idx2, 1); } }
             delete allPVZData[pvz].schedules[deletedName];
         }
         delete salaryData[deletedName];
         delete extraWorks[deletedName];
         delete fines[deletedName];
-        
         updatePVZEmployeesUI(); renderSchedule(); renderGlobalEmployeesTable();
-        if (currentTab === 'dashboard') { 
-            renderSalaryTable(); 
-            renderExtraWorksTable(); 
-            renderFinesTable(); 
-            populateExtraEmployeeSelect(); 
-            populateFineEmployeeSelect(); 
-            renderEmergencyContacts(); 
-        }
-        if (currentTab === 'analytics') {
-            populateMobileEmployeeSelect();
-            renderAnalytics();
-        }
+        if (currentTab === 'dashboard') { renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); renderEmergencyContacts(); }
+        if (currentTab === 'analytics') { populateMobileEmployeeSelect(); renderAnalytics(); }
         if (currentTab === 'emergency') loadPublicEmergencyForm();
         await saveAndSync();
         showNotification(`❌ Сотрудник "${deletedName}" удалён из списка. Данные экстренных контактов сохранены.`, false);
@@ -3093,18 +2355,10 @@
         globalEmployees.push({ name, surname, fullName, email: document.getElementById("newEmpEmail")?.value.trim() || "", phone: document.getElementById("newEmpPhone")?.value.trim() || "", telegramId: document.getElementById("newEmpTelegram")?.value.trim() || "" });
         const currentKey = getMonthKey(currentDashboardYear, currentDashboardMonth);
         salaryData[fullName] = {}; salaryData[fullName][currentKey] = { rate: 1500, traineeDays: 0, traineeRate: 800, advance: 0, moneyTransferred: 0, fine: 0 };
-        extraWorks[fullName] = [];
-        fines[fullName] = [];
+        extraWorks[fullName] = []; fines[fullName] = [];
         renderGlobalEmployeesTable();
-        if (currentTab === 'dashboard') { 
-            renderSalaryTable(); 
-            populateExtraEmployeeSelect(); 
-            populateFineEmployeeSelect(); 
-        }
-        if (currentTab === 'analytics') {
-            populateMobileEmployeeSelect();
-            renderAnalytics();
-        }
+        if (currentTab === 'dashboard') { renderSalaryTable(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); }
+        if (currentTab === 'analytics') { populateMobileEmployeeSelect(); renderAnalytics(); }
         updateAvailableEmployeesSelect();
         ["newEmpName","newEmpSurname","newEmpEmail","newEmpPhone","newEmpTelegram"].forEach(id => { if (document.getElementById(id)) document.getElementById(id).value = ""; });
         await saveAndSync();
@@ -3137,33 +2391,15 @@
         const empFullName = document.getElementById("availableEmployeesSelect").value;
         if (!empFullName) { alert("Выберите сотрудника"); return; }
         const currentEmps = getEmployeesForMonth(currentPVZ, selectedYear, selectedMonth);
-        if (!currentEmps.includes(empFullName)) {
-            addEmployeeToMonth(currentPVZ, selectedYear, selectedMonth, empFullName);
-            updatePVZEmployeesUI();
-            if (currentTab === 'analytics') renderAnalytics();
-            await saveAndSync();
-            showNotification(`✅ ${empFullName} добавлен в ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false);
-        } else {
-            alert("Сотрудник уже добавлен в этом месяце");
-        }
+        if (!currentEmps.includes(empFullName)) { addEmployeeToMonth(currentPVZ, selectedYear, selectedMonth, empFullName); updatePVZEmployeesUI(); if (currentTab === 'analytics') renderAnalytics(); await saveAndSync(); showNotification(`✅ ${empFullName} добавлен в ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false); } 
+        else alert("Сотрудник уже добавлен в этом месяце");
     }
     
-    async function removeEmployeeFromPVZ(empFullName) {
-        if (!checkPassword()) return;
-        if (!confirm(`Удалить "${empFullName}" из ПВЗ "${currentPVZ}" за ${getMonthName(selectedMonth)} ${selectedYear}?`)) return;
-        removeEmployeeFromMonth(currentPVZ, selectedYear, selectedMonth, empFullName);
-        updatePVZEmployeesUI();
-        if (currentTab === 'analytics') renderAnalytics();
-        await saveAndSync();
-        showNotification(`❌ ${empFullName} удалён из ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false);
-    }
+    async function removeEmployeeFromPVZ(empFullName) { if (!checkPassword()) return; if (!confirm(`Удалить "${empFullName}" из ПВЗ "${currentPVZ}" за ${getMonthName(selectedMonth)} ${selectedYear}?`)) return; removeEmployeeFromMonth(currentPVZ, selectedYear, selectedMonth, empFullName); updatePVZEmployeesUI(); if (currentTab === 'analytics') renderAnalytics(); await saveAndSync(); showNotification(`❌ ${empFullName} удалён из ПВЗ за ${getMonthName(selectedMonth)} ${selectedYear}`, false); }
     
     function generateHeader(daysCount, year, month) {
         let html = `<tr><th class="employee-col">Сотрудник</th>`;
-        for (let d = 1; d <= daysCount; d++) {
-            const dow = getDayOfWeek(year, month, d);
-            html += `<th class="${dow === 0 || dow === 6 ? 'weekend' : 'weekday'} ${isToday(year, month, d) ? 'today-column' : ''}"><div class="day-number">${d}</div><div class="weekday-name">${weekdays[dow]}</div></th>`;
-        }
+        for (let d = 1; d <= daysCount; d++) { const dow = getDayOfWeek(year, month, d); html += `<th class="${dow === 0 || dow === 6 ? 'weekend' : 'weekday'} ${isToday(year, month, d) ? 'today-column' : ''}"><div class="day-number">${d}</div><div class="weekday-name">${weekdays[dow]}</div></th>`; }
         return html + '<th>📊</th></tr>';
     }
     
@@ -3177,12 +2413,7 @@
         const employeesThisMonth = getEmployeesForMonth(currentPVZ, year, month);
         for (let emp of employeesThisMonth) {
             let workCount = 0, row = `<tr><td class="employee-col">${escapeHtml(emp)}</td>`;
-            for (let d = 1; d <= daysCount; d++) {
-                if (!data.schedules[emp]) data.schedules[emp] = {};
-                const isWork = data.schedules[emp][`${year}-${month}-${d}`] === true;
-                if (isWork) workCount++;
-                row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isToday(year, month, d) ? 'today-column' : ''}" data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">${isWork ? '✅' : '❌'}</td>`;
-            }
+            for (let d = 1; d <= daysCount; d++) { if (!data.schedules[emp]) data.schedules[emp] = {}; const isWork = data.schedules[emp][`${year}-${month}-${d}`] === true; if (isWork) workCount++; row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${isToday(year, month, d) ? 'today-column' : ''}" data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">${isWork ? '✅' : '❌'}</td>`; }
             bodyHtml += row + `<td style="text-align:center;font-weight:700;">${workCount}</td></tr>`;
         }
         document.getElementById("tableBody").innerHTML = bodyHtml || '<tr><td colspan="40" style="text-align:center;padding:40px;">👀 Нет сотрудников в этом ПВЗ за выбранный месяц</td></tr>';
@@ -3196,24 +2427,16 @@
         const emp = target.dataset.employee, year = parseInt(target.dataset.year), month = parseInt(target.dataset.month), day = parseInt(target.dataset.day);
         const currentStatus = target.dataset.status === 'true';
         const newStatus = !currentStatus;
-        
         if (newStatus) {
             const conflict = canEmployeeWorkOnDay(emp, year, month, day, currentPVZ);
             if (!conflict.canWork) { 
-                if (conflict.reason === 'alreadyInOtherPVZ') {
-                    showNotification(`⚠️ "${emp}" уже работает ${day}.${month}.${year} в ПВЗ "${conflict.conflictingPVZ}"`); 
-                } else if (conflict.reason === 'anotherInSamePVZ') {
-                    showNotification(`⚠️ В этот день (${day}.${month}.${year}) в ПВЗ "${currentPVZ}" уже работает сотрудник "${conflict.conflictingEmployee}". Два сотрудника не могут работать в одном ПВЗ в один день!`); 
-                }
+                if (conflict.reason === 'alreadyInOtherPVZ') showNotification(`⚠️ "${emp}" уже работает ${day}.${month}.${year} в ПВЗ "${conflict.conflictingPVZ}"`); 
+                else if (conflict.reason === 'anotherInSamePVZ') showNotification(`⚠️ В этот день (${day}.${month}.${year}) в ПВЗ "${currentPVZ}" уже работает сотрудник "${conflict.conflictingEmployee}". Два сотрудника не могут работать в одном ПВЗ в один день!`);
                 return; 
             }
             const employeesThisMonth = getEmployeesForMonth(currentPVZ, year, month);
-            if (!employeesThisMonth.includes(emp)) {
-                showNotification(`⚠️ "${emp}" не числится в этом ПВЗ за ${getMonthName(month)} ${year}. Сначала добавьте его.`);
-                return;
-            }
+            if (!employeesThisMonth.includes(emp)) { showNotification(`⚠️ "${emp}" не числится в этом ПВЗ за ${getMonthName(month)} ${year}. Сначала добавьте его.`); return; }
         }
-        
         if (!allPVZData[currentPVZ].schedules[emp]) allPVZData[currentPVZ].schedules[emp] = {};
         allPVZData[currentPVZ].schedules[emp][`${year}-${month}-${day}`] = newStatus;
         renderSchedule();
@@ -3223,30 +2446,9 @@
         showNotification(`${emp}: ${newStatus ? '✅ рабочий день' : '❌ выходной'} на ${day}.${month}.${year}`, false);
     }
     
-    async function renamePVZ(oldName, newName) {
-        if (!newName || newName === oldName || allPVZData[newName]) return false;
-        allPVZData[newName] = allPVZData[oldName]; delete allPVZData[oldName];
-        if (currentPVZ === oldName) currentPVZ = newName;
-        renderTabs();
-        if (!['employees','dashboard','analytics','emergency'].includes(currentTab)) { updatePVZEmployeesUI(); renderSchedule(); }
-        if (currentTab === 'analytics') renderAnalytics();
-        await saveAndSync();
-        showNotification(`✅ ПВЗ переименован`, false);
-        return true;
-    }
-    
+    async function renamePVZ(oldName, newName) { if (!newName || newName === oldName || allPVZData[newName]) return false; allPVZData[newName] = allPVZData[oldName]; delete allPVZData[oldName]; if (currentPVZ === oldName) currentPVZ = newName; renderTabs(); if (!['employees','dashboard','analytics','emergency'].includes(currentTab)) { updatePVZEmployeesUI(); renderSchedule(); } if (currentTab === 'analytics') renderAnalytics(); await saveAndSync(); showNotification(`✅ ПВЗ переименован`, false); return true; }
     async function editCurrentPVZName() { if (checkPassword()) { const n = prompt("Новое название:", currentPVZ); if (n && n !== currentPVZ) await renamePVZ(currentPVZ, n); } }
-    
-    async function deleteCurrentPVZ() {
-        if (!checkPassword() || Object.keys(allPVZData).length === 1) return;
-        if (confirm(`Удалить "${currentPVZ}"?`)) {
-            delete allPVZData[currentPVZ]; currentPVZ = Object.keys(allPVZData)[0];
-            renderTabs(); updatePVZEmployeesUI(); populateMonthSelect(); renderSchedule();
-            if (currentTab === 'analytics') renderAnalytics();
-            await saveAndSync();
-            showNotification(`❌ ПВЗ удалён`, false);
-        }
-    }
+    async function deleteCurrentPVZ() { if (!checkPassword() || Object.keys(allPVZData).length === 1) return; if (confirm(`Удалить "${currentPVZ}"?`)) { delete allPVZData[currentPVZ]; currentPVZ = Object.keys(allPVZData)[0]; renderTabs(); updatePVZEmployeesUI(); populateMonthSelect(); renderSchedule(); if (currentTab === 'analytics') renderAnalytics(); await saveAndSync(); showNotification(`❌ ПВЗ удалён`, false); } }
     
     function showDashboardPasswordModal(callback) {
         const overlay = document.createElement('div');
@@ -3261,43 +2463,16 @@
         input.focus();
     }
     
-    async function openDashboard() {
-        showDashboardPasswordModal(granted => {
-            if (granted) {
-                currentTab = 'dashboard'; renderTabs();
-                ["employeesTabContent","pvzTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none");
-                document.getElementById("dashboardTabContent").style.display = "block";
-                populateDashboardMonthSelect(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); populatePVZSelect();
-                renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); renderEmergencyContacts();
-                document.getElementById("dashboardMainTab").style.display = "block";
-                document.getElementById("dashboardExtraTab").style.display = "none";
-                document.getElementById("dashboardFinesTab").style.display = "none";
-                document.getElementById("dashboardEmergencyTab").style.display = "none";
-                showNotification("Доступ к дашборду открыт", false);
-            } else showNotification("Доступ запрещён", true);
-        });
-    }
+    async function openDashboard() { showDashboardPasswordModal(granted => { if (granted) { currentTab = 'dashboard'; renderTabs(); ["employeesTabContent","pvzTabContent","analyticsTabContent","emergencyContactsTabContent"].forEach(id => document.getElementById(id).style.display = "none"); document.getElementById("dashboardTabContent").style.display = "block"; populateDashboardMonthSelect(); populateExtraEmployeeSelect(); populateFineEmployeeSelect(); populatePVZSelect(); renderSalaryTable(); renderExtraWorksTable(); renderFinesTable(); renderEmergencyContacts(); document.getElementById("dashboardMainTab").style.display = "block"; document.getElementById("dashboardExtraTab").style.display = "none"; document.getElementById("dashboardFinesTab").style.display = "none"; document.getElementById("dashboardEmergencyTab").style.display = "none"; showNotification("Доступ к дашборду открыт", false); } else showNotification("Доступ запрещён", true); }); }
     
     function renderTabs() {
         const tabsLeft = document.getElementById("tabsLeft"), tabsRight = document.getElementById("tabsRight");
         if (!tabsLeft || !tabsRight) return;
         tabsLeft.innerHTML = '';
-        for (let pvz in allPVZData) {
-            const tab = document.createElement('button');
-            tab.className = `tab ${currentTab === pvz ? 'active' : ''}`;
-            tab.innerHTML = `📍 ${pvz}`; tab.onclick = () => switchTab(pvz);
-            tabsLeft.appendChild(tab);
-        }
-        const addBtn = document.createElement('button');
-        addBtn.className = 'add-tab-btn'; addBtn.innerHTML = '➕ Добавить ПВЗ'; addBtn.onclick = () => addNewPVZ();
-        tabsLeft.appendChild(addBtn);
+        for (let pvz in allPVZData) { const tab = document.createElement('button'); tab.className = `tab ${currentTab === pvz ? 'active' : ''}`; tab.innerHTML = `📍 ${pvz}`; tab.onclick = () => switchTab(pvz); tabsLeft.appendChild(tab); }
+        const addBtn = document.createElement('button'); addBtn.className = 'add-tab-btn'; addBtn.innerHTML = '➕ Добавить ПВЗ'; addBtn.onclick = () => addNewPVZ(); tabsLeft.appendChild(addBtn);
         tabsRight.innerHTML = '';
-        [['employees','👥 Все сотрудники'],['analytics','📊 Аналитика']].forEach(([id,label]) => {
-            const tab = document.createElement('button');
-            tab.className = `tab ${currentTab === id ? 'active' : ''}`;
-            tab.innerHTML = label; tab.onclick = () => switchTab(id);
-            tabsRight.appendChild(tab);
-        });
+        [['employees','👥 Все сотрудники'],['analytics','📊 Аналитика']].forEach(([id,label]) => { const tab = document.createElement('button'); tab.className = `tab ${currentTab === id ? 'active' : ''}`; tab.innerHTML = label; tab.onclick = () => switchTab(id); tabsRight.appendChild(tab); });
     }
     
     async function switchTab(tabId) {
@@ -3311,24 +2486,14 @@
         await saveAndSync();
     }
     
-    async function addNewPVZ() {
-        if (!checkPassword()) return;
-        let num = Object.keys(allPVZData).length + 1, name = `ПВЗ ${num}`;
-        while (allPVZData[name]) { num++; name = `ПВЗ ${num}`; }
-        allPVZData[name] = { employeesHistory: {}, schedules: {} };
-        await switchTab(name); await saveAndSync();
-        showNotification(`✅ ПВЗ "${name}" добавлен`, false);
-    }
+    async function addNewPVZ() { if (!checkPassword()) return; let num = Object.keys(allPVZData).length + 1, name = `ПВЗ ${num}`; while (allPVZData[name]) { num++; name = `ПВЗ ${num}`; } allPVZData[name] = { employeesHistory: {}, schedules: {} }; await switchTab(name); await saveAndSync(); showNotification(`✅ ПВЗ "${name}" добавлен`, false); }
     
     function openModal() { document.getElementById("botSettingsModal").style.display = "block"; document.getElementById("botTokenInput").value = botToken; }
     function closeModal() { document.getElementById("botSettingsModal").style.display = "none"; }
     function saveBotToken() { botToken = document.getElementById("botTokenInput").value.trim(); localStorage.setItem(BOT_TOKEN_KEY, botToken); closeModal(); showNotification(botToken ? "✅ Токен сохранён" : "❌ Токен удалён", false); }
     function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[m])); }
     
-    function updatePVZMonthName() {
-        const monthSpan = document.getElementById("currentMonthNameForPVZ");
-        if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`;
-    }
+    function updatePVZMonthName() { const monthSpan = document.getElementById("currentMonthNameForPVZ"); if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`; }
     
     async function initApp() {
         if (!await loadFromFirestore()) showNotification("⚠️ Не удалось загрузить данные.", true);
@@ -3337,21 +2502,8 @@
         document.getElementById("addToPVZBtn")?.addEventListener("click", addEmployeeToPVZ);
         document.getElementById("editPVZNameBtn")?.addEventListener("click", editCurrentPVZName);
         document.getElementById("deletePVZBtn")?.addEventListener("click", deleteCurrentPVZ);
-        document.getElementById("monthSelect")?.addEventListener("change", e => { 
-            [selectedYear, selectedMonth] = e.target.value.split("-").map(Number); 
-            updatePVZEmployeesUI(); 
-            renderSchedule();
-            updatePVZMonthName();
-        });
-        document.getElementById("goToCurrentMonthBtn")?.addEventListener("click", () => { 
-            const now = new Date(); 
-            selectedYear = now.getFullYear(); 
-            selectedMonth = now.getMonth() + 1; 
-            document.getElementById("monthSelect").value = `${selectedYear}-${selectedMonth}`; 
-            updatePVZEmployeesUI();
-            renderSchedule(); 
-            updatePVZMonthName();
-        });
+        document.getElementById("monthSelect")?.addEventListener("change", e => { [selectedYear, selectedMonth] = e.target.value.split("-").map(Number); updatePVZEmployeesUI(); renderSchedule(); updatePVZMonthName(); });
+        document.getElementById("goToCurrentMonthBtn")?.addEventListener("click", () => { const now = new Date(); selectedYear = now.getFullYear(); selectedMonth = now.getMonth() + 1; document.getElementById("monthSelect").value = `${selectedYear}-${selectedMonth}`; updatePVZEmployeesUI(); renderSchedule(); updatePVZMonthName(); });
         document.getElementById("scheduleGrid")?.addEventListener("click", toggleStatus);
         document.getElementById("sendTomorrowNotifyBtn")?.addEventListener("click", sendTomorrowNotifications);
         document.getElementById("sendTestNotifyBtn")?.addEventListener("click", sendTestNotification);
@@ -3372,33 +2524,15 @@
         document.getElementById("addMoreContactsBtn")?.addEventListener("click", addContactRow);
         document.querySelector(".close-doc-modal")?.addEventListener("click", closeDocViewer);
         document.getElementById("docViewerModal")?.addEventListener("click", function(e) { if (e.target === this) closeDocViewer(); });
-        
         document.querySelector(".close-edit-modal")?.addEventListener("click", closeEditContactsModal);
         document.getElementById("cancelEditBtn")?.addEventListener("click", closeEditContactsModal);
         document.getElementById("saveEditBtn")?.addEventListener("click", saveEditedContacts);
         document.getElementById("addEditContactBtn")?.addEventListener("click", () => addEditContactRow());
         document.getElementById("editContactsModal")?.addEventListener("click", function(e) { if (e.target === this) closeEditContactsModal(); });
-        
-        document.querySelectorAll('.sub-tab').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (btn.classList.contains('analytics-sub-tab')) return;
-                document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const subtab = btn.getAttribute('data-subtab');
-                document.getElementById("dashboardMainTab").style.display = subtab === 'main' ? "block" : "none";
-                document.getElementById("dashboardExtraTab").style.display = subtab === 'extra' ? "block" : "none";
-                document.getElementById("dashboardFinesTab").style.display = subtab === 'fines' ? "block" : "none";
-                document.getElementById("dashboardEmergencyTab").style.display = subtab === 'emergency' ? "block" : "none";
-                if (subtab === 'extra') { renderExtraWorksTable(); populateExtraEmployeeSelect(); populatePVZSelect(); }
-                if (subtab === 'fines') { renderFinesTable(); populateFineEmployeeSelect(); }
-                if (subtab === 'emergency') renderEmergencyContacts();
-            });
-        });
-        
+        document.querySelectorAll('.sub-tab').forEach(btn => { btn.addEventListener('click', () => { if (btn.classList.contains('analytics-sub-tab')) return; document.querySelectorAll('.sub-tab').forEach(b => b.classList.remove('active')); btn.classList.add('active'); const subtab = btn.getAttribute('data-subtab'); document.getElementById("dashboardMainTab").style.display = subtab === 'main' ? "block" : "none"; document.getElementById("dashboardExtraTab").style.display = subtab === 'extra' ? "block" : "none"; document.getElementById("dashboardFinesTab").style.display = subtab === 'fines' ? "block" : "none"; document.getElementById("dashboardEmergencyTab").style.display = subtab === 'emergency' ? "block" : "none"; if (subtab === 'extra') { renderExtraWorksTable(); populateExtraEmployeeSelect(); populatePVZSelect(); } if (subtab === 'fines') { renderFinesTable(); populateFineEmployeeSelect(); } if (subtab === 'emergency') renderEmergencyContacts(); }); });
         document.querySelector(".close")?.addEventListener("click", closeModal);
         window.addEventListener("click", e => { if (e.target === document.getElementById("botSettingsModal")) closeModal(); });
         document.getElementById("saveBotTokenBtn")?.addEventListener("click", saveBotToken);
-        
         window.uploadDocument = uploadDocument;
         window.deleteDocument = deleteDocument;
         window.openDocViewer = openDocViewer;
@@ -3407,7 +2541,6 @@
         window.openEditContactsModal = openEditContactsModal;
         window.filterAnalyticsTable = filterAnalyticsTable;
         window._emergencyContacts = emergencyContacts;
-        
         await switchTab(currentPVZ);
     }
     
