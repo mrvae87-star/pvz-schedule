@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -982,7 +983,7 @@
     <h1>
         🏪 График сотрудников
         <div class="header-buttons">
-                      <button id="employeesCornerBtn" class="header-corner-btn">👥 Все сотрудники</button>
+            <button id="employeesCornerBtn" class="header-corner-btn">👥 Все сотрудники</button>
             <button id="analyticsCornerBtn" class="header-corner-btn">📊 Аналитика</button>
             <button id="dashboardCornerBtn" class="header-corner-btn">💰 Дашборд</button>
             <button id="chatCornerBtn" class="header-corner-btn chat-corner-btn">💬 Чат</button>
@@ -995,13 +996,11 @@
     </div>
     
     <div id="employeesTabContent" style="display: none;">
-        <!-- Подвкладки внутри "Все сотрудники" -->
         <div class="employees-sub-tabs">
             <button class="employees-sub-tab active" data-employees-subtab="list">📋 Список сотрудников</button>
             <button class="employees-sub-tab" data-employees-subtab="emergency">🆘 Экстренные контакты</button>
         </div>
         
-        <!-- Подвкладка "Список сотрудников" -->
         <div id="employeesListSubtab">
             <div class="employees-table-container">
                 <table class="employees-table">
@@ -1020,7 +1019,6 @@
             </div>
         </div>
         
-        <!-- Подвкладка "Экстренные контакты" внутри "Все сотрудники" -->
         <div id="employeesEmergencySubtab" style="display: none;">
             <div class="emergency-contacts-container">
                 <h3>🆘 Экстренные контакты сотрудников</h3>
@@ -1396,7 +1394,6 @@
     let emergencyContacts = {};
     let currentEditingEmployee = null;
     
-    // Данные чата
     let chatMessages = [];
     let chatUnsubscribe = null;
     let lastMessageTimestamp = 0;
@@ -1411,7 +1408,6 @@
         application: { label: '📄 Заявление на расчет', icon: '📄' }
     };
     
-    // Инициализация звука уведомления
     function initNotificationSound() {
         try {
             notificationSound = new Audio('data:audio/wav;base64,U3RlYWx0aCBzb3VuZA==');
@@ -1426,9 +1422,11 @@
         }
     }
     
-    // Функции чата
+    // ========== ФУНКЦИИ ЧАТА ==========
+    
     function getCurrentEmployeeName() {
-        return "Администратор";
+        const pvzSelect = document.getElementById("chatPVZSelect");
+        return pvzSelect ? pvzSelect.value : "Неизвестный ПВЗ";
     }
     
     async function loadChatMessages() {
@@ -1461,7 +1459,6 @@
                 
                 renderChatMessages();
                 
-                // Проверяем, есть ли новые сообщения
                 const hasNew = allDocs.some(m => m.timestamp.getTime() > lastMessageTimestamp - 5000);
                 if (hasNew && document.getElementById("chatTabContent")?.style.display === "block") {
                     playNotificationSound();
@@ -1489,10 +1486,10 @@
             return;
         }
         
-        const currentEmployee = getCurrentEmployeeName();
+        const currentPVZ = getCurrentEmployeeName();
         
         container.innerHTML = chatMessages.map(msg => {
-            const isOwn = msg.author === currentEmployee;
+            const isOwn = msg.author === currentPVZ;
             const timeStr = msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const dateStr = msg.timestamp.toLocaleDateString();
             
@@ -1510,14 +1507,13 @@
                 attachmentsHtml += '</div>';
             }
             
-            // Кнопка удаления - только смайлик, справа от даты
             const deleteBtnHtml = `<button class="delete-message-btn" onclick="deleteChatMessage('${msg.id}')" title="Удалить сообщение">🗑</button>`;
             
             return `
                 <div class="message ${isOwn ? 'message-own' : ''}">
                     <div class="message-header">
-                        <span class="message-author">${escapeHtml(msg.author)}</span>
-                        <span class="message-pvz">📍 ${escapeHtml(msg.pvz)}</span>
+                        <span class="message-author">📍 ${escapeHtml(msg.author)}</span>
+                        <span class="message-pvz">🏪 ${escapeHtml(msg.pvz)}</span>
                         <span class="message-time">${dateStr} ${timeStr} ${deleteBtnHtml}</span>
                     </div>
                     <div class="message-text">${escapeHtml(msg.text).replace(/\n/g, '<br>')}</div>
@@ -1529,9 +1525,7 @@
         container.scrollTop = container.scrollHeight;
     }
     
-    // Функция для удаления сообщения администратором
     window.deleteChatMessage = async function(messageId) {
-        // Запрашиваем пароль администратора для удаления
         const password = prompt("Введите пароль администратора для удаления сообщения:");
         if (password !== CHAT_DELETE_PASSWORD) {
             showNotification("❌ Неверный пароль!", true);
@@ -1548,7 +1542,147 @@
     };
     
     window.openChatAttachment = function(url) {
-        window.open(url, '_blank');
+        if (!url) {
+            showNotification("❌ Ссылка на файл отсутствует", true);
+            return;
+        }
+        
+        if (url.startsWith('data:')) {
+            try {
+                const isImage = url.startsWith('data:image');
+                
+                const win = window.open('', '_blank');
+                if (!win) {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'file';
+                    link.click();
+                    return;
+                }
+                
+                win.document.write(`
+                    <html>
+                        <head>
+                            <title>Файл</title>
+                            <style>
+                                * { margin: 0; padding: 0; box-sizing: border-box; }
+                                body {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    min-height: 100vh;
+                                    background: #f0f4f8;
+                                    font-family: system-ui, sans-serif;
+                                }
+                                .file-container {
+                                    background: white;
+                                    border-radius: 20px;
+                                    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+                                    width: 95%;
+                                    max-width: 900px;
+                                    height: 90vh;
+                                    max-height: 800px;
+                                    display: flex;
+                                    flex-direction: column;
+                                    padding: 20px;
+                                }
+                                .file-header {
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                    margin-bottom: 16px;
+                                    padding-bottom: 12px;
+                                    border-bottom: 2px solid #e2e8f0;
+                                }
+                                .file-header h2 {
+                                    font-size: 1.1rem;
+                                    color: #1e293b;
+                                }
+                                .file-viewer {
+                                    flex: 1;
+                                    overflow: auto;
+                                    background: #f8fafc;
+                                    border-radius: 12px;
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                }
+                                .file-viewer iframe,
+                                .file-viewer img {
+                                    width: 100%;
+                                    height: 100%;
+                                    border: none;
+                                    border-radius: 8px;
+                                    object-fit: contain;
+                                }
+                                .close-btn {
+                                    padding: 8px 24px;
+                                    background: #3b82f6;
+                                    color: white;
+                                    border: none;
+                                    border-radius: 40px;
+                                    cursor: pointer;
+                                    font-weight: 500;
+                                    font-size: 0.9rem;
+                                }
+                                .close-btn:hover {
+                                    background: #2563eb;
+                                }
+                                .download-btn {
+                                    padding: 8px 20px;
+                                    background: #e2e8f0;
+                                    color: #1e293b;
+                                    border: none;
+                                    border-radius: 40px;
+                                    cursor: pointer;
+                                    font-weight: 500;
+                                    font-size: 0.9rem;
+                                    margin-right: 10px;
+                                }
+                                .download-btn:hover {
+                                    background: #cbd5e1;
+                                }
+                                .file-actions {
+                                    display: flex;
+                                    gap: 8px;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="file-container">
+                                <div class="file-header">
+                                    <h2>📎 Просмотр файла</h2>
+                                    <div class="file-actions">
+                                        <button class="download-btn" onclick="downloadFile()">⬇ Скачать</button>
+                                        <button class="close-btn" onclick="window.close()">✕ Закрыть</button>
+                                    </div>
+                                </div>
+                                <div class="file-viewer">
+                                    ${isImage ? `<img src="${url}" alt="Изображение">` : `<iframe src="${url}"></iframe>`}
+                                </div>
+                            </div>
+                            <script>
+                                function downloadFile() {
+                                    const link = document.createElement('a');
+                                    link.href = '${url}';
+                                    link.download = 'file';
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }
+                            <\/script>
+                        </body>
+                    </html>
+                `);
+                win.document.close();
+                
+            } catch (e) {
+                console.error("Ошибка открытия файла:", e);
+                showNotification("❌ Не удалось открыть файл", true);
+            }
+        } else {
+            window.open(url, '_blank');
+        }
     };
     
     function compressImageForChat(file, maxWidth = 800, maxHeight = 800, quality = 0.7) {
@@ -1636,7 +1770,7 @@
         
         const message = {
             text: text,
-            author: getCurrentEmployeeName(),
+            author: selectedPVZ,
             pvz: selectedPVZ,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             attachments: attachments
@@ -1676,13 +1810,14 @@
         } else {
             renderChatMessages();
         }
-        // Убираем индикатор с кнопки
         const chatBtn = document.getElementById("chatCornerBtn");
         if (chatBtn) {
             const indicator = chatBtn.querySelector(".new-message-indicator");
             if (indicator) indicator.remove();
         }
     }
+    
+    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ ==========
     
     function getPVZColorClass(pvzName) {
         const pvzColors = {
@@ -2269,58 +2404,139 @@
         globalEmployees.forEach(emp => { const option = document.createElement("option"); option.value = emp.fullName; option.textContent = emp.fullName; select.appendChild(option); });
     }
     
-    function addContactRow() {
-        const container = document.getElementById("publicContactsContainer");
-        const newRow = document.createElement('div');
-        newRow.className = 'emergency-form-row contact-row';
-        newRow.innerHTML = `<input type="text" class="contact-name-input" placeholder="ФИО контакта *"><input type="text" class="contact-phone-input" placeholder="Телефон *"><input type="text" class="contact-relation-input" placeholder="Кем приходится"><button type="button" class="delete-contact-btn remove-contact-row">✕</button>`;
-        container.appendChild(newRow);
-        newRow.querySelector('.remove-contact-row').addEventListener('click', () => { if (container.querySelectorAll('.contact-row').length > 1) newRow.remove(); else showNotification("Должен быть хотя бы один контакт", true); });
-        updateRemoveButtons();
-    }
+    // ========== ФУНКЦИИ ДЛЯ ЭКСТРЕННЫХ КОНТАКТОВ (ИСПРАВЛЕННЫЕ) ==========
     
-    function updateRemoveButtons() {
-        const rows = document.querySelectorAll('#publicContactsContainer .contact-row');
-        rows.forEach(row => { const btn = row.querySelector('.remove-contact-row'); if (btn) btn.style.display = rows.length > 1 ? 'inline-flex' : 'none'; });
+    function loadPublicEmergencyForm() { 
+        populatePublicEmployeeSelect(); 
+        clearPublicEmergencyForm(); 
+        document.getElementById("emergencyFormBlock").style.display = "block"; 
+        document.getElementById("emergencySuccessMessage").style.display = "none"; 
     }
     
     function clearPublicEmergencyForm() {
         document.getElementById("publicEmployeeSelect").value = "";
         document.getElementById("publicEmployeeAddress").value = "";
         const container = document.getElementById("publicContactsContainer");
-        container.innerHTML = `<div class="emergency-form-row contact-row"><input type="text" class="contact-name-input" placeholder="ФИО контакта *"><input type="text" class="contact-phone-input" placeholder="Телефон *"><input type="text" class="contact-relation-input" placeholder="Кем приходится"><button type="button" class="delete-contact-btn remove-contact-row" style="display: none;">✕</button></div>`;
+        container.innerHTML = `
+            <div class="emergency-form-row contact-row">
+                <input type="text" class="contact-name-input" placeholder="ФИО контакта *">
+                <input type="text" class="contact-phone-input" placeholder="Телефон *">
+                <input type="text" class="contact-relation-input" placeholder="Кем приходится">
+                <button type="button" class="delete-contact-btn remove-contact-row" style="display: none;">✕</button>
+            </div>
+        `;
         const newRow = container.querySelector('.contact-row');
-        if (newRow) newRow.querySelector('.remove-contact-row').addEventListener('click', () => { if (container.querySelectorAll('.contact-row').length > 1) { newRow.remove(); updateRemoveButtons(); } else showNotification("Должен быть хотя бы один контакт", true); });
+        if (newRow) {
+            const removeBtn = newRow.querySelector('.remove-contact-row');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', () => {
+                    if (container.querySelectorAll('.contact-row').length > 1) {
+                        newRow.remove();
+                        updateRemoveButtons();
+                    } else {
+                        showNotification("Должен быть хотя бы один контакт", true);
+                    }
+                });
+            }
+        }
         updateRemoveButtons();
     }
     
-    function loadPublicEmergencyForm() { populatePublicEmployeeSelect(); clearPublicEmergencyForm(); document.getElementById("emergencyFormBlock").style.display = "block"; document.getElementById("emergencySuccessMessage").style.display = "none"; }
+    function updateRemoveButtons() {
+        const rows = document.querySelectorAll('#publicContactsContainer .contact-row');
+        rows.forEach(row => { 
+            const btn = row.querySelector('.remove-contact-row'); 
+            if (btn) btn.style.display = rows.length > 1 ? 'inline-flex' : 'none'; 
+        });
+    }
     
+    function addContactRow() {
+        const container = document.getElementById("publicContactsContainer");
+        const newRow = document.createElement('div');
+        newRow.className = 'emergency-form-row contact-row';
+        newRow.innerHTML = `
+            <input type="text" class="contact-name-input" placeholder="ФИО контакта *">
+            <input type="text" class="contact-phone-input" placeholder="Телефон *">
+            <input type="text" class="contact-relation-input" placeholder="Кем приходится">
+            <button type="button" class="delete-contact-btn remove-contact-row">✕</button>
+        `;
+        container.appendChild(newRow);
+        const removeBtn = newRow.querySelector('.remove-contact-row');
+        if (removeBtn) {
+            removeBtn.addEventListener('click', () => { 
+                if (container.querySelectorAll('.contact-row').length > 1) {
+                    newRow.remove(); 
+                    updateRemoveButtons(); 
+                } else {
+                    showNotification("Должен быть хотя бы один контакт", true);
+                }
+            });
+        }
+        updateRemoveButtons();
+    }
+    
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ СОХРАНЕНИЯ
     async function savePublicEmergencyContacts() {
         const selectedEmployee = document.getElementById("publicEmployeeSelect").value;
-        if (!selectedEmployee) { alert("Выберите сотрудника из списка"); return; }
+        if (!selectedEmployee) {
+            alert("Выберите сотрудника из списка");
+            return;
+        }
+        
         const address = document.getElementById("publicEmployeeAddress").value.trim();
-        if (!address) { alert("Введите место проживания"); return; }
+        if (!address) {
+            alert("Введите место проживания");
+            return;
+        }
+        
         const contacts = [];
         const rows = document.querySelectorAll('#publicContactsContainer .contact-row');
-        let hasError = false;
+        
         rows.forEach(row => {
-            const name = row.querySelector('.contact-name-input').value.trim();
-            const phone = row.querySelector('.contact-phone-input').value.trim();
-            const relation = row.querySelector('.contact-relation-input').value.trim();
-            if (!name || !phone) hasError = true;
-            if (name && phone) contacts.push({ id: Date.now().toString() + Math.random().toString(), contactName: name, contactPhone: phone, relation: relation });
+            const nameInput = row.querySelector('.contact-name-input');
+            const phoneInput = row.querySelector('.contact-phone-input');
+            const relationInput = row.querySelector('.contact-relation-input');
+            
+            const name = nameInput ? nameInput.value.trim() : '';
+            const phone = phoneInput ? phoneInput.value.trim() : '';
+            const relation = relationInput ? relationInput.value.trim() : '';
+            
+            if (name && phone) {
+                contacts.push({
+                    id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
+                    contactName: name,
+                    contactPhone: phone,
+                    relation: relation || ''
+                });
+            }
         });
-        if (hasError || contacts.length === 0) { alert("Заполните все обязательные поля (ФИО и телефон) хотя бы для одного контакта"); return; }
-        if (!emergencyContacts[selectedEmployee]) emergencyContacts[selectedEmployee] = { address: "", contacts: [], documents: {} };
+        
+        if (contacts.length === 0) {
+            alert("Заполните все обязательные поля (ФИО и телефон) хотя бы для одного контакта");
+            return;
+        }
+        
+        if (!emergencyContacts[selectedEmployee]) {
+            emergencyContacts[selectedEmployee] = { address: "", contacts: [], documents: {} };
+        }
+        
         emergencyContacts[selectedEmployee].address = address;
         emergencyContacts[selectedEmployee].contacts = contacts;
+        
         await autoSaveSalary();
+        
         document.getElementById("emergencyFormBlock").style.display = "none";
         document.getElementById("emergencySuccessMessage").style.display = "block";
         showNotification("✅ Экстренные контакты сохранены!", false);
-        setTimeout(() => { clearPublicEmergencyForm(); document.getElementById("emergencyFormBlock").style.display = "block"; document.getElementById("emergencySuccessMessage").style.display = "none"; }, 3000);
+        
+        setTimeout(() => {
+            clearPublicEmergencyForm();
+            document.getElementById("emergencyFormBlock").style.display = "block";
+            document.getElementById("emergencySuccessMessage").style.display = "none";
+        }, 3000);
     }
+    
+    // ========== ОСТАЛЬНЫЕ ФУНКЦИИ ==========
     
     function populateAnalyticsSelects() {
         const yearSelect = document.getElementById("analyticsYearSelect");
@@ -2831,7 +3047,6 @@
         for (let pvz in allPVZData) { const tab = document.createElement('button'); tab.className = `tab ${currentTab === pvz ? 'active' : ''}`; tab.innerHTML = `📍 ${pvz}`; tab.onclick = () => switchTab(pvz); tabsLeft.appendChild(tab); }
         const addBtn = document.createElement('button'); addBtn.className = 'add-tab-btn'; addBtn.innerHTML = '➕ Добавить ПВЗ'; addBtn.onclick = () => addNewPVZ(); tabsLeft.appendChild(addBtn);
         tabsRight.innerHTML = '';
-       
     }
     
     async function switchTab(tabId) {
@@ -2840,7 +3055,6 @@
             currentTab = 'employees'; 
             document.getElementById("employeesTabContent").style.display = "block"; 
             renderGlobalEmployeesTable();
-            // Показываем подвкладку "Список сотрудников" по умолчанию
             showEmployeesSubtab('list');
         }
         else if (tabId === 'dashboard') { await openDashboard(); return; }
@@ -2852,7 +3066,6 @@
         await saveAndSync();
     }
     
-    // Функция для переключения подвкладок внутри "Все сотрудники"
     function showEmployeesSubtab(subtabId) {
         document.getElementById("employeesListSubtab").style.display = subtabId === 'list' ? 'block' : 'none';
         document.getElementById("employeesEmergencySubtab").style.display = subtabId === 'emergency' ? 'block' : 'none';
@@ -2875,7 +3088,6 @@
     
     function updatePVZMonthName() { const monthSpan = document.getElementById("currentMonthNameForPVZ"); if (monthSpan) monthSpan.textContent = `${getMonthName(selectedMonth)} ${selectedYear}`; }
     
-    // Функции для кнопок в хедере
     function openEmployeesTab() {
         switchTab('employees');
     }
@@ -2885,7 +3097,6 @@
         renderTabs();
         initNotificationSound();
         
-        // Обработчики для подвкладок внутри "Все сотрудники"
         document.querySelectorAll('.employees-sub-tab').forEach(btn => {
             btn.addEventListener('click', () => {
                 const subtab = btn.getAttribute('data-employees-subtab');
@@ -2893,7 +3104,6 @@
             });
         });
         
-        // Обработчики для кнопок в хедере
         document.getElementById("employeesCornerBtn")?.addEventListener("click", openEmployeesTab);
         document.getElementById("analyticsCornerBtn")?.addEventListener("click", () => switchTab('analytics'));
         document.getElementById("emergencyCornerBtn")?.addEventListener("click", () => switchTab('emergency'));
@@ -2917,10 +3127,15 @@
         document.getElementById("mobileYearSelect")?.addEventListener("change", refreshAnalytics);
         document.getElementById("mobileMonthSelect")?.addEventListener("change", refreshAnalytics);
         document.getElementById("mobileEmployeeSelect")?.addEventListener("change", () => renderMobileAnalytics());
-        document.getElementById("savePublicEmergencyContactsBtn")?.addEventListener("click", savePublicEmergencyContacts);
+        
+        // ИСПРАВЛЕННЫЙ ОБРАБОТЧИК ДЛЯ КНОПКИ СОХРАНЕНИЯ
+        document.getElementById("savePublicEmergencyContactsBtn")?.addEventListener("click", function(e) {
+            e.preventDefault();
+            savePublicEmergencyContacts();
+        });
+        
         document.getElementById("addMoreContactsBtn")?.addEventListener("click", addContactRow);
         
-        // Чат
         document.getElementById("chatSendBtn")?.addEventListener("click", sendChatMessage);
         document.getElementById("chatMessageInput")?.addEventListener("keypress", (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChatMessage(); } });
         document.getElementById("chatFileBtn")?.addEventListener("click", () => document.getElementById("chatFileInput").click());
