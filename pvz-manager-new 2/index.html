@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>График сотрудников ПВЗ</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-size='80'%3E🏪%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components/modal.css">
+    <link rel="stylesheet" href="css/components/dashboard.css">
+</head>
+<body>
+
+<!-- ======================================== -->
+<!-- ЭКРАН ВХОДА (ПРОСТОЙ ПАРОЛЬ) -->
+<!-- ======================================== -->
+<div id="loginScreen" class="login-screen">
+    <div class="login-card">
+        <h2>🔐 Вход в систему</h2>
+        <p>Введите пароль для доступа к графику</p>
+        <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="off">
+        <button id="submitLoginBtn">Войти</button>
+        <div id="loginError" class="error-msg"></div>
+    </div>
+</div>
+
+<!-- ======================================== -->
+<!-- ГЛАВНОЕ ПРИЛОЖЕНИЕ -->
+<!-- ======================================== -->
+<div id="mainAppContent" class="main-content" style="display:none;">
+    <div class="container">
+        
+        <!-- ШАПКА -->
+        <h1>
+            🏪 График сотрудников
+          <div class="header-buttons">
+    <button id="employeesCornerBtn" class="header-corner-btn">👥 Все сотрудники</button>
+    <button id="analyticsCornerBtn" class="header-corner-btn">📊 Аналитика</button>
+    <button id="dashboardCornerBtn" class="header-corner-btn">💰 Дашборд</button>
+    <button id="importantCornerBtn" class="header-corner-btn" style="background: #f59e0b; color: white;">⚠️ Важно знать</button>
+    <button id="checkinCornerBtn" class="header-corner-btn" style="background: #22c55e; color: white;">✅ Чекин</button>
+</div>
+        </h1>
+
+        <!-- ПЛАШКА "ЕСТЬ НОВОЕ" (появляется сама на 3 дня после добавления записи) -->
+        <div id="newNoticeBanner" style="display: none; cursor: pointer; background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; padding: 14px 20px; border-radius: 14px; margin-bottom: 16px; font-weight: 600; text-align: center; box-shadow: 0 4px 12px rgba(239,68,68,0.3);">
+            ⚠️ Появилась новая информация в разделе «Важно знать» — нажмите, чтобы посмотреть
+        </div>
+        
+        <!-- ВКЛАДКИ ПВЗ -->
+        <div class="tabs-wrapper">
+            <div class="tabs-left" id="tabsLeft"></div>
+            <div class="tabs-right" id="tabsRight"></div>
+        </div>
+        
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: СОТРУДНИКИ -->
+        <!-- ======================================== -->
+        <div id="employeesTabContent" style="display: none;">
+            <div class="employees-sub-tabs" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                    <button class="employees-sub-tab active" data-employees-subtab="list">📋 Список сотрудников</button>
+                    <button class="employees-sub-tab" data-employees-subtab="emergency">🆘 Экстренные контакты</button>
+                </div>
+                <button id="unlockAdminEmployeesBtn" style="background: #64748b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;">🔒 Админ</button>
+            </div>
+            
+            <div id="employeesListSubtab">
+                <div class="employees-table-container">
+                    <table class="employees-table">
+                        <thead>
+                            <tr>
+                                <th>Имя</th>
+                                <th>Фамилия</th>
+                                <th>Email</th>
+                                <th>Телефон</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employeesTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="add-employee-form">
+                    <input type="text" id="newEmpName" placeholder="Имя *">
+                    <input type="text" id="newEmpSurname" placeholder="Фамилия *">
+                    <input type="email" id="newEmpEmail" placeholder="Email">
+                    <input type="tel" id="newEmpPhone" placeholder="Телефон">
+                    <button id="addEmployeeBtnGlobal">➕ Добавить сотрудника</button>
+                </div>
+            </div>
+            
+            <div id="employeesEmergencySubtab" style="display: none;">
+                <div class="emergency-contacts-container">
+                    <h3>🆘 Экстренные контакты сотрудников</h3>
+                    <p style="color: #64748b; margin-bottom: 20px;">Заполните информацию для экстренной связи.</p>
+                    <div id="emergencyFormBlock">
+                        <div class="emergency-form">
+                            <h3>📝 Выберите сотрудника</h3>
+                            <div class="emergency-form-row">
+                                <select id="publicEmployeeSelect">
+                                    <option value="">-- Выберите сотрудника из списка --</option>
+                                </select>
+                            </div>
+                            <div class="emergency-form-row">
+                                <input type="text" id="publicEmployeeAddress" placeholder="Место проживания *">
+                            </div>
+                            <h3 style="margin-top: 20px;">👤 Дополнительные контакты</h3>
+                            <div id="publicContactsContainer">
+                                <div class="emergency-form-row contact-row">
+                                    <input type="text" class="contact-name-input" placeholder="ФИО контакта *">
+                                    <input type="text" class="contact-phone-input" placeholder="Телефон *">
+                                    <input type="text" class="contact-relation-input" placeholder="Кем приходится">
+                                    <button type="button" class="delete-contact-btn remove-contact-row" style="display: none;">✕</button>
+                                </div>
+                            </div>
+                            <button id="addMoreContactsBtn" class="add-contact-btn" style="background: #64748b; margin-right: 10px;">➕ Добавить ещё контакт</button>
+                            <button id="savePublicEmergencyContactsBtn" class="save-contacts-btn">💾 Сохранить данные</button>
+                        </div>
+                    </div>
+                    <div id="emergencySuccessMessage" style="display: none;">
+                        <div class="success-message">
+                            <h3>✅ Данные сохранены!</h3>
+                            <p>Экстренные контакты сохранены.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: ГРАФИК ПВЗ -->
+        <!-- ======================================== -->
+        <div id="pvzTabContent" style="display: none;">
+            <div class="month-selector">
+                <label>📅 Выберите месяц:</label>
+                <select id="monthSelect"></select>
+                <button id="goToCurrentMonthBtn" class="current-month-badge">📅 Текущий месяц</button>
+            </div>
+            
+            <div class="current-month-container">
+                <div class="current-header" id="currentMonthTitle" style="text-align: center; font-size: 1.4rem; font-weight: 700; color: #1e293b; padding: 16px 0;"></div>
+                <div class="table-wrapper">
+                    <table class="schedule-table" id="scheduleGrid">
+                        <thead id="tableHeader"></thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="pvz-employees-management" style="margin-top: 20px;">
+                <h3>👥 Сотрудники ПВЗ <span id="currentPVZName"></span> за <span id="currentMonthNameForPVZ"></span></h3>
+                <div class="employee-selector">
+                    <select id="availableEmployeesSelect">
+                        <option value="">-- Выберите сотрудника --</option>
+                    </select>
+                    <button id="addToPVZBtn" style="background:#dcfce7; color:#15803d;">➕ Добавить в ПВЗ</button>
+                </div>
+                <div class="pvz-employees-list" id="pvzEmployeesList"></div>
+            </div>
+        </div>
+        
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: ДАШБОРД -->
+        <!-- ======================================== -->
+        <div id="dashboardTabContent" style="display: none;">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h2>💰 Расчётная плата сотрудников</h2>
+                </div>
+                <div class="dashboard-sub-tabs">
+                    <button class="sub-tab active" data-subtab="main">📊 Основной расчёт</button>
+                    <button class="sub-tab" data-subtab="extra">📋 Подработки</button>
+                    <button class="sub-tab" data-subtab="fines">💰 Штрафы</button>
+                    <button class="sub-tab" data-subtab="emergency">🆘 Экстренные контакты</button>
+                    <button class="sub-tab" data-subtab="settings">⚙️ Настройки</button>
+                    <button class="sub-tab" data-subtab="archive">🗃 Архив</button>
+                </div>
+                
+                <div id="dashboardMainTab">
+                    <div class="dashboard-month-selector">
+                        <label>📅 Месяц расчёта:</label>
+                        <select id="dashboardMonthSelect"></select>
+                        <button id="refreshSalaryBtn" style="background:#3b82f6; color:white; border:none; padding:6px 16px; border-radius:40px; cursor:pointer;">🔄 Обновить</button>
+                    </div>
+                    <div class="salary-table-wrapper">
+                        <table class="salary-table" id="salaryTable">
+                            <thead>
+                                <tr>
+                                    <th>Имя сотрудника</th>
+                                    <th>Раб. дней</th>
+                                    <th>Ставка руб.</th>
+                                    <th>Подработка</th>
+                                    <th>Дней стажер</th>
+                                    <th>Ставка стажер</th>
+                                    <th>Аванс руб.</th>
+                                    <th>Перевод на счет</th>
+                                    <th>Штраф руб.</th>
+                                    <th>Итого на руки</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salaryTableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="total-salary-wrapper">
+                        <div class="total-salary-row">
+                            💰 Итого за месяц: <span id="totalSalaryAmount">0</span> ₽
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboardExtraTab" style="display: none;">
+                    <div class="extra-work-section">
+                        <h3>➕ Добавить подработку</h3>
+                        <div class="extra-work-form">
+                            <div class="form-field-compact">
+                                <label>👤 Сотр.</label>
+                                <select id="extraEmployeeSelect"><option value="">-- Выберите --</option></select>
+                            </div>
+                            <div class="form-field-compact">
+                                <label>🏪 ПВЗ</label>
+                                <select id="extraPVZSelect"><option value="">-- Выберите --</option></select>
+                            </div>
+                            <div class="form-field-compact">
+                                <label>📅 Дата</label>
+                                <input type="date" id="extraDate">
+                            </div>
+                            <div class="form-field-compact">
+                                <label>⏱️ Часы</label>
+                                <input type="number" id="extraHours" placeholder="0" step="0.5" style="width:80px;">
+                            </div>
+                            <div class="form-field-compact">
+                                <label>💰 Ставка/час</label>
+                                <input type="number" id="extraHourlyRate" placeholder="200" step="50" value="200" style="width:90px;">
+                            </div>
+                            <div class="form-field-compact">
+                                <label>📝 Комментарий</label>
+                                <input type="text" id="extraDesc" placeholder="Кратко" style="width:120px;">
+                            </div>
+                            <button id="addExtraWorkBtn">✅ Добавить</button>
+                        </div>
+                        <h3>📜 История подработок</h3>
+                        <div class="extra-work-list">
+                            <table class="extra-work-table">
+                                <thead><tr><th>Сотрудник</th><th>ПВЗ</th><th>Дата</th><th>Часы</th><th>Ставка</th><th>Комментарий</th><th>Сумма</th><th>Действие</th></tr></thead>
+                                <tbody id="extraWorkTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboardFinesTab" style="display: none;">
+                    <div class="extra-work-section">
+                        <h3>➕ Добавить штраф</h3>
+                        <div class="extra-work-form">
+                            <div class="form-field-compact">
+                                <label>👤 Сотр.</label>
+                                <select id="fineEmployeeSelect"><option value="">-- Выберите --</option></select>
+                            </div>
+                            <div class="form-field-compact">
+                                <label>📅 Дата</label>
+                                <input type="date" id="fineDate">
+                            </div>
+                            <div class="form-field-compact">
+                                <label>💰 Сумма</label>
+                                <input type="number" id="fineAmount" placeholder="0" step="100" value="1000" style="width:120px;">
+                            </div>
+                            <div class="form-field-compact">
+                                <label>📝 Примечание</label>
+                                <input type="text" id="fineDesc" placeholder="Причина" style="width:150px;">
+                            </div>
+                            <button id="addFineBtn">✅ Добавить</button>
+                        </div>
+                        <h3>📜 История штрафов</h3>
+                        <div class="extra-work-list">
+                            <table class="extra-work-table">
+                                <thead><tr><th>Сотрудник</th><th>Дата</th><th>Сумма</th><th>Примечание</th><th>Действие</th></tr></thead>
+                                <tbody id="finesTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboardEmergencyTab" style="display: none;">
+                    <div class="emergency-contacts-container">
+                        <h3>🆘 Экстренные контакты</h3>
+                        <div class="search-box">
+                            <label>🔍 Поиск:</label>
+                            <input type="text" id="emergencySearchInput" placeholder="Введите имя..." oninput="filterEmergencyContacts()">
+                        </div>
+                        <div id="emergencyContactsList"></div>
+                    </div>
+                </div>
+
+                <div id="dashboardSettingsTab" style="display: none;">
+                    <div id="pvzTimeSettings" style="background: white; border: 2px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                            <h3 style="margin: 0; color: #1e293b; font-size: 1rem;">⚙️ Время открытия ПВЗ</h3>
+                            <button id="toggleTimeSettingsBtn" style="background: #64748b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;">🔒 Админ</button>
+                        </div>
+                        <div id="timeSettingsContent" style="display: none;">
+                            <p style="color: #64748b; font-size: 0.8rem; margin-bottom: 12px;">Установите время открытия для каждого ПВЗ.</p>
+                            <div id="pvzTimeList"></div>
+                            <button id="savePvzTimesBtn" style="width: 100%; margin-top: 12px; background: #3b82f6; color: white; border: none; padding: 10px; border-radius: 40px; cursor: pointer; font-size: 0.95rem;">💾 Сохранить настройки</button>
+
+                            <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #e2e8f0;">
+                                <h4 style="margin: 0 0 6px 0; font-size: 0.9rem; color: #1e293b;">📞 Номера для звонка при пропуске чекина</h4>
+                                <p style="color: #64748b; font-size: 0.8rem; margin-bottom: 12px;">На эти номера сервис автоматически позвонит, если сотрудник не отметился вовремя.</p>
+                                <div id="zvonokBalanceBlock" style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 10px 14px; margin-bottom: 12px; font-size: 0.85rem; color: #0369a1;"></div>
+                                <div id="managerPhonesList"></div>
+                                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                                    <input type="text" id="newManagerPhoneInput" placeholder="Например: 79161234567" style="flex: 1; padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem;">
+                                    <button id="addManagerPhoneBtn" style="background: #22c55e; color: white; border: none; padding: 10px 18px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; white-space: nowrap;">➕ Добавить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="allStaffStatus" style="background: white; border: 2px solid #e2e8f0; border-radius: 16px; padding: 16px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                            <h3 style="margin: 0; color: #1e293b; font-size: 1rem;">📊 Статус сотрудников</h3>
+                            <button id="toggleStaffStatusBtn" style="background: #64748b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;">👁️ Руководитель</button>
+                        </div>
+                        <div id="staffStatusContent" style="display: none;">
+                            <div id="checkinStatusList"></div>
+                        </div>
+                    </div>
+
+                    <div style="background: white; border: 2px solid #e2e8f0; border-radius: 16px; padding: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h3 style="margin: 0; font-size: 1rem; color: #1e293b;">⚠️ Добавить запись «Важно знать»</h3>
+                            <button id="toggleImportantAdminBtn" style="background: #64748b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;">🔒 Админ</button>
+                        </div>
+                        <div id="importantAdminForm" style="display: none;">
+                            <div class="extra-work-form">
+                                <div class="form-field-compact" style="flex: 2;">
+                                    <label>📝 За что</label>
+                                    <input type="text" id="newNoticeTitle" placeholder="Например: Опоздание на смену" style="width: 100%;">
+                                </div>
+                                <div class="form-field-compact">
+                                    <label>💰 Сумма</label>
+                                    <input type="number" id="newNoticeAmount" placeholder="0" step="100" style="width: 120px;">
+                                </div>
+                                <button id="addNoticeBtn">✅ Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboardArchiveTab" style="display: none;">
+                    <p style="color: #64748b; font-size: 0.85rem; margin-bottom: 16px;">Уволенные сотрудники — вся их история (штрафы, зарплата, график) сохраняется.</p>
+                    <div class="analytics-search" style="margin-bottom: 16px;">
+                        <input type="text" id="archiveSearchInput" placeholder="🔍 Поиск по имени...">
+                    </div>
+                    <div class="salary-table-wrapper">
+                        <table class="salary-table">
+                            <thead>
+                                <tr>
+                                    <th>Сотрудник</th>
+                                    <th>Начал работать</th>
+                                    <th>Уволен</th>
+                                    <th>Дней проработал</th>
+                                    <th>Действие</th>
+                                </tr>
+                            </thead>
+                            <tbody id="archivedEmployeesTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: АНАЛИТИКА -->
+        <!-- ======================================== -->
+        <div id="analyticsTabContent" style="display: none;">
+            <div class="analytics-container">
+                <div class="analytics-header">
+                    <h2>📊 Аналитика работы сотрудников</h2>
+                </div>
+                <div class="analytics-controls">
+                    <div class="control-group">
+                        <label>Год</label>
+                        <select id="analyticsYearSelect"></select>
+                    </div>
+                    <div class="control-group">
+                        <label>Месяц</label>
+                        <select id="analyticsMonthSelect"></select>
+                    </div>
+                </div>
+                <div class="analytics-search">
+                    <input type="text" id="analyticsSearchInput" placeholder="🔍 Поиск по имени..." oninput="filterAnalyticsTable()">
+                </div>
+                <div class="analytics-table-wrapper">
+                    <table class="analytics-table">
+                        <thead id="analyticsTableHeader"></thead>
+                        <tbody id="analyticsTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="legend-analytics" style="margin-top: 20px;">
+                    <span><span class="legend-dot work"></span> Рабочий день</span>
+                    <span><span class="legend-dot off"></span> Выходной</span>
+                    <span><span class="legend-dot today"></span> Сегодня</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: ЧЕКИН -->
+        <!-- ======================================== -->
+        <div id="checkinTabContent" style="display: none;">
+            <div class="checkin-container">
+                <h2 style="margin-bottom: 20px; font-size: 1.3rem;">✅ Чекин на смену</h2>
+                
+                <div class="checkin-time-info" style="background: #f8fafc; padding: 12px 16px; border-radius: 16px; margin-bottom: 16px; border-left: 4px solid #3b82f6;">
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <span style="font-weight: 600; font-size: 0.9rem;">🕐 Текущее время:</span>
+                            <span id="currentTimeDisplay" style="font-size: 1.1rem; font-weight: 700; color: #1e293b;"></span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                            <span style="font-weight: 600; font-size: 0.9rem;">📅 Сегодня:</span>
+                            <span id="todayDateDisplay" style="font-size: 1rem; font-weight: 700; color: #3b82f6;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkin-form" style="background: white; border: 2px solid #e2e8f0; border-radius: 16px; padding: 20px; margin-bottom: 16px;">
+                    <h3 style="margin-bottom: 16px; color: #1e293b; font-size: 1.1rem;">📝 Ваш выход на смену</h3>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 6px; color: #475569; font-size: 0.9rem;">👤 Ваше имя:</label>
+                        <select id="checkinEmployeeSelect" style="width: 100%; padding: 12px 14px; border: 2px solid #cbd5e1; border-radius: 12px; font-size: 1rem; background: white;">
+                            <option value="">-- Выберите себя --</option>
+                        </select>
+                    </div>
+
+                    <div id="shiftInfo" style="background: #f1f5f9; padding: 14px 16px; border-radius: 12px; margin-bottom: 16px; display: none; text-align: center;">
+                        <span id="shiftInfoText"></span>
+                    </div>
+
+                    <button id="checkinConfirmBtn" style="width: 100%; padding: 16px; background: #22c55e; color: white; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+                        ✅ Подтвердить выход на смену
+                    </button>
+                    
+                    <div id="myCheckinStatus" style="margin-top: 16px; padding: 12px 16px; border-radius: 12px; display: none; font-size: 0.95rem; text-align: center;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ======================================== -->
+        <!-- ВКЛАДКА: ВАЖНО ЗНАТЬ (ШТРАФЫ) -->
+        <!-- ======================================== -->
+        <div id="importantTabContent" style="display: none;">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="margin-bottom: 8px; font-size: 1.3rem;">⚠️ Важно знать</h2>
+                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 20px;">Актуальные штрафы и правила для сотрудников.</p>
+
+                <div id="importantNoticesList"></div>
+            </div>
+        </div>
+
+        <!-- ======================================== -->
+        <!-- ЛЕГЕНДА -->
+        <!-- ======================================== -->
+        <div class="legend" id="scheduleLegend" style="justify-content: space-between; align-items: center;">
+            <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                <span>✅ <span class="badge-work">Рабочий день</span></span>
+                <span>❌ <span class="badge-off">Выходной</span></span>
+                <span>🟡 <span class="badge-today">Сегодня</span></span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button id="editPVZNameBtn" class="edit-pvz-name-btn" style="padding: 5px 12px; font-size: 0.75rem; border-radius: 20px;">✏️ Редактировать</button>
+                <button id="deletePVZBtn" class="delete-pvz-btn" style="padding: 5px 12px; font-size: 0.75rem; border-radius: 20px;">🗑 Удалить ПВЗ</button>
+            </div>
+        </div>
+        <footer>☁️ Все данные — доступны с любого устройства</footer>
+    </div>
+</div>
+
+<!-- ======================================== -->
+<!-- МОДАЛЬНЫЕ ОКНА -->
+<!-- ======================================== -->
+
+<div id="docViewerModal" class="doc-modal">
+    <span class="close-doc-modal">&times;</span>
+    <div id="docViewerContent"></div>
+</div>
+
+<div id="editContactsModal" class="edit-contacts-modal">
+    <div class="edit-contacts-content">
+        <span class="close-edit-modal">&times;</span>
+        <h3>✏️ Редактирование экстренных контактов</h3>
+        <div id="editEmployeeName" style="font-weight: 600; margin-bottom: 15px; color: #3b82f6;"></div>
+        <div class="edit-form-group">
+            <label style="font-weight: 500;">📍 Место проживания:</label>
+            <input type="text" id="editAddress" style="width: 100%; padding: 8px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 10px;">
+        </div>
+        <div class="edit-form-group">
+            <label style="font-weight: 500;">📞 Контакты:</label>
+            <div id="editContactsContainer"></div>
+            <button id="addEditContactBtn" style="margin-top: 10px; background: #64748b; color: white; border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer;">➕ Добавить контакт</button>
+        </div>
+        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+            <button id="cancelEditBtn" style="background: #cbd5e1; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer;">Отмена</button>
+            <button id="saveEditBtn" style="background: #3b82f6; color: white; border: none; padding: 8px 20px; border-radius: 40px; cursor: pointer;">💾 Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<div id="employeeHistoryModal" class="edit-contacts-modal">
+    <div class="edit-contacts-content">
+        <span class="close-history-modal">&times;</span>
+        <h3>🕰 История изменений</h3>
+        <div id="employeeHistoryName" style="font-weight: 600; margin-bottom: 15px; color: #3b82f6;"></div>
+        <div id="employeeHistoryList" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+</div>
+
+<!-- ======================================== -->
+<!-- SUPABASE -->
+<!-- ======================================== -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- ======================================== -->
+<!-- ГЛАВНЫЙ JS -->
+<!-- ======================================== -->
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

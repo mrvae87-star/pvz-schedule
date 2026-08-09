@@ -1,0 +1,61 @@
+{
+  "name": "График сотрудников ПВЗ",
+  "short_name": "ПВЗ",
+  "description": "Управление графиком, чекинами и расчётом зарплаты сотрудников ПВЗ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Чекин на смену",
+      "short_name": "Чекин",
+      "description": "Быстро отметиться на смену",
+      "url": "/?action=checkin",
+      "icons": [
+        { "src": "icons/icon-192.png", "sizes": "192x192" }
+      ]
+    },
+    {
+      "name": "Все сотрудники",
+      "short_name": "Сотрудники",
+      "description": "Список сотрудников и контакты",
+      "url": "/?action=employees",
+      "icons": [
+        { "src": "icons/icon-192.png", "sizes": "192x192" }
+      ]
+    },
+    {
+      "name": "Важно знать",
+      "short_name": "Важно знать",
+      "description": "Штрафы и правила",
+      "url": "/?action=important",
+      "icons": [
+        { "src": "icons/icon-192.png", "sizes": "192x192" }
+      ]
+    },
+    {
+      "name": "Дашборд",
+      "short_name": "Дашборд",
+      "description": "Расчёт зарплаты, штрафы, подработки",
+      "url": "/?action=dashboard",
+      "icons": [
+        { "src": "icons/icon-192.png", "sizes": "192x192" }
+      ]
+    }
+  ]
+}
