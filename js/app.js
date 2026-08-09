@@ -1295,7 +1295,7 @@ function populateDashboardMonthSelect() {
     select.innerHTML = '';
     const currentYear = now.getFullYear();
     const startYear = currentYear - 2;
-    const endYear = currentYear + 1;
+    const endYear = Math.max(2030, currentYear + 2);
 
     for (let year = startYear; year <= endYear; year++) {
         for (let month = 1; month <= 12; month++) {
@@ -2546,7 +2546,7 @@ function renderImportantNoticesList() {
     container.innerHTML = importantNotices.map(notice => {
         const date = new Date(notice.created_at);
         const dateStr = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-        const isNew = (Date.now() - date.getTime()) < (3 * 24 * 60 * 60 * 1000);
+        const isNew = (Date.now() - date.getTime()) < (7 * 24 * 60 * 60 * 1000);
         const amountStr = notice.amount != null ? `${Number(notice.amount).toLocaleString('ru-RU')} ₽` : '';
 
         return `
@@ -2624,7 +2624,7 @@ function checkNewNoticeBanner() {
 
     const hasRecent = importantNotices.some(notice => {
         const createdAt = new Date(notice.created_at).getTime();
-        return (Date.now() - createdAt) < (3 * 24 * 60 * 60 * 1000);
+        return (Date.now() - createdAt) < (7 * 24 * 60 * 60 * 1000);
     });
 
     banner.style.display = hasRecent ? 'block' : 'none';

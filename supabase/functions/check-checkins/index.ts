@@ -319,6 +319,20 @@ Deno.serve(async () => {
 
           if (callResult.success) {
             anySucceeded = true;
+
+            // ====== СОХРАНЯЕМ БАЛАНС ======
+            // Отдельного метода "узнать баланс" у API zvonok.com нет —
+            // он приходит только в ответе на реальный звонок, поэтому
+            // сохраняем его каждый раз, когда он есть.
+            const balanceValue = callResult.data?.balance;
+            if (balanceValue !== undefined) {
+              const { error: balanceError } = await supabase
+                .from('zvonok_status')
+                .upsert({ id: 1, balance: parseFloat(balanceValue), updated_at: new Date().toISOString() });
+              if (balanceError) {
+                console.warn('⚠️ Не удалось сохранить баланс zvonok.com:', balanceError);
+              }
+            }
           }
         }
       }
