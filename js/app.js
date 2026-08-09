@@ -608,10 +608,12 @@ function renderSchedule() {
         const dow = getDayOfWeek(year, month, d);
         const isToday = isCurrentMonth && todayDate === d;
         const isWeekend = (dow === 0 || dow === 6);
+        const isWeekStart = (dow === 1); // понедельник — начало новой недели
         
         let extraClass = '';
         if (isToday) extraClass = 'today-column';
         if (isWeekend) extraClass += ' weekend';
+        if (isWeekStart) extraClass += ' week-start';
         
         headerHtml += `<th class="${extraClass}">
             <div class="day-number">${d}</div>
@@ -633,9 +635,14 @@ function renderSchedule() {
             const isWork = data.schedules[emp][`${year}-${month}-${d}`] === true;
             if (isWork) workCount++;
             
+            const dow = getDayOfWeek(year, month, d);
+            const isWeekend = (dow === 0 || dow === 6);
+            const isWeekStart = (dow === 1);
             const isToday = isCurrentMonth && todayDate === d;
             let extraClass = '';
             if (isToday) extraClass = 'today-column';
+            if (isWeekend) extraClass += ' weekend';
+            if (isWeekStart) extraClass += ' week-start';
             
             row += `<td class="${isWork ? 'shift-work' : 'shift-off'} ${extraClass}" 
                         data-employee="${emp}" data-year="${year}" data-month="${month}" data-day="${d}" data-status="${isWork}">
