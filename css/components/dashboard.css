@@ -1,0 +1,781 @@
+/* ======================================== */
+/* ДАШБОРД */
+/* ======================================== */
+
+.dashboard-container {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.dashboard-header h2 {
+    font-size: 1.3rem;
+    color: #1e293b;
+    margin-bottom: 16px;
+}
+
+.dashboard-sub-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 16px;
+}
+
+.sub-tab {
+    background: #f1f5f9;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.sub-tab:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+.sub-tab.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
+}
+
+.dashboard-month-selector {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+}
+
+.dashboard-month-selector label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.9rem;
+}
+
+.dashboard-month-selector select {
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
+.dashboard-month-selector select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* Таблица зарплаты */
+.salary-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+}
+
+.salary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 1000px;
+}
+
+.salary-table th {
+    background: #f8fafc;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+    font-size: 0.8rem;
+}
+
+.salary-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.salary-table tr:hover {
+    background: #f8fafc;
+}
+
+.salary-table input {
+    width: 80px;
+    padding: 6px 10px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+    background: #fafafa;
+}
+
+.salary-table input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.salary-table input[type="number"] {
+    width: 80px;
+}
+
+.readonly-cell {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.extra-display {
+    color: #2563eb;
+    font-weight: 700;
+}
+
+.fine-display {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.net-salary-amount {
+    color: #15803d;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* Итого */
+.total-salary-wrapper {
+    margin-top: 20px;
+    padding: 16px 24px;
+    background: #dcfce7;
+    border-radius: 12px;
+    border-left: 4px solid #22c55e;
+}
+
+.total-salary-row {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #15803d;
+    text-align: right;
+}
+
+/* ======================================== */
+/* ПОДРАБОТКИ И ШТРАФЫ */
+/* ======================================== */
+
+.extra-work-section {
+    margin-top: 20px;
+}
+
+.extra-work-section h3 {
+    color: #1e293b;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+
+.extra-work-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    padding: 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.form-field-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.form-field-compact label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.form-field-compact select,
+.form-field-compact input {
+    padding: 8px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.form-field-compact select:focus,
+.form-field-compact input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.extra-work-form button {
+    padding: 8px 24px;
+    background: #22c55e;
+    color: white;
+    border: none;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 12px rgba(34, 197, 94, 0.2);
+    height: 40px;
+}
+
+.extra-work-form button:hover {
+    background: #16a34a;
+    transform: translateY(-2px);
+}
+
+/* Таблица подработок */
+.extra-work-list {
+    overflow-x: auto;
+}
+
+.extra-work-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.extra-work-table th {
+    background: #f8fafc;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 700;
+    color: #475569;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 0.75rem;
+    white-space: nowrap;
+}
+
+.extra-work-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.extra-work-table tr:hover {
+    background: #f8fafc;
+}
+
+.extra-work-table button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.extra-work-table button:hover {
+    background: #fee2e2;
+}
+
+/* ======================================== */
+/* ЭКСТРЕННЫЕ КОНТАКТЫ */
+/* ======================================== */
+
+.emergency-contacts-container {
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.emergency-contacts-container h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    color: #1e293b;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.search-box label {
+    font-weight: 600;
+    color: #475569;
+}
+
+.search-box input {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.emergency-form {
+    padding: 20px;
+    background: #f8fafc;
+    border-radius: 16px;
+}
+
+.emergency-form h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+
+.emergency-form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.emergency-form-row input {
+    flex: 1;
+    min-width: 150px;
+    padding: 8px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.emergency-form-row input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.emergency-form-row select {
+    flex: 1;
+    min-width: 200px;
+    padding: 8px 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: white;
+}
+
+.emergency-form-row select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.contact-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 8px;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.contact-row input {
+    flex: 1;
+    min-width: 120px;
+}
+
+.delete-contact-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.delete-contact-btn:hover {
+    color: #dc2626;
+    background: #fee2e2;
+}
+
+.add-contact-btn,
+.save-contacts-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-contact-btn {
+    background: #64748b;
+    color: white;
+}
+
+.add-contact-btn:hover {
+    background: #475569;
+}
+
+.save-contacts-btn {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.2);
+}
+
+.save-contacts-btn:hover {
+    background: #2563eb;
+}
+
+.success-message {
+    background: #dcfce7;
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+    border-left: 4px solid #22c55e;
+}
+
+.success-message h3 {
+    color: #15803d;
+    margin-bottom: 4px;
+}
+
+.success-message p {
+    color: #475569;
+}
+
+/* ======================================== */
+/* АНАЛИТИКА */
+/* ======================================== */
+
+.analytics-container {
+    background: white;
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.analytics-header h2 {
+    font-size: 1.3rem;
+    color: #1e293b;
+    margin-bottom: 16px;
+}
+
+.legend-analytics {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: #f8fafc;
+    border-radius: 12px;
+    font-size: 0.85rem;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    margin-right: 4px;
+}
+
+.legend-dot.work {
+    background: #22c55e;
+}
+
+.legend-dot.off {
+    background: #ef4444;
+}
+
+.legend-dot.today {
+    background: #f59e0b;
+}
+
+.analytics-controls {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-group label {
+    font-weight: 600;
+    color: #475569;
+    font-size: 0.85rem;
+}
+
+.control-group select {
+    padding: 6px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: white;
+    cursor: pointer;
+}
+
+.control-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.analytics-search {
+    margin-bottom: 16px;
+}
+
+.analytics-search input {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px 16px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.analytics-search input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.analytics-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #f1f5f9;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.analytics-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+    min-width: 800px;
+}
+
+.analytics-table th {
+    background: #1e293b;
+    color: white;
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    font-size: 0.7rem;
+    min-width: 50px;
+}
+
+.analytics-table td {
+    padding: 6px 4px;
+    text-align: center;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.analytics-table .employee-name-cell {
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    position: sticky;
+    left: 0;
+    background: #f8fafc !important;
+    z-index: 5;
+    min-width: 120px;
+}
+
+.analytics-table .today-highlight {
+    border: 3px solid #f59e0b !important;
+    border-radius: 4px;
+}
+
+.analytics-table .pvz-color-0 { background: #dbeafe; }
+.analytics-table .pvz-color-1 { background: #d1fae5; }
+.analytics-table .pvz-color-2 { background: #fef3c7; }
+.analytics-table .pvz-color-3 { background: #fce4ec; }
+.analytics-table .pvz-color-default { background: #f1f5f9; }
+
+.work-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+}
+
+.off-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    opacity: 0.5;
+}
+
+.pvz-name-small {
+    display: block;
+    font-size: 0.55rem;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+/* ======================================== */
+/* ЧЕКИН */
+/* ======================================== */
+
+.checkin-container {
+    padding: 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.checkin-form .confirmed {
+    background: #16a34a !important;
+    opacity: 0.8;
+}
+
+.checkin-status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.checkin-status-item:hover {
+    background: #f8fafc;
+}
+
+.checkin-status-employee {
+    font-weight: 600;
+    font-size: 0.9rem;
+    flex: 1;
+}
+
+.checkin-status-pvz {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.checkin-status-time {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.checkin-status-badge {
+    padding: 4px 12px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.checkin-status-badge.confirmed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.checkin-status-badge.missed {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.checkin-status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.checkin-status-badge.not-working {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.pvz-time-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f5f9;
+    flex-wrap: wrap;
+}
+
+.pvz-time-row label {
+    font-weight: 500;
+    min-width: 120px;
+    font-size: 0.9rem;
+}
+
+.pvz-time-row input[type="time"] {
+    padding: 6px 12px;
+    border: 2px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    background: white;
+}
+
+.pvz-time-row input[type="time"]:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* ======================================== */
+/* УВЕДОМЛЕНИЯ */
+/* ======================================== */
+
+.notification {
+    background: #fef3c7 !important;
+    border-left: 4px solid #f59e0b !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    margin-bottom: 10px !important;
+    z-index: 10000 !important;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    max-width: 350px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.custom-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    z-index: 9999;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    max-width: 90%;
+    text-align: center;
+    animation: slideUp 0.3s ease;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
