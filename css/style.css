@@ -357,6 +357,12 @@ h1 span {
     transform: translateY(-2px);
 }
 
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+}
+
 .schedule-table {
     width: 100%;
     border-collapse: collapse;
@@ -365,6 +371,7 @@ h1 span {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    min-width: 900px;
 }
 
 .schedule-table th {
@@ -410,6 +417,9 @@ h1 span {
     padding: 8px 14px;
     min-width: 130px;
     background: #f8fafc;
+    position: sticky;
+    left: 0;
+    z-index: 2;
     color: #1e293b;
     font-size: 0.85rem;
     border-right: 2px solid #e2e8f0;
@@ -446,11 +456,32 @@ h1 span {
 }
 
 .schedule-table .weekend {
-    background: #1e293b !important;
+    background: #7f1d1d !important;
+}
+
+.schedule-table td.weekend {
+    background: #fef2f2 !important;
 }
 
 .schedule-table .weekday {
     background: #1e293b;
+}
+
+.schedule-table .week-start {
+    border-left: 2px solid #94a3b8;
+}
+
+.schedule-table th.week-start {
+    border-left: 2px solid #64748b;
+}
+
+/* Если "сегодня" выпадает на выходной — цвет "сегодня" должен быть виднее */
+.schedule-table td.today-column.weekend {
+    background: #fef3c7 !important;
+}
+
+.schedule-table th.today-column.weekend {
+    background: #f59e0b !important;
 }
 
 /* Панель управления ПВЗ */
@@ -704,12 +735,12 @@ footer {
     }
     
     .schedule-table {
-        font-size: 0.55rem;
+        font-size: 0.75rem;
     }
     
     .schedule-table th {
-        min-width: 24px;
-        padding: 4px 2px;
+        min-width: 34px;
+        padding: 6px 4px;
     }
     
     .schedule-table th .day-number {
@@ -784,22 +815,22 @@ footer {
 
 @media (max-width: 480px) {
     .schedule-table {
-        font-size: 0.45rem;
+        font-size: 0.7rem;
     }
     
     .schedule-table th {
-        min-width: 18px;
-        padding: 2px 1px;
+        min-width: 30px;
+        padding: 5px 3px;
     }
     
     .schedule-table td {
-        padding: 2px 1px;
+        padding: 5px 3px;
     }
     
     .schedule-table .employee-col {
-        min-width: 50px;
-        font-size: 0.5rem;
-        padding: 2px 4px;
+        min-width: 90px;
+        font-size: 0.75rem;
+        padding: 6px 8px;
     }
     
     .header-corner-btn {
